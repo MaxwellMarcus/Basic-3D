@@ -2,7 +2,7 @@ from Tkinter import *
 import math
 
 root = Tk()
-canvas = Canvas(root,width = 1000,height = 1000)
+canvas = Canvas(root,width = 2000,height = 2000)
 canvas.pack()
 
 
@@ -85,17 +85,17 @@ class Particle:
     def angleTo (self,p2):
         return math.atan2(p2.position.getY()-self.position.getY(),p2.position.getX() - self.position.getX())
     def distanceTo(self,p2):
-        dx = p2.position.getX() - self.position.getX()
-        dy = p2.position.getY() - self.position.getY()
+        dx = p2.position.getX() - (self.position.getX())
+        dy = p2.position.getY() - (self.position.getY())
         return math.sqrt(dx*dx+dy*dy)
     def gravitateTo(self,p2):
         grav = Vector(0,0)
         dist = self.distanceTo(p2)
-
-        grav.setLength(p2.mass*7/(dist*dist))
+        if dist < 20: dist = 20
+        grav.setLength(p2.mass/(dist*dist))
         grav.setAngle(self.angleTo(p2))
-
         self.velocity.addTo(grav)
+        #print(dist,grav.getX(),self.velocity.getX(),self.position.getX())
     def update(self):
         self.position.addTo(self.velocity)
         self.velocity.addTo(self.acceleration)
@@ -110,10 +110,10 @@ class Particle:
             self.position.setY(500)'''
 
 particles = []
-sun = Particle(500,500,mass = 100)
+sun = Particle(500,500,mass = 1000)
 particles.append(sun)
 sun.color = 'yellow'
-planet = Particle(300,300,1,-math.pi/2,acceleration = .1)
+planet = Particle(300,300,1,-math.pi/2)
 particles.append(planet)
 def update():
     canvas.delete(ALL)
