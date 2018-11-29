@@ -1,8 +1,11 @@
-from Tkinter import *
+try:
+    from Tkinter import *
+except:
+    from tkinter import *
 import math
 
 root = Tk()
-canvas = Canvas(root,width = 2000,height = 2000)
+canvas = Canvas(root,width = root.winfo_screenwidth(),height = root.winfo_screenheight())
 canvas.pack()
 
 
@@ -55,7 +58,7 @@ class Vector:
         self.y /= value
 
 class Particle:
-    def __init__(self,x,y,speed = 0,angle = 0,accelAngle = 0,acceleration = 0,accelerationX=0,accelerationY=0,friction = 1,mass = 10):
+    def __init__(self,x,y,speed = 0,angle = 0,accelAngle = 0,acceleration = 0,accelerationX=0,accelerationY=0,friction = 1,mass = 10,maxVel = 10000000,radius = 10):
         self.position = Vector(x,y)
         self.velocity = Vector(0,0)
         self.acceleration = Vector(accelerationX,accelerationY)
@@ -66,12 +69,15 @@ class Particle:
         self.velocity.setLength(speed)
         self.velocity.setAngle(angle)
 
+        self.radius = radius
+        self.maxVel = maxVel
         self.mass = mass
         self.friction = Vector(friction,friction)
         self.color = 'black'
 
         root.bind('<KeyPress>',self.keypress)
         root.bind('<KeyRelease>',self.keyrelease)
+        #root.bind('<Motion>',self.moveToMouse)
     def keypress(self,event):
         if event.keysym == 'w':self.acceleration.setY(-0.1)
         if event.keysym == 's':self.acceleration.setY(0.1)
@@ -91,36 +97,31 @@ class Particle:
     def gravitateTo(self,p2):
         grav = Vector(0,0)
         dist = self.distanceTo(p2)
-        if dist < 20: dist = 20
         grav.setLength(p2.mass/(dist*dist))
         grav.setAngle(self.angleTo(p2))
         self.velocity.addTo(grav)
-        #print(dist,grav.getX(),self.velocity.getX(),self.position.getX())
+    def moveToMouse(self,event):
+        self.position.setX(event.x)
+        self.position.setY(event.y)
     def update(self):
-        self.position.addTo(self.velocity)
+        if self.velocity.getLength() < self.maxVel:
+            self.position.addTo(self.velocity.divide(100))
         self.velocity.addTo(self.acceleration)
 
-    '''    if self.position.getX() > 500:
-            self.position.setX(0)
-        if self.position.getY() > 500:
-            self.position.setY(0)
-        if self.position.getX() < 0:
-            self.position.setX(500)
-        if self.position.getY() < 0:
-            self.position.setY(500)'''
+        if self.position.getX() + self.radius > root.winfo_screenwidth():self.velocity.setX(-self.velocity.getX()*-1);self.position.setX(root.winfo_screenwidth() - self.radius)#self.position.setX(- self.radius)
+        if self.position.getY() + self.radius > root.winfo_screenheight():self.velocity.setY(-self.velocity.getY()*-1);self.position.setY(root.winfo_screenheight() - self.radius)#self.position.setY(- self.radius)
+        if self.position.getX() - self.radius < 0:self.velocity.setX(self.velocity.getX()*-1);self.position.setX(self.radius)#self.position.setX(2000 + self.radius )
+        if self.position.getY() - self.radius < 0:self.velocity.setY(self.velocity.getY()*-1);self.position.setY(self.radius)#self.position.setY(2000 + self.radius )
 
 particles = []
-sun = Particle(500,500,mass = 1000)
-particles.append(sun)
-sun.color = 'yellow'
-planet = Particle(300,300,1,-math.pi/2)
+planet = Particle(400,300,-2,maxVel = 1000,radius = 50)
+planet.color = 'blue'
 particles.append(planet)
 def update():
     canvas.delete(ALL)
-    planet.gravitateTo(sun)
     for i in particles:
         i.update()
-        canvas.create_oval(i.position.getX()-i.mass/2,i.position.getY()-i.mass/2,i.position.getX()+i.mass/2,i.position.getY()+i.mass/2,fill = i.color)
+        canvas.create_oval(i.position.getX()-i.radius,i.position.getY()-i.radius,i.position.getX()+i.radius,i.position.getY()+i.radius,fill = i.color)
     root.update()
 
 while True:
