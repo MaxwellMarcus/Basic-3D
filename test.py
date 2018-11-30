@@ -1,7 +1,7 @@
 try:
     from Tkinter import *
 except:
-    from tkinter import *
+    from tkinter import *1
 import math
 
 root = Tk()
