@@ -79,55 +79,62 @@ class _3D:
                     num.remove(num[0])
         return ans
 
-    def perspectify(self,shape,color='black',xRad=2,yRad=2):
+    def perspectify(self,shape,color):
+        shapeRadius = 50
         perspective = self.fl/(self.fl+shape[2])
-        radiusX = xRad * perspective
-        radiusY = yRad * perspective
+        radius = shapeRadius * perspective
         shapeMod = [shape[0]*perspective + root.winfo_screenwidth()/2,shape[1]*perspective+root.winfo_screenheight()/2]
-        #canvas.create_oval(shapeMod[0]-radiusX,shapeMod[1]-radiusY,shapeMod[0]+radiusX,shapeMod[1]+radiusY,fill = color)
-        return shapeMod
-    def project(self,points):
-        for i in range(len(points)-1):
-            p = points[i]
-            scale = self.fl/(self.fl + p[2])
-            p[3] = p[0] * scale + root.winfo_screenwidth()/2
-            p[4] = p[1] * scale + root.winfo_screenheight()/2
-        return points
-    def drawLines(self,points,indexes):
-        for i in range(len(indexes)-2):
-            p = points[indexes[i]]
-            nextP = points[indexes[i+1]]
-            canvas.create_line(p[3],p[4],nextP[3],nextP[4])
+        canvas.create_rectangle(shapeMod[0]-radius,shapeMod[1]-radius,shapeMod[0]+radius,shapeMod[1]+radius,fill = color)
 
 
 _3d = _3D(300)
 
-points = []
-points.append([-500,-500,1000,0,0])
-points.append([500,-500,1000,0,0])
-points.append([500,-500,500,0,0])
-points.append([-500,-500,500,0,0])
-points.append([-500,500,1000,0,0])
-points.append([500,500,1000,0,0])
-points.append([500,500,500,0,0])
-points.append([-500,500,500,0,0])
+shapes = []
+shapes2 = []
+numShapes = 10
+
+for i in range(numShapes):
+    angle = math.pi * 2/numShapes * i
+    shape = [math.cos(angle) * _3d.radius,0,_3d.centerZ + math.sin(angle) * _3d.radius]
+    shapes.append(shape)
+for i in range(numShapes):
+    angle = math.pi * 2/numShapes * i
+    shape = [0,math.cos(angle) * _3d.radius,_3d.centerZ + math.sin(angle) * _3d.radius]
+    shapes2.append(shape)
 
 rotationSpeed = 1
 baseAngle = 0
+rotationSpeed2 = 1
+baseAngle2 = 0
+colors = ['red','green','blue','yellow','orange','black']
 
-points = _3d.project(points)
-while   True:
-    for i in points:
-        canvas.create_rectangle(i[3]-5,i[4]-5,i[3]+5,i[3]+5,fill = 'black')
+while True:
     canvas.delete(ALL)
+    rotationSpeed = (_3d.mouseX - root.winfo_screenwidth()/2) * 0.000005
+    baseAngle += rotationSpeed
+    i = 0
+    while i < len(shapes):
+        angle = math.pi * 2/numShapes * i
+        shapes[i][0] = math.cos(angle + baseAngle) * _3d.radius
+        shapes[i][2] = _3d.centerZ + math.sin(angle + baseAngle) * _3d.radius
+        i += 1
+    shapes = _3d.zsort(shapes)
+    i = 0
+    while i < len(shapes):
+        _3d.perspectify(shapes[i],'blue')
+        i += 1
 
-    points = _3d.project(points)
-
-    '''_3d.drawLines(points,[0,1,2,3,0])
-    _3d.drawLines(points,[4,5,6,7,4])
-    _3d.drawLines(points,[0,4])
-    _3d.drawLines(points,[1,5])
-    _3d.drawLines(points,[2,6])
-    _3d.drawLines(points,[3,7])'''
-
+    rotationSpeed2 = (_3d.mouseY - root.winfo_screenheight()/2) * 0.000005
+    baseAngle2 += rotationSpeed2
+    i = 0
+    while i < len(shapes2):
+        angle = math.pi * 2/numShapes * i
+        shapes2[i][1] = math.cos(angle + baseAngle2) * _3d.radius
+        shapes2[i][2] = _3d.centerZ + math.sin(angle + baseAngle2) * _3d.radius
+        i += 1
+    shapes2 = _3d.zsort(shapes2)
+    i = 0
+    while i < len(shapes2):
+        _3d.perspectify(shapes2[i],'blue')
+        i += 1
     root.update()
