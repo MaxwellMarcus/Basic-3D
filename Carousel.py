@@ -91,6 +91,8 @@ _3d = _3D(300)
 
 shapes = []
 shapes2 = []
+shapes3 = []
+shapes4 = []
 numShapes = 10
 
 for i in range(numShapes):
@@ -101,16 +103,28 @@ for i in range(numShapes):
     angle = math.pi * 2/numShapes * i
     shape = [0,math.cos(angle) * _3d.radius,_3d.centerZ + math.sin(angle) * _3d.radius]
     shapes2.append(shape)
-
+for i in range(numShapes):
+    angle = math.pi * 2/numShapes * i
+    shape = [0,math.cos(angle) * _3d.radius,_3d.centerZ + math.sin(angle) * _3d.radius]
+    shapes3.append(shape)
+for i in range(numShapes):
+    angle = math.pi * 2/numShapes * i
+    shape = [0,math.cos(angle) * _3d.radius,_3d.centerZ + math.sin(angle) * _3d.radius]
+    shapes4.append(shape)
 rotationSpeed = 1
 baseAngle = 0
 rotationSpeed2 = 1
 baseAngle2 = 0
+rotationSpeed3 = 1
+baseAngle3 = 0
+rotationSpeed4 = 1
+baseAngle4 = 0
+
 colors = ['red','green','blue','yellow','orange','black']
 
 while True:
     canvas.delete(ALL)
-    rotationSpeed = (_3d.mouseX - root.winfo_screenwidth()/2) * 0.000005
+    rotationSpeed = (_3d.mouseX - root.winfo_screenwidth()/2) * 0.00005
     baseAngle += rotationSpeed
     i = 0
     while i < len(shapes):
@@ -124,7 +138,7 @@ while True:
         _3d.perspectify(shapes[i],'blue')
         i += 1
 
-    rotationSpeed2 = (_3d.mouseY - root.winfo_screenheight()/2) * 0.000005
+    rotationSpeed2 = (_3d.mouseY - root.winfo_screenheight()/2) * 0.00005
     baseAngle2 += rotationSpeed2
     i = 0
     while i < len(shapes2):
@@ -135,6 +149,37 @@ while True:
     shapes2 = _3d.zsort(shapes2)
     i = 0
     while i < len(shapes2):
-        _3d.perspectify(shapes2[i],'blue')
+        _3d.perspectify(shapes2[i],'red')
         i += 1
+
+    rotationSpeed3 = math.sqrt(((_3d.mouseY - root.winfo_screenheight()/2) * 0.000005)**2 + ((_3d.mouseX - root.winfo_screenheight()/2) * 0.000005)**2)
+    baseAngle3 += rotationSpeed3
+    i = 0
+    while i < len(shapes3):
+        angle = math.pi * 2/numShapes * i
+        shapes3[i][0] = math.cos(angle + baseAngle3) * _3d.radius
+        shapes3[i][1] = math.cos(angle + baseAngle3) * _3d.radius
+        shapes3[i][2] = _3d.centerZ + math.sin(angle + baseAngle3) * _3d.radius
+        i += 1
+    shapes3 = _3d.zsort(shapes3)
+    i = 0
+    while i < len(shapes3):
+        _3d.perspectify(shapes3[i],'green')
+        i += 1
+
+    rotationSpeed4 = math.sqrt(((_3d.mouseY - root.winfo_screenheight()/2) * 0.000005)**2 + ((_3d.mouseX - root.winfo_screenheight()/2) * 0.000005)**2)
+    baseAngle4 += rotationSpeed4
+    i = 0
+    while i < len(shapes4):
+        angle = math.pi * 2/numShapes * i
+        shapes4[i][0] = -math.cos(angle + baseAngle4) * _3d.radius
+        shapes4[i][1] = math.cos(angle + baseAngle4) * _3d.radius
+        shapes4[i][2] = _3d.centerZ + math.sin(angle + baseAngle4) * _3d.radius
+        i += 1
+    shapes4 = _3d.zsort(shapes4)
+    i = 0
+    while i < len(shapes4):
+        _3d.perspectify(shapes4[i],'purple')
+        i += 1
+
     root.update()
