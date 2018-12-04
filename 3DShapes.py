@@ -106,11 +106,16 @@ class _3D:
             y = root.winfo_screenheight()/2
             canvas.create_line(p[3]+x,p[4]+y,nextP[3]+x,nextP[4]+y)
     def drawFace(self,points,indexes):
-        face = []
+        avg = 0
         for i in indexes:
-            face.append(points[i][3] + root.winfo_screenwidth()/2)
-            face.append(points[i][4] + root.winfo_screenheight()/2)
-        canvas.create_polygon(face,fill = 'red')
+            avg += points[i][2]
+        avg /= len(indexes)
+        if avg > -self.fl:
+            face = []
+            for i in indexes:
+                face.append(points[i][3] + root.winfo_screenwidth()/2)
+                face.append(points[i][4] + root.winfo_screenheight()/2)
+            canvas.create_polygon(face,fill = 'red')
     def translate(self,points,x=0,y=0,z=0):
         for i in range(len(points)):
             points[i][0] += x
