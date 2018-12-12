@@ -20,9 +20,12 @@ class _3D:
         self.mouseX = 0
         self.mouseY = 0
         self.camPos = [0,0,0]
+        self.camRot = [0,0,0]
         self.mousePressed = False
 
         self.keysPressed = []
+
+        self.objects = []
 
         root.bind('<Motion>',self.mouseSet)
         root.bind('<KeyPress>',self.keyPressed)
@@ -109,8 +112,8 @@ class _3D:
 
                 scale = first/second
 
-                p[3] = p[0] * scale + self.camPos[0] * scale
-                p[4] = p[1] * scale + self.camPos[1] * scale
+                p[3] = p[0] * scale - self.camPos[0] * scale
+                p[4] = p[1] * scale - self.camPos[1] * scale
         return points
     def drawLines(self,points,indexes):
         for i in range(len(indexes)-1):
@@ -142,6 +145,10 @@ class _3D:
             self.camPos[0] += x
             self.camPos[1] += y
             self.camPos[2] += z
+    def camRotate(self,x=0,y=0,z=0):
+        self.camRot[0] += x
+        self.camRot[1] += y
+        self.camRot[2] += z
     def rotateX(self,points,angle):
         cos = math.cos(angle)
         sin = math.sin(angle)
@@ -202,6 +209,19 @@ class _3D:
         points.append([x-radius,y-radius,z-radius,0,0])
         points.append([x+radius,y-radius,z-radius,0,0])
 
+        self.objects.append(points)
+    def returnCube(self,x,y,z,radius):
+        points = [[x,y,z]]
+        points.append([x+radius,y+radius,z+radius,0,0])#back square
+        points.append([x-radius,y+radius,z+radius,0,0])
+        points.append([x-radius,y-radius,z+radius,0,0])
+        points.append([x+radius,y-radius,z+radius,0,0])
+
+        points.append([x+radius,y+radius,z-radius,0,0])#front square
+        points.append([x-radius,y+radius,z-radius,0,0])
+        points.append([x-radius,y-radius,z-radius,0,0])
+        points.append([x+radius,y-radius,z-radius,0,0])
+
         return points
     def keyPressed(self,event):
         self.keysPressed.append(event.keysym)
@@ -217,13 +237,10 @@ class _3D:
 
 _3d = _3D(500)
 
-points = _3d.createCube(0,0,0,100)
+#_3d.createCube(0,0,0,100)
 
 rotationSpeed = 1
 baseAngle = 0
-
-points = _3d.project(points)
-last = points[:]
 
 lastMouseY = _3d.mouseY
 lastMouseX = _3d.mouseX
@@ -232,37 +249,47 @@ lastMouseX = _3d.mouseX
 v = 0
 while v < 1:
 
-    mouseChangeY = root.winfo_screenwidth()/2 - _3d.mouseY
-    mouseChangeX = root.winfo_screenwidth()/2 - _3d.mouseX
-    #_3d.rotateAroundX(points,mouseChangeY/1000000)
-    #_3d.rotateAroundY(points,mouseChangeX/1000000)
-
+    if 'Up' in _3d.keysPressed:
+        _3d.camRotate(x,y,z)
     if 'w' in _3d.keysPressed:
-        _3d.camTranslate(z=10)
+        _3d.camTranslate(z=1)
     if 's' in _3d.keysPressed:
-        _3d.camTranslate(z=-10)
+        _3d.camTranslate(z=-1)
     if 'a' in _3d.keysPressed:
-        _3d.camTranslate(x=-10)
+        _3d.camTranslate(x=-1)
     if 'd' in _3d.keysPressed:
-        _3d.camTranslate(x=10)
-    if '??' in _3d.keysPressed:
-        _3d.camTranslate(y=-10)
+        _3d.camTranslate(x=1)
+    if 'Shift_L' in _3d.keysPressed:
+        _3d.camTranslate(y=1)
     if 'space' in _3d.keysPressed:
-        _3d.camTranslate(y=10)
+        _3d.camTranslate(y=-1)
     if _3d.mousePressed:
-        _3d.createCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
+        x = True
+        cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
+        x,y,z = _3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100
+        x,y,z = int(x/100)*100,int(y/100)*100,int(z/100)*100
+        for i in _3d.objects:
+            for k in range(len(i)-1):
+                f = i[k]
+                if ((f[0] - 100 < cube[k][0] + 100 and f[0] + 100 > cube[k][0] - 100) and (f[1] - 100 < cube[k][1] + 100 and f[1] + 100 > cube[k][1] - 100) and (f[2] - 100 < cube[k][2] + 100 and f[2] + 100 > cube[k][2] - 100)) or (not abs(x-f[0])%200 < 0.1 and not abs(y-f[1])%200 < 0.1 and not abs(z-f[2])%200 < 0.1):
+                    x = False
+
+        if x:
+            _3d.createCube(x,y,z,100)
 
 
     canvas.delete(ALL)
 
-    for i in _3d.Objects:
-        points = _3d.project(points)
+    #print(len(_3d.objects))
 
-        _3d.drawFace(points,[5,6,7,8])
-        _3d.drawFace(points,[2,3,7,6])
-        _3d.drawFace(points,[1,4,8,5])
-        _3d.drawFace(points,[3,4,8,7])
-        _3d.drawFace(points,[2,1,5,6])
+    for i in _3d.objects:
+        i = _3d.project(i)
+
+        _3d.drawFace(i,[5,6,7,8])
+        _3d.drawFace(i,[2,3,7,6])
+        _3d.drawFace(i,[1,4,8,5])
+        _3d.drawFace(i,[3,4,8,7])
+        _3d.drawFace(i,[2,1,5,6])
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
