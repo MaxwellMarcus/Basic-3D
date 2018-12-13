@@ -104,22 +104,40 @@ class _3D:
     def project(self,points):
         for i in range(len(points)-1):
             p = points[i+1]
+            cosX = math.cos(self.camRot[0])
+            sinX = math.sin(self.camRot[0])
+            cosY = math.cos(self.camRot[1])
+            sinY = math.sin(self.camRot[1])
+            cosZ = math.cos(self.camRot[2])
+            sinZ = math.sin(self.camRot[2])
+
+            radiusX = self.camPos[0] + root.winfo_screenwidth()
+            radiusY = self.camPos[1] + root.winfo_screenheight()
+            radiusZ = self.fl+self.camPos[2]
+
+            newX = ((p[0]-radiusX) * cosY + (p[2]-radiusX) * sinY)+radiusX
+            newY = ((p[1]-radiusY) * cosX - (p[2]-radiusY) * sinX)+radiusY
+            newZ = ((p[2]-radiusZ) * cosX + (p[1]-radiusZ) * sinX)+radiusZ
+            newX = ((newX-radiusX) * cosZ + (newY-radiusX) * sinZ)+radiusX
+            newY = ((newY-radiusY) * cosY - (newX-radiusY) * sinZ)+radiusY
+            newZ = ((newZ-radiusZ) * cosY + (newX-radiusZ) * sinY)+radiusZ
+
             if p[2] > self.camPos[2]-self.fl:
-                l = [self.fl,self.camPos[2],p[2]]
+                l = [self.fl,self.camPos[2],newZ]
                 l = list(l)
                 first = float(l[0])
                 second = float(l[0]-l[1]+l[2])
 
                 scale = first/second
 
-                p[3] = p[0] * scale - self.camPos[0] * scale
-                p[4] = p[1] * scale - self.camPos[1] * scale
+                p[3] = newX * scale - self.camPos[0] * scale
+                p[4] = newY * scale - self.camPos[1] * scale
         return points
     def drawLines(self,points,indexes):
         for i in range(len(indexes)-1):
             p = points[indexes[i]]
             nextP = points[indexes[i+1]]
-            if p[2] > -self.fl:
+            if p[2] > -self.fl and p[0] > 0 and p[1] > 0 and p[0] < root.winfo_screenwidth() and p[1] < root.winfo_screenheight():
                 x = root.winfo_screenwidth()/2
                 y = root.winfo_screenheight()/2
                 canvas.create_line(p[3]+x,p[4]+y,nextP[3]+x,nextP[4]+y)
@@ -131,9 +149,11 @@ class _3D:
         if avg > -self.fl:
             face = []
             for i in indexes:
+                p = points[i]
                 if points[i][2] > -self.fl:
                     face.append(points[i][3] + root.winfo_screenwidth()/2)
                     face.append(points[i][4] + root.winfo_screenheight()/2)
+
             canvas.create_polygon(face,fill='red',outline = 'black')
     def translate(self,points,x=0,y=0,z=0):
         for i in range(len(points)):
@@ -142,9 +162,9 @@ class _3D:
             points[i][2] += z
         return points
     def camTranslate(self,x=0,y=0,z=0):
-            self.camPos[0] += x
-            self.camPos[1] += y
-            self.camPos[2] += z
+        self.camPos[0] += x
+        self.camPos[1] += y
+        self.camPos[2] += z
     def camRotate(self,x=0,y=0,z=0):
         self.camRot[0] += x
         self.camRot[1] += y
@@ -180,7 +200,7 @@ class _3D:
         h = root.winfo_screenheight()/2
         for i in points:
             i[1] = ((i[1]+h) * cos - (i[2]+h) * sin)-h
-            i[2] = ((i[2]+self.fl) * cos + (i[1]+self.fl) * sin)-self.fl
+            i[2] = ((i[2]+self.fl+self.camPos[2]) * cos + (i[0]+self.fl+self.camPos[2]) * sin)-self.fl-self.camPos[2]
     def rotateAroundY(self,points,angle):
         cos = math.cos(angle)
         sin = math.sin(angle)
@@ -188,7 +208,7 @@ class _3D:
         h = root.winfo_screenheight()/2
         for i in points:
             i[0] = ((i[0]+w) * cos - (i[2]+w) * sin)-w
-            i[2] = ((i[2]+self.fl) * cos + (i[0]+self.fl) * sin)-self.fl
+            i[2] = ((i[2]+self.fl+self.camPos[2]) * cos + (i[0]+self.fl+self.camPos[2]) * sin)-self.fl-self.camPos[2]
     def rotateAroundZ(self,points,angle):
         cos = math.cos(angle)
         sin = math.sin(angle)
@@ -250,7 +270,9 @@ v = 0
 while v < 1:
 
     if 'Up' in _3d.keysPressed:
-        _3d.camRotate(x,y,z)
+        _3d.camRotate(x=.0001)
+    if 'Down' in _3d.keysPressed:
+        _3d.camRotate(x=-.0001)
     if 'w' in _3d.keysPressed:
         _3d.camTranslate(z=1)
     if 's' in _3d.keysPressed:
