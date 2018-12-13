@@ -113,14 +113,17 @@ class _3D:
 
             radiusX = self.camPos[0] + root.winfo_screenwidth()
             radiusY = self.camPos[1] + root.winfo_screenheight()
-            radiusZ = -self.fl-self.camPos[2]
+            radiusZ = self.fl+self.camPos[2]
 
             newX = ((p[0]-radiusX) * cosY + (p[2]-radiusX) * sinY)+radiusX
             newY = ((p[1]-radiusY) * cosX - (p[2]-radiusY) * sinX)+radiusY
             newZ = ((p[2]-radiusZ) * cosX + (p[1]-radiusZ) * sinX)+radiusZ
             newX = ((newX-radiusX) * cosZ + (newY-radiusX) * sinZ)+radiusX
-            newY = ((newY-radiusY) * cosY - (newX-radiusY) * sinZ)+radiusY
+            newY = ((newY-radiusY) * cosZ - (newX-radiusY) * sinZ)+radiusY
             newZ = ((newZ-radiusZ) * cosY + (newX-radiusZ) * sinY)+radiusZ
+
+            print((newZ-radiusZ) * cosY)
+            print((newX-radiusZ) * sinY)
 
             if p[2] > self.camPos[2]-self.fl:
                 l = [self.fl,self.camPos[2],newZ]
@@ -146,15 +149,33 @@ class _3D:
         for i in indexes:
             avg += points[i][2]
         avg /= len(indexes)
+
         if avg > -self.fl:
             face = []
             for i in indexes:
                 p = points[i]
-                if points[i][2] > -self.fl:
+                cosX = math.cos(self.camRot[0])
+                sinX = math.sin(self.camRot[0])
+                cosY = math.cos(self.camRot[1])
+                sinY = math.sin(self.camRot[1])
+                cosZ = math.cos(self.camRot[2])
+                sinZ = math.sin(self.camRot[2])
+
+                radiusX = self.camPos[0] + root.winfo_screenwidth()
+                radiusY = self.camPos[1] + root.winfo_screenheight()
+                radiusZ = self.fl+self.camPos[2]
+
+                newX = ((p[0]-radiusX) * cosY + (p[2]-radiusX) * sinY)+radiusX
+                newY = ((p[1]-radiusY) * cosX - (p[2]-radiusY) * sinX)+radiusY
+                newZ = ((p[2]-radiusZ) * cosX + (p[1]-radiusZ) * sinX)+radiusZ
+                newX = ((newX-radiusX) * cosZ + (newY-radiusX) * sinZ)+radiusX
+                newY = ((newY-radiusY) * cosZ - (newX-radiusY) * sinZ)+radiusY
+                newZ = ((newZ-radiusZ) * cosY + (newX-radiusZ) * sinY)+radiusZ
+                if newZ > -(self.fl+self.camPos[2]):
                     face.append(points[i][3] + root.winfo_screenwidth()/2)
                     face.append(points[i][4] + root.winfo_screenheight()/2)
-
-            canvas.create_polygon(face,fill='red',outline = 'black')
+            if len(face) > 0:
+                canvas.create_polygon(face,fill='red',outline = 'black')
     def translate(self,points,x=0,y=0,z=0):
         for i in range(len(points)):
             points[i][0] += x
@@ -270,23 +291,23 @@ v = 0
 while v < 1:
 
     if 'Up' in _3d.keysPressed:
-        _3d.camRotate(y=.0001)
+        _3d.camRotate(y=.01)
     if 'Down' in _3d.keysPressed:
-        _3d.camRotate(y=-.0001)
+        _3d.camRotate(y=-.01)
     if 'w' in _3d.keysPressed:
-        _3d.camTranslate(z=1)
+        _3d.camTranslate(z=10)
     if 's' in _3d.keysPressed:
-        _3d.camTranslate(z=-1)
+        _3d.camTranslate(z=-10)
     if 'a' in _3d.keysPressed:
-        _3d.camTranslate(x=-1)
+        _3d.camTranslate(x=-10)
     if 'd' in _3d.keysPressed:
-        _3d.camTranslate(x=1)
+        _3d.camTranslate(x=10)
     if 'Shift_L' in _3d.keysPressed:
-        _3d.camTranslate(y=1)
+        _3d.camTranslate(y=10)
     if 'space' in _3d.keysPressed:
-        _3d.camTranslate(y=-1)
+        _3d.camTranslate(y=-10)
     if _3d.mousePressed:
-        x = True
+        a = True
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
         x,y,z = _3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100
         x,y,z = int(x/100)*100,int(y/100)*100,int(z/100)*100
@@ -295,14 +316,11 @@ while v < 1:
                 f = i[k]
                 if ((f[0] - 100 < cube[k][0] + 100 and f[0] + 100 > cube[k][0] - 100) and (f[1] - 100 < cube[k][1] + 100 and f[1] + 100 > cube[k][1] - 100) and (f[2] - 100 < cube[k][2] + 100 and f[2] + 100 > cube[k][2] - 100)) or (not abs(x-f[0])%200 < 0.1 and not abs(y-f[1])%200 < 0.1 and not abs(z-f[2])%200 < 0.1):
                     x = False
-
-        if x:
+        if a:
             _3d.createCube(x,y,z,100)
 
 
     canvas.delete(ALL)
-
-    #print(len(_3d.objects))
 
     for i in _3d.objects:
         i = _3d.project(i)
