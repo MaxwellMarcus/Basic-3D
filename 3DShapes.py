@@ -113,7 +113,7 @@ class _3D:
 
             radiusX = self.camPos[0] + root.winfo_screenwidth()
             radiusY = self.camPos[1] + root.winfo_screenheight()
-            radiusZ = self.fl+self.camPos[2]
+            radiusZ = -self.fl-self.camPos[2]
 
             newX = ((p[0]-radiusX) * cosY + (p[2]-radiusX) * sinY)+radiusX
             newY = ((p[1]-radiusY) * cosX - (p[2]-radiusY) * sinX)+radiusY
@@ -270,9 +270,9 @@ v = 0
 while v < 1:
 
     if 'Up' in _3d.keysPressed:
-        _3d.camRotate(x=.0001)
+        _3d.camRotate(y=.0001)
     if 'Down' in _3d.keysPressed:
-        _3d.camRotate(x=-.0001)
+        _3d.camRotate(y=-.0001)
     if 'w' in _3d.keysPressed:
         _3d.camTranslate(z=1)
     if 's' in _3d.keysPressed:
