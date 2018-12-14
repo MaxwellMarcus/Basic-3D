@@ -111,8 +111,8 @@ class _3D:
             cosZ = math.cos(self.camRot[2])
             sinZ = math.sin(self.camRot[2])
 
-            radiusX = self.camPos[0] + root.winfo_screenwidth()
-            radiusY = self.camPos[1] + root.winfo_screenheight()
+            radiusX = self.camPos[0] + root.winfo_screenwidth()/float(2)
+            radiusY = self.camPos[1] + root.winfo_screenheight()/float(2)
             radiusZ = self.fl+self.camPos[2]
 
             newX = ((p[0]-radiusX) * cosY + (p[2]-radiusX) * sinY)+radiusX
@@ -121,9 +121,6 @@ class _3D:
             newX = ((newX-radiusX) * cosZ + (newY-radiusX) * sinZ)+radiusX
             newY = ((newY-radiusY) * cosZ - (newX-radiusY) * sinZ)+radiusY
             newZ = ((newZ-radiusZ) * cosY + (newX-radiusZ) * sinY)+radiusZ
-
-            print((newZ-radiusZ) * cosY)
-            print((newX-radiusZ) * sinY)
 
             if p[2] > self.camPos[2]-self.fl:
                 l = [self.fl,self.camPos[2],newZ]
@@ -135,6 +132,7 @@ class _3D:
 
                 p[3] = newX * scale - self.camPos[0] * scale
                 p[4] = newY * scale - self.camPos[1] * scale
+
         return points
     def drawLines(self,points,indexes):
         for i in range(len(indexes)-1):
@@ -291,9 +289,9 @@ v = 0
 while v < 1:
 
     if 'Up' in _3d.keysPressed:
-        _3d.camRotate(y=.01)
+        _3d.camRotate(z=.01)
     if 'Down' in _3d.keysPressed:
-        _3d.camRotate(y=-.01)
+        _3d.camRotate(z=-.01)
     if 'w' in _3d.keysPressed:
         _3d.camTranslate(z=10)
     if 's' in _3d.keysPressed:
