@@ -111,16 +111,36 @@ class _3D:
             cosZ = math.cos(self.camRot[2])
             sinZ = math.sin(self.camRot[2])
 
-            radiusX = self.camPos[0] + root.winfo_screenwidth()/float(2)
-            radiusY = self.camPos[1] + root.winfo_screenheight()/float(2)
-            radiusZ = self.fl+self.camPos[2]
+            radiusX = self.camPos[0]
+            radiusY = self.camPos[1]
+            radiusZ = -self.fl+self.camPos[2]
 
-            newX = ((p[0]-radiusX) * cosY + (p[2]-radiusX) * sinY)+radiusX
-            newY = ((p[1]-radiusY) * cosX - (p[2]-radiusY) * sinX)+radiusY
-            newZ = ((p[2]-radiusZ) * cosX + (p[1]-radiusZ) * sinX)+radiusZ
-            newX = ((newX-radiusX) * cosZ + (newY-radiusX) * sinZ)+radiusX
-            newY = ((newY-radiusY) * cosZ - (newX-radiusY) * sinZ)+radiusY
-            newZ = ((newZ-radiusZ) * cosY + (newX-radiusZ) * sinY)+radiusZ
+            lz=[abs(radiusX),abs(radiusY)]
+            radiusz = max(lz)
+            if radiusz == abs(radiusX):
+                radiusz = radiusX
+            else:
+                radiusz = radiusY
+            lx=[abs(radiusZ),abs(radiusY)]
+            radiusx = max(lx)
+            if radiusx == abs(radiusZ):
+                radiusx = radiusZ
+            else:
+                radiusx = radiusY
+            ly=[abs(radiusX),abs(radiusZ)]
+            radiusy = max(lx)
+            if radiusy == abs(radiusX):
+                radiusy = radiusX
+            else:
+                radiusy = radiusZ
+
+            newX = ((p[0]-radiusy) * cosY + (p[2]-radiusy) * sinY)+radiusy
+            newY = ((p[1]-radiusx) * cosX - (p[2]-radiusx) * sinX)+radiusx
+            newZ = ((p[2]-radiusx) * cosX + (p[1]-radiusx) * sinX)+radiusx
+
+            newX = ((newX-radiusz) * cosZ + (newY-radiusz) * sinZ)+radiusz
+            newY = ((newY-radiusz) * cosZ - (newX-radiusz) * sinZ)+radiusz
+            newZ = ((newZ-radiusy) * cosY - (newX-radiusy) * sinY)+radiusy
 
             if p[2] > self.camPos[2]-self.fl:
                 l = [self.fl,self.camPos[2],newZ]
@@ -159,17 +179,37 @@ class _3D:
                 cosZ = math.cos(self.camRot[2])
                 sinZ = math.sin(self.camRot[2])
 
-                radiusX = self.camPos[0] + root.winfo_screenwidth()
-                radiusY = self.camPos[1] + root.winfo_screenheight()
-                radiusZ = self.fl+self.camPos[2]
+                radiusX = self.camPos[0]
+                radiusY = self.camPos[1]
+                radiusZ = -self.fl+self.camPos[2]
 
-                newX = ((p[0]-radiusX) * cosY + (p[2]-radiusX) * sinY)+radiusX
-                newY = ((p[1]-radiusY) * cosX - (p[2]-radiusY) * sinX)+radiusY
-                newZ = ((p[2]-radiusZ) * cosX + (p[1]-radiusZ) * sinX)+radiusZ
-                newX = ((newX-radiusX) * cosZ + (newY-radiusX) * sinZ)+radiusX
-                newY = ((newY-radiusY) * cosZ - (newX-radiusY) * sinZ)+radiusY
-                newZ = ((newZ-radiusZ) * cosY + (newX-radiusZ) * sinY)+radiusZ
-                if newZ > -(self.fl+self.camPos[2]):
+                lz=[abs(radiusX),abs(radiusY)]
+                radiusz = max(lz)
+                if radiusz == abs(radiusX):
+                    radiusz = radiusX
+                else:
+                    radiusz = radiusY
+                lx=[abs(radiusZ),abs(radiusY)]
+                radiusx = max(lx)
+                if radiusx == abs(radiusZ):
+                    radiusx = radiusZ
+                else:
+                    radiusx = radiusY
+                ly=[abs(radiusX),abs(radiusZ)]
+                radiusy = max(lx)
+                if radiusy == abs(radiusX):
+                    radiusy = radiusX
+                else:
+                    radiusy = radiusZ
+
+                newX = ((p[0]-radiusy) * cosY + (p[2]-radiusy) * sinY)+radiusy
+                newY = ((p[1]-radiusx) * cosX - (p[2]-radiusx) * sinX)+radiusx
+                newZ = ((p[2]-radiusx) * cosX + (p[1]-radiusx) * sinX)+radiusx
+
+                newX = ((newX-radiusz) * cosZ + (newY-radiusz) * sinZ)+radiusz
+                newY = ((newY-radiusz) * cosZ - (newX-radiusz) * sinZ)+radiusz
+                newZ = ((newZ-radiusy) * cosY - (newX-radiusy) * sinY)+radiusy
+                if newZ > -(self.fl-self.camPos[2]):
                     face.append(points[i][3] + root.winfo_screenwidth()/2)
                     face.append(points[i][4] + root.winfo_screenheight()/2)
             if len(face) > 0:
@@ -215,27 +255,52 @@ class _3D:
     def rotateAroundX(self,points,angle):
         cos = math.cos(angle)
         sin = math.sin(angle)
-        w = root.winfo_screenwidth()/2
-        h = root.winfo_screenheight()/2
+        radiusY = self.camPos[1]
+        radiusZ = -self.fl+self.camPos[2]
+
+        lx=[abs(radiusZ),abs(radiusY)]
+        radiusx = max(lx)
+        if radiusx == abs(radiusZ):
+            radiusx = radiusZ
+        else:
+            radiusx = radiusY
+
         for i in points:
-            i[1] = ((i[1]+h) * cos - (i[2]+h) * sin)-h
-            i[2] = ((i[2]+self.fl+self.camPos[2]) * cos + (i[0]+self.fl+self.camPos[2]) * sin)-self.fl-self.camPos[2]
+            i[1] = ((i[1]+radiusx) * cos - (i[2]+radiusx) * sin)-radiusx
+            i[2] = ((i[2]+radiusx) * cos + (i[1]+radiusx) * sin)-radiusx
+        return points
     def rotateAroundY(self,points,angle):
         cos = math.cos(angle)
         sin = math.sin(angle)
-        w = root.winfo_screenwidth()/2
-        h = root.winfo_screenheight()/2
+        radiusY = self.camPos[0]
+        radiusZ = -self.fl+self.camPos[2]
+
+        ly=[abs(radiusZ),abs(radiusY)]
+        radiusx = max(ly)
+        if radiusx == abs(radiusZ):
+            radiusx = radiusZ
+        else:
+            radiusx = radiusY
         for i in points:
-            i[0] = ((i[0]+w) * cos - (i[2]+w) * sin)-w
-            i[2] = ((i[2]+self.fl+self.camPos[2]) * cos + (i[0]+self.fl+self.camPos[2]) * sin)-self.fl-self.camPos[2]
+            i[0] = ((i[0]+radiusx) * cos - (i[2]+radiusx) * sin)-radiusx
+            i[2] = ((i[2]+radiusx) * cos + (i[0]+radiusx) * sin)-radiusx
+        return points
     def rotateAroundZ(self,points,angle):
         cos = math.cos(angle)
         sin = math.sin(angle)
-        w = root.winfo_screenwidth()/2
-        h = root.winfo_screenheight()/2
+        radiusX = self.camPos[0]
+        radiusZ = self.camPos[1]
+
+        ly=[abs(radiusZ),abs(radiusX)]
+        radiusy = max(ly)
+        if radiusy == abs(radiusZ):
+            radiusy = radiusZ
+        else:
+            radiusy = radiusX
         for i in points:
-            i[1] = ((i[1]+h) * cos - (i[0]+h) * sin)-h
-            i[0] = ((i[0]+w) * cos + (i[1]+w) * sin)-w
+            i[0] = ((i[0]+radiusy) * cos - (i[1]+radiusy) * sin)-radiusy
+            i[1] = ((i[1]+radiusy) * cos + (i[0]+radiusy) * sin)-radiusy
+        return points
     def createCube(self,x,y,z,radius):
         points = [[x,y,z]]
         points.append([x+radius,y+radius,z+radius,0,0])#back square
@@ -289,9 +354,13 @@ v = 0
 while v < 1:
 
     if 'Up' in _3d.keysPressed:
-        _3d.camRotate(z=.01)
+        _3d.camRotate(x=-.01)
     if 'Down' in _3d.keysPressed:
-        _3d.camRotate(z=-.01)
+        _3d.camRotate(x=.01)
+    if 'Left' in _3d.keysPressed:
+        _3d.camRotate(y=.01)
+    if 'Right' in _3d.keysPressed:
+        _3d.camRotate(y=-.01)
     if 'w' in _3d.keysPressed:
         _3d.camTranslate(z=10)
     if 's' in _3d.keysPressed:
@@ -315,7 +384,11 @@ while v < 1:
                 if ((f[0] - 100 < cube[k][0] + 100 and f[0] + 100 > cube[k][0] - 100) and (f[1] - 100 < cube[k][1] + 100 and f[1] + 100 > cube[k][1] - 100) and (f[2] - 100 < cube[k][2] + 100 and f[2] + 100 > cube[k][2] - 100)) or (not abs(x-f[0])%200 < 0.1 and not abs(y-f[1])%200 < 0.1 and not abs(z-f[2])%200 < 0.1):
                     x = False
         if a:
-            _3d.createCube(x,y,z,100)
+            cube = _3d.returnCube(x,y,z,100)
+            cube = _3d.rotateAroundX(cube,_3d.camRot[0])
+            cube = _3d.rotateAroundY(cube,-_3d.camRot[1])
+            cube = _3d.rotateAroundZ(cube,-_3d.camRot[2])
+            _3d.objects.append(cube)
 
 
     canvas.delete(ALL)
