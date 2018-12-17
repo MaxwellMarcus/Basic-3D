@@ -266,8 +266,8 @@ class _3D:
             radiusx = radiusY
 
         for i in points:
-            i[1] = ((i[1]+radiusx) * cos - (i[2]+radiusx) * sin)-radiusx
-            i[2] = ((i[2]+radiusx) * cos + (i[1]+radiusx) * sin)-radiusx
+            i[1] = ((i[1]-radiusx) * cos - (i[2]-radiusx) * sin)+radiusx
+            i[2] = ((i[2]-radiusx) * cos + (i[1]-radiusx) * sin)+radiusx
         return points
     def rotateAroundY(self,points,angle):
         cos = math.cos(angle)
@@ -282,8 +282,8 @@ class _3D:
         else:
             radiusx = radiusY
         for i in points:
-            i[0] = ((i[0]+radiusx) * cos - (i[2]+radiusx) * sin)-radiusx
-            i[2] = ((i[2]+radiusx) * cos + (i[0]+radiusx) * sin)-radiusx
+            i[0] = ((i[0]-radiusx) * cos - (i[2]-radiusx) * sin)+radiusx
+            i[2] = ((i[2]-radiusx) * cos + (i[0]-radiusx) * sin)+radiusx
         return points
     def rotateAroundZ(self,points,angle):
         cos = math.cos(angle)
@@ -298,8 +298,8 @@ class _3D:
         else:
             radiusy = radiusX
         for i in points:
-            i[0] = ((i[0]+radiusy) * cos - (i[1]+radiusy) * sin)-radiusy
-            i[1] = ((i[1]+radiusy) * cos + (i[0]+radiusy) * sin)-radiusy
+            i[0] = ((i[0]-radiusy) * cos - (i[1]-radiusy) * sin)+radiusy
+            i[1] = ((i[1]-radiusy) * cos + (i[0]-radiusy) * sin)+radiusy
         return points
     def createCube(self,x,y,z,radius):
         points = [[x,y,z]]
@@ -339,7 +339,7 @@ class _3D:
     def mouseRelease(self,event):
         self.mousePressed = False
 
-_3d = _3D(500)
+_3d = _3D(300)
 
 #_3d.createCube(0,0,0,100)
 
@@ -385,7 +385,7 @@ while v < 1:
                     x = False
         if a:
             cube = _3d.returnCube(x,y,z,100)
-            cube = _3d.rotateAroundX(cube,_3d.camRot[0])
+            cube = _3d.rotateAroundX(cube,-_3d.camRot[0])
             cube = _3d.rotateAroundY(cube,-_3d.camRot[1])
             cube = _3d.rotateAroundZ(cube,-_3d.camRot[2])
             _3d.objects.append(cube)
