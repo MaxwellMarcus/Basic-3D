@@ -377,22 +377,36 @@ while v < 1:
         a = True
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
         x,y,z = _3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100
-        x,y,z = int(x/100)*100,int(y/100)*100,int(z/100)*100
         for i in _3d.objects:
             for k in range(len(i)-1):
                 f = i[k]
-                if ((f[0] - 100 < cube[k][0] + 100 and f[0] + 100 > cube[k][0] - 100) and (f[1] - 100 < cube[k][1] + 100 and f[1] + 100 > cube[k][1] - 100) and (f[2] - 100 < cube[k][2] + 100 and f[2] + 100 > cube[k][2] - 100)) or (not abs(x-f[0])%200 < 0.1 and not abs(y-f[1])%200 < 0.1 and not abs(z-f[2])%200 < 0.1):
-                    x = False
+                if (f[0] - 100 < cube[k][0] + 100 and f[0] + 100 > cube[k][0] - 100 and f[1] - 100 < cube[k][1] + 100 and f[1] + 100 > cube[k][1] - 100 and f[2] - 100 < cube[k][2] + 100 and f[2] + 100 > cube[k][2] - 100):
+                    a = False
+
         if a:
+            x = (x//200)*200
+            y = (y//200)*200
+            z = (z//200)*200
             cube = _3d.returnCube(x,y,z,100)
             cube = _3d.rotateAroundX(cube,-_3d.camRot[0])
             cube = _3d.rotateAroundY(cube,-_3d.camRot[1])
             cube = _3d.rotateAroundZ(cube,-_3d.camRot[2])
             _3d.objects.append(cube)
+        elif clickable:
+            x = (x//200)*200
+            y = (y//200)*200
+            z = (z//200)*200
+            cube = _3d.returnCube(x,y,z,100)
+            _3d.project(cube)
+            if cube in _3d.objects:
+                _3d.objects.remove(cube)
+
+        clickable = False
+    if not _3d.mousePressed:
+        clickable = True
 
 
     canvas.delete(ALL)
-
     for i in _3d.objects:
         i = _3d.project(i)
 
@@ -401,6 +415,7 @@ while v < 1:
         _3d.drawFace(i,[1,4,8,5])
         _3d.drawFace(i,[3,4,8,7])
         _3d.drawFace(i,[2,1,5,6])
+
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
