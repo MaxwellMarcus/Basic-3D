@@ -21,8 +21,9 @@ class _3D:
         self.mouseY = 0
         self.camPos = [0,0,0]
         self.camRot = [0,0,0]
-        self.mousePressed = False
 
+        self.mousePressed = False
+        self.mouse2Pressed = False
         self.keysPressed = []
 
         self.objects = []
@@ -32,6 +33,8 @@ class _3D:
         root.bind('<KeyRelease>',self.KeyReleased)
         root.bind('<Button-1>',self.mousePress)
         root.bind('<ButtonRelease-1>',self.mouseRelease)
+        root.bind('<Button-2>',self.mouse2Press)
+        root.bind('<ButtonRelease-2>',self.mouse2Release)
 
     def mouseSet(self,event):
         self.mouseX = event.x
@@ -162,7 +165,7 @@ class _3D:
                 x = root.winfo_screenwidth()/2
                 y = root.winfo_screenheight()/2
                 canvas.create_line(p[3]+x,p[4]+y,nextP[3]+x,nextP[4]+y)
-    def drawFace(self,points,indexes):
+    def drawFace(self,points,indexes,color='red'):
         avg = 0
         for i in indexes:
             avg += points[i][2]
@@ -213,7 +216,7 @@ class _3D:
                     face.append(points[i][3] + root.winfo_screenwidth()/2)
                     face.append(points[i][4] + root.winfo_screenheight()/2)
             if len(face) > 0:
-                canvas.create_polygon(face,fill='red',outline = 'black')
+                canvas.create_polygon(face,fill=color,outline = 'black')
     def translate(self,points,x=0,y=0,z=0):
         for i in range(len(points)):
             points[i][0] += x
@@ -338,6 +341,10 @@ class _3D:
         self.mousePressed = True
     def mouseRelease(self,event):
         self.mousePressed = False
+    def mouse2Press(self,event):
+        self.mouse2Pressed = True
+    def mouse2Release(self,event):
+        self.mouse2Pressed = False
 
 _3d = _3D(300)
 
@@ -369,39 +376,46 @@ while v < 1:
         _3d.camTranslate(x=-10)
     if 'd' in _3d.keysPressed:
         _3d.camTranslate(x=10)
-    if 'Shift_L' in _3d.keysPressed:
+    if 'r' in _3d.keysPressed:
+        _3d.camRot = [0,0,0]
+        _3d.camPos = [0,0,0]
+    if '??' in _3d.keysPressed:
         _3d.camTranslate(y=10)
     if 'space' in _3d.keysPressed:
         _3d.camTranslate(y=-10)
     if _3d.mousePressed:
-        a = True
+        a = False
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
         x,y,z = _3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100
+        x = (x//200)*200
+        y = (y//200)*200
+        z = (z//200)*200
         for i in _3d.objects:
             for k in range(len(i)-1):
                 f = i[k]
                 if (f[0] - 100 < cube[k][0] + 100 and f[0] + 100 > cube[k][0] - 100 and f[1] - 100 < cube[k][1] + 100 and f[1] + 100 > cube[k][1] - 100 and f[2] - 100 < cube[k][2] + 100 and f[2] + 100 > cube[k][2] - 100):
-                    a = False
-
+                    a = True
         if a:
-            x = (x//200)*200
-            y = (y//200)*200
-            z = (z//200)*200
+            z -= 200
+        if clickable:
             cube = _3d.returnCube(x,y,z,100)
-            cube = _3d.rotateAroundX(cube,-_3d.camRot[0])
-            cube = _3d.rotateAroundY(cube,-_3d.camRot[1])
-            cube = _3d.rotateAroundZ(cube,-_3d.camRot[2])
+            #cube = _3d.rotateAroundX(cube,-_3d.camRot[0])
+            #cube = _3d.rotateAroundY(cube,-_3d.camRot[1])
+            #cube = _3d.rotateAroundZ(cube,-_3d.camRot[2])
             _3d.objects.append(cube)
-        elif clickable:
-            x = (x//200)*200
-            y = (y//200)*200
-            z = (z//200)*200
-            cube = _3d.returnCube(x,y,z,100)
-            _3d.project(cube)
-            if cube in _3d.objects:
-                _3d.objects.remove(cube)
-
         clickable = False
+
+    if _3d.mouse2Pressed:
+        cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
+        x,y,z = _3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100
+        x = (x//200)*200
+        y = (y//200)*200
+        z = (z//200)*200
+        cube = _3d.returnCube(x,y,z,100)
+        _3d.project(cube)
+        if cube in _3d.objects:
+            _3d.objects.remove(cube)
+
     if not _3d.mousePressed:
         clickable = True
 
@@ -416,6 +430,13 @@ while v < 1:
         _3d.drawFace(i,[3,4,8,7])
         _3d.drawFace(i,[2,1,5,6])
 
+    cube = _3d.returnCube((_3d.camPos[0]/200)*200,(_3d.camPos[1]/200)*200,(_3d.camPos[2]+100/200)*200,100)
+    cube = _3d.project(cube)
+    _3d.drawFace(cube,[5,6,7,8],color = '')
+    _3d.drawFace(cube,[2,3,7,6],color = '')
+    _3d.drawFace(cube,[1,4,8,5],color = '')
+    _3d.drawFace(cube,[3,4,8,7],color = '')
+    _3d.drawFace(cube,[2,1,5,6],color = '')
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
