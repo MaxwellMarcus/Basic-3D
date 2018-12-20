@@ -348,7 +348,7 @@ class _3D:
 
 _3d = _3D(300)
 
-#_3d.createCube(0,0,0,100)
+_3d.createCube(0,0,200,100)
 
 rotationSpeed = 1
 baseAngle = 0
@@ -386,7 +386,11 @@ while v < 1:
     if _3d.mousePressed:
         a = False
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
-        x,y,z = _3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100
+        closest = 0
+        for l in range(len(_3d.objects)-1):
+            if abs(_3d.objects[closest][0][2] - _3d.camPos[2] + _3d.objects[closest][0][1] - _3d.camPos[1] + _3d.objects[closest][0][0] - _3d.camPos[0]) > abs(_3d.objects[l][0][2] - _3d.camPos[2] + _3d.objects[l][0][1] - _3d.camPos[1] + _3d.objects[l][0][0] - _3d.camPos[0]):
+                closest = l
+        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]-200
         x = (x//200)*200
         y = (y//200)*200
         z = (z//200)*200
@@ -407,7 +411,11 @@ while v < 1:
 
     if _3d.mouse2Pressed:
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
-        x,y,z = _3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100
+        closest = 0
+        for l in range(len(_3d.objects)-1):
+            if abs(_3d.objects[closest][0][2] - _3d.camPos[2] + _3d.objects[closest][0][1] - _3d.camPos[1] + _3d.objects[closest][0][0] - _3d.camPos[0]) > abs(_3d.objects[l][0][2] - _3d.camPos[2] + _3d.objects[l][0][1] - _3d.camPos[1] + _3d.objects[l][0][0] - _3d.camPos[0]):
+                closest = l
+        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]+200
         x = (x//200)*200
         y = (y//200)*200
         z = (z//200)*200
@@ -430,7 +438,13 @@ while v < 1:
         _3d.drawFace(i,[3,4,8,7])
         _3d.drawFace(i,[2,1,5,6])
 
-    cube = _3d.returnCube((_3d.camPos[0]/200)*200,(_3d.camPos[1]/200)*200,(_3d.camPos[2]+100/200)*200,100)
+    closest = 0
+    for l in range(len(_3d.objects)-1):
+        if abs(_3d.objects[closest][0][2] - _3d.camPos[2] + _3d.objects[closest][0][1] - _3d.camPos[1] + _3d.objects[closest][0][0] - _3d.camPos[0]) > abs(_3d.objects[l][0][2] - _3d.camPos[2] + _3d.objects[l][0][1] - _3d.camPos[1] + _3d.objects[l][0][0] - _3d.camPos[0]):
+            closest = l
+    x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]-00
+
+    cube = _3d.returnCube(x,y,z+200,100)
     cube = _3d.project(cube)
     _3d.drawFace(cube,[5,6,7,8],color = '')
     _3d.drawFace(cube,[2,3,7,6],color = '')
