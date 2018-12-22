@@ -329,7 +329,41 @@ class _3D:
         points.append([x-radius,y-radius,z-radius,0,0])
         points.append([x+radius,y-radius,z-radius,0,0])
 
+        points = self.project(points)
         return points
+    def ray(self,x1,y1,z1,x2=0,y2=0,z2=0,radius=1,range=100):
+        a = False
+        b = None
+        c = 0
+        x = x1
+        y = y1
+        z = z1
+        while not a and not c < range:
+            cube = self.returnCube(x,y,z,radius)
+            for i in self.objects:
+                if self.collision(cube,i) == True:
+                    b = self.objects.index(i)
+                    a = True
+            x += x2
+            y += y2
+            z += z2
+            c += 1
+        return b
+    def sameCubePos(self, cube1, cube2):
+        if cube1[0][0] == cube2[0][0] and cube1[0][1] == cube2[0][1] and cube1[0][2] == cube2[0][2]:
+            return True
+        else:
+            return False
+    def collision(self,cube1,cube2):
+        r1 = abs(cube1[0][0]-cube1[1][0])
+        r2 = abs(cube2[0][0]-cube2[1][0])
+        x1,y1,z1 = cube1[0][0],cube1[0][1],cube1[0][2]
+        x2,y2,z2 = cube2[0][0],cube2[0][1],cube2[0][2]
+
+        if x1+r1 > x2-r2 and x1-r1 < x2+r2 and y1+r1 > y2-r2 and y1-r1 < y2+r2 and z1+r1 > z2-r2 and z1-r1 < z2+r2:
+            return True
+        else:
+            return False
     def keyPressed(self,event):
         self.keysPressed.append(event.keysym)
     def KeyReleased(self,event):
@@ -420,7 +454,6 @@ while v < 1:
         y = (y//200)*200
         z = (z//200)*200
         cube = _3d.returnCube(x,y,z,100)
-        _3d.project(cube)
         if cube in _3d.objects:
             _3d.objects.remove(cube)
 
@@ -442,10 +475,9 @@ while v < 1:
     for l in range(len(_3d.objects)-1):
         if abs(_3d.objects[closest][0][2] - _3d.camPos[2] + _3d.objects[closest][0][1] - _3d.camPos[1] + _3d.objects[closest][0][0] - _3d.camPos[0]) > abs(_3d.objects[l][0][2] - _3d.camPos[2] + _3d.objects[l][0][1] - _3d.camPos[1] + _3d.objects[l][0][0] - _3d.camPos[0]):
             closest = l
-    x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]-00
+    x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]-200
 
     cube = _3d.returnCube(x,y,z+200,100)
-    cube = _3d.project(cube)
     _3d.drawFace(cube,[5,6,7,8],color = '')
     _3d.drawFace(cube,[2,3,7,6],color = '')
     _3d.drawFace(cube,[1,4,8,5],color = '')
@@ -454,5 +486,7 @@ while v < 1:
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
+
+    print(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000))
 
     root.update()
