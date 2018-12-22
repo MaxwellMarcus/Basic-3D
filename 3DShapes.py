@@ -171,7 +171,7 @@ class _3D:
             avg += points[i][2]
         avg /= len(indexes)
 
-        if avg > -self.fl:
+        if avg > -(self.fl-self.camPos[2]):
             face = []
             for i in indexes:
                 p = points[i]
@@ -415,7 +415,7 @@ while v < 1:
         for l in range(len(_3d.objects)-1):
             if abs(_3d.objects[closest][0][2] - _3d.camPos[2] + _3d.objects[closest][0][1] - _3d.camPos[1] + _3d.objects[closest][0][0] - _3d.camPos[0]) > abs(_3d.objects[l][0][2] - _3d.camPos[2] + _3d.objects[l][0][1] - _3d.camPos[1] + _3d.objects[l][0][0] - _3d.camPos[0]):
                 closest = l
-        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]+200
+        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]-200
         x = (x//200)*200
         y = (y//200)*200
         z = (z//200)*200
