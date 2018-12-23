@@ -346,9 +346,9 @@ class _3D:
                 if self.collision(cube,i) == True:
                     b = self.objects.index(i)
                     a = True
-            x += x2
-            y += y2
-            z += z2
+            x += x2*200
+            y += y2*200
+            z += z2*200
             c += 1
         return b
     def sameCubePos(self, cube1, cube2):
@@ -386,8 +386,6 @@ _3d = _3D(300)
 
 _3d.createCube(0,0,0,100)
 
-_3d.facing = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
-
 rotationSpeed = 1
 baseAngle = 0
 
@@ -408,34 +406,25 @@ while v < 1:
         _3d.camRotate(y=-.01)
     if 'w' in _3d.keysPressed:
         _3d.camTranslate(z=10)
-        _3d.facing = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
     if 's' in _3d.keysPressed:
         _3d.camTranslate(z=-10)
-        _3d.facing = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
     if 'a' in _3d.keysPressed:
         _3d.camTranslate(x=-10)
-        _3d.facing = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
     if 'd' in _3d.keysPressed:
         _3d.camTranslate(x=10)
-        _3d.facing = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
     if 'r' in _3d.keysPressed:
         _3d.camRot = [0,0,0]
         _3d.camPos = [0,0,0]
-        _3d.facing = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
     if '??' in _3d.keysPressed or 'Shift_L' in _3d.keysPressed:
         _3d.camTranslate(y=10)
-        _3d.facing = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
     if 'space' in _3d.keysPressed:
         _3d.camTranslate(y=-10)
-        _3d.facing = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
-    if _3d.mousePressed and type(_3d.facing) == int:
+    if _3d.mousePressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)) == int:
         a = False
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
-        closest = _3d.facing
+        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
         x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
-        #x = (x//100)*100
-        #y = (y//100)*100
-        #z = (z//100)*100
+
         for i in _3d.objects:
             for k in range(len(i)-1):
                 f = i[k]
@@ -448,10 +437,10 @@ while v < 1:
             _3d.objects.append(cube)
         clickable = False
 
-    if _3d.mouse2Pressed and _3d.facing:
+    if _3d.mouse2Pressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)) == int:
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
-        closest = _3d.facing
-        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]-200
+        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
+        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
         x = (x//200)*200
         y = (y//200)*200
         z = (z//200)*200
@@ -473,9 +462,9 @@ while v < 1:
         _3d.drawFace(i,[3,4,8,7])
         _3d.drawFace(i,[2,1,5,6])
 
-    if _3d.facing:
-        closest = _3d.facing
-        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]-200
+    if type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)) == int:
+        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
+        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
 
         cube = _3d.returnCube(x,y,z+200,100)
         _3d.drawFace(cube,[5,6,7,8],color = '')
