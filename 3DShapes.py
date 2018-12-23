@@ -351,6 +351,43 @@ class _3D:
             z += z2*200
             c += 1
         return b
+    def drawRay(self,x1,y1,z1,x2=0,y2=0,z2=0,radius=1,range=100,color='black'):
+        a = False
+        c = 0
+        x = x1
+        y = y1
+        z = z1
+        while not a and c < range:
+            cube = self.returnCube(x,y,z,radius)
+            for i in self.objects:
+                if self.collision(cube,i) == True:
+                    a = True
+            x += x2*200
+            y += y2*200
+            z += z2*200
+            c += 1
+        if a:
+            l = [self.fl,self.camPos[2],z1]
+            l = list(l)
+            first = float(l[0])
+            second = float(l[0]-l[1]+l[2])
+
+            scale = first/second
+
+            p1x = x1 * scale - self.camPos[0] * scale
+            p1y = y1 * scale - self.camPos[1] * scale
+
+            l = [self.fl,self.camPos[2],z]
+            l = list(l)
+            first = float(l[0])
+            second = float(l[0]-l[1]+l[2])
+
+            scale = first/second
+
+            p2x = x * scale - self.camPos[1] * scale
+            p2y = y * scale - self.camPos[1] * scale
+
+            canvas.create_line(p1x,p1y,p2x,p2y,fill = color)
     def sameCubePos(self, cube1, cube2):
         if cube1[0][0] == cube2[0][0] and cube1[0][1] == cube2[0][1] and cube1[0][2] == cube2[0][2]:
             return True
@@ -384,7 +421,8 @@ class _3D:
 
 _3d = _3D(300)
 
-_3d.createCube(0,0,0,100)
+for i in range(50):
+    _3d.createCube(0,i*200,0,100)
 
 rotationSpeed = 1
 baseAngle = 0
@@ -419,10 +457,10 @@ while v < 1:
         _3d.camTranslate(y=10)
     if 'space' in _3d.keysPressed:
         _3d.camTranslate(y=-10)
-    if _3d.mousePressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)) == int:
+    if _3d.mousePressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int:
         a = False
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
-        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
+        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)
         x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
 
         for i in _3d.objects:
@@ -437,9 +475,9 @@ while v < 1:
             _3d.objects.append(cube)
         clickable = False
 
-    if _3d.mouse2Pressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)) == int:
+    if _3d.mouse2Pressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int:
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
-        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
+        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)
         x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
         x = (x//200)*200
         y = (y//200)*200
@@ -455,26 +493,16 @@ while v < 1:
     canvas.delete(ALL)
     for i in _3d.objects:
         i = _3d.project(i)
-
-        _3d.drawFace(i,[5,6,7,8])
-        _3d.drawFace(i,[2,3,7,6])
-        _3d.drawFace(i,[1,4,8,5])
-        _3d.drawFace(i,[3,4,8,7])
-        _3d.drawFace(i,[2,1,5,6])
-
-    if type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)) == int:
-        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
-        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
-
-        cube = _3d.returnCube(x,y,z+200,100)
-        _3d.drawFace(cube,[5,6,7,8],color = '')
-        _3d.drawFace(cube,[2,3,7,6],color = '')
-        _3d.drawFace(cube,[1,4,8,5],color = '')
-        _3d.drawFace(cube,[3,4,8,7],color = '')
-        _3d.drawFace(cube,[2,1,5,6],color = '')
+        if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
+            _3d.drawFace(i,[5,6,7,8])
+            _3d.drawFace(i,[2,3,7,6])
+            _3d.drawFace(i,[1,4,8,5])
+            _3d.drawFace(i,[3,4,8,7])
+            _3d.drawFace(i,[2,1,5,6])
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
+
 
     q = _3d.returnCube(0,0,200,100)
     z = _3d.objects[0]
