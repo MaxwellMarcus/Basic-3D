@@ -167,7 +167,7 @@ class _3D:
                 x = root.winfo_screenwidth()/2
                 y = root.winfo_screenheight()/2
                 canvas.create_line(p[3]+x,p[4]+y,nextP[3]+x,nextP[4]+y)
-    def drawFace(self,points,indexes,color='red'):
+    def drawFace(self,points,indexes,color='red',lines=''):
         avg = 0
         for i in indexes:
             avg += points[i][2]
@@ -218,7 +218,7 @@ class _3D:
                     face.append(points[i][3] + root.winfo_screenwidth()/2)
                     face.append(points[i][4] + root.winfo_screenheight()/2)
             if len(face) > 0:
-                canvas.create_polygon(face,fill=color,outline = 'black')
+                canvas.create_polygon(face,fill=color,outline = lines)
     def translate(self,points,x=0,y=0,z=0):
         for i in range(len(points)):
             points[i][0] += x
@@ -422,13 +422,17 @@ class _3D:
 _3d = _3D(300)
 
 for i in range(50):
-    _3d.createCube(0,i*200,0,100)
+    _3d.createCube(0,0,i*200,100)
+    print(i)
 
 rotationSpeed = 1
 baseAngle = 0
 
 lastMouseY = _3d.mouseY
 lastMouseX = _3d.mouseX
+
+clickable = True
+clickable2 = True
 
 
 v = 0
@@ -475,9 +479,9 @@ while v < 1:
             _3d.objects.append(cube)
         clickable = False
 
-    if _3d.mouse2Pressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int:
+    if clickable2 and _3d.mouse2Pressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int:
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
-        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)
+        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
         x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
         x = (x//200)*200
         y = (y//200)*200
@@ -485,9 +489,12 @@ while v < 1:
         cube = _3d.returnCube(x,y,z,100)
         if cube in _3d.objects:
             _3d.objects.remove(cube)
+        clickable2 = False
 
     if not _3d.mousePressed:
         clickable = True
+    if not _3d.mouse2Pressed:
+        clickable2 = True
 
 
     canvas.delete(ALL)
