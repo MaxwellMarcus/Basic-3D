@@ -37,6 +37,8 @@ class _3D:
         root.bind('<ButtonRelease-1>',self.mouseRelease)
         root.bind('<Button-2>',self.mouse2Press)
         root.bind('<ButtonRelease-2>',self.mouse2Release)
+        root.bind('<Button-3>',self.mouse2Press)
+        root.bind('<ButtonRelease-3>',self.mouse2Release)
 
     def mouseSet(self,event):
         self.mouseX = event.x
