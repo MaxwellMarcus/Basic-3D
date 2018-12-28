@@ -148,6 +148,7 @@ class _3D:
             #newY = ((p[1]-radiusx) * cosX - (p[2]-radiusx) * sinX)+radiusx
             #newZ = ((p[2]-radiusx) * cosX + (p[1]-radiusx) * sinX)+radiusx
             newZ = p[2]
+            print(radiusz)
             newX = ((p[0]-radiusz) * cosZ + (p[1]-radiusz) * sinZ)+radiusz
             newY = ((p[1]-radiusz) * cosZ - (p[0]-radiusz) * sinZ)+radiusz
             #newZ  = ((newZ-radiusy) * cosY - (newX-radiusy) * sinY)+radiusy
@@ -165,19 +166,20 @@ class _3D:
 
         f = 0
         while f < 500:
-            newX = ((p[0]-radiusz) * math.cos(f) + (p[1]-radiusz) * math.sin(f))+radiusz+root.winfo_screenwidth()/2
-            newY = ((p[1]-radiusz) * math.cos(f) - (p[0]-radiusz) * math.sin(f))+radiusz+root.winfo_screenheight()/2
+            newX = ((p[0]-radiusz) * math.cos(f) + (p[1]-radiusz) * math.sin(f))+radiusz
+            newY = ((p[1]-radiusz) * math.cos(f) - (p[0]-radiusz) * math.sin(f))+radiusz
             newZ = p[2]
-            l = [self.fl,self.camPos[2],newZ]
-            l = list(l)
-            first = float(l[0])
-            second = float(l[0]-l[1]+l[2])
+            if p[2] > self.camPos[2]-self.fl:
+                l = [self.fl,self.camPos[2],newZ]
+                l = list(l)
+                first = float(l[0])
+                second = float(l[0]-l[1]+l[2])
 
-            scale = first/second
+                scale = first/second
 
-            newX= newX * scale - self.camPos[0] * scale
-            newY = newY * scale - self.camPos[1] * scale
-            self.draw_square(newX,newY,2)
+                newX = newX * scale - self.camPos[0] * scale
+                newY = newY * scale - self.camPos[1] * scale
+                self.draw_square(newX+root.winfo_screenwidth()/2,newY+root.winfo_screenheight()/2,2)
             f+=10
 
         return points
@@ -440,7 +442,7 @@ class _3D:
 
 _3d = _3D(300)
 
-_3d.createCube(0,0,0,2)
+_3d.createCube(0,0,0,50)
 
 rotationSpeed = 1
 baseAngle = 0
