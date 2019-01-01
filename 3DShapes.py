@@ -148,9 +148,8 @@ class _3D:
             #newY = ((p[1]-radiusx) * cosX - (p[2]-radiusx) * sinX)+radiusx
             #newZ = ((p[2]-radiusx) * cosX + (p[1]-radiusx) * sinX)+radiusx
             newZ = p[2]
-            print(radiusz)
-            newX = ((p[0]-radiusz) * cosZ + (p[1]-radiusz) * sinZ)+radiusz
-            newY = ((p[1]-radiusz) * cosZ - (p[0]-radiusz) * sinZ)+radiusz
+            newX = ((p[0]+radiusz) * cosZ + (p[1]+radiusz) * sinZ)-radiusz
+            newY = ((p[1]+radiusz) * cosZ - (p[0]+radiusz) * sinZ)-radiusz
             #newZ  = ((newZ-radiusy) * cosY - (newX-radiusy) * sinY)+radiusy
 
             if p[2] > self.camPos[2]-self.fl:
@@ -441,6 +440,7 @@ class _3D:
         self.mouse2Pressed = False
 
 _3d = _3D(300)
+#_3d.camRot = [0,0,math.pi*.5]
 
 _3d.createCube(0,0,0,50)
 
