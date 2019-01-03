@@ -45,6 +45,7 @@ class _3D:
     def mouseSet(self,event):
         self.mouseX = event.x
         self.mouseY = event.y
+
     def zsort(self,num,smallest=False):
         olen = len(num)
 
@@ -111,6 +112,58 @@ class _3D:
         shapeMod = [shape[0]*perspective + root.winfo_screenwidth()/2,shape[1]*perspective+root.winfo_screenheight()/2]
         return shapeMod
 
+    def projectSingle(self,point):
+        p = point
+        cosX = math.cos(self.camRot[0])
+        sinX = math.sin(self.camRot[0])
+        cosY = math.cos(self.camRot[1])
+        sinY = math.sin(self.camRot[1])
+        cosZ = math.cos(self.camRot[2])
+        sinZ = math.sin(self.camRot[2])
+
+        centerX = self.camPos[0]
+        centerY = self.camPos[1]
+        centerZ = -self.fl+self.camPos[2]
+
+        lz=[abs(centerX),abs(centerY)]
+        radiusz = max(lz)
+        if radiusz == abs(centerX):
+            radiusz = centerX
+        else:
+            radiusz = centerY
+        lx=[abs(centerZ),abs(centerY)]
+        radiusx = max(lx)
+        if radiusx == abs(centerZ):
+            radiusx = centerZ
+        else:
+            radiusx = centerY
+        ly=[abs(centerX),abs(centerZ)]
+        radiusy = max(lx)
+        if radiusy == abs(centerX):
+            radiusy = centerX
+        else:
+            radiusy = centerZ
+
+        #newX = ((p[0]-radiusy) * cosY + (p[2]-radiusy) * sinY)+radiusy
+        #newY = ((p[1]-radiusx) * cosX - (p[2]-radiusx) * sinX)+radiusx
+        #newZ = ((p[2]-radiusx) * cosX + (p[1]-radiusx) * sinX)+radiusx
+        newZ = p[2]
+        newX = ((p[0]-radiusz) * cosZ + (p[1]-radiusz) * sinZ)+radiusz
+        newY = ((p[1]-radiusz) * cosZ - (p[0]-radiusz) * sinZ)+radiusz
+        #newZ  = ((newZ-radiusy) * cosY - (newX-radiusy) * sinY)+radiusy
+
+        if p[2] > self.camPos[2]-self.fl:
+            l = [self.fl,self.camPos[2],newZ]
+            l = list(l)
+            first = float(l[0])
+            second = float(l[0]-l[1]+l[2])
+
+            scale = first/second
+
+            newX = newX * scale - self.camPos[0] * scale
+            newY = newY * scale - self.camPos[1] * scale
+
+        return newX + root.winfo_screenwidth()/2, newY + root.winfo_screenheight()/2
     def project(self,points):
         for i in range(len(points)-1):
             p = points[i+1]
@@ -191,7 +244,7 @@ class _3D:
                 y = root.winfo_screenheight()/2
                 canvas.create_line(p[3]+x,p[4]+y,nextP[3]+x,nextP[4]+y)
 
-    def drawFace(self,points,indexes,color='red',lines=''):
+    def drawFace(self,points,indexes,color='red',lines='black'):
         face = []
         for i in indexes:
             p = points[i]
@@ -439,11 +492,10 @@ class _3D:
     def mouse2Release(self,event):
         self.mouse2Pressed = False
 
-_3d = _3D(300)
+_3d = _3D(700)
 #_3d.camRot = [0,0,math.pi*.5]
 
-#_3d.createCube(0,0,0,50)
-_3d.createCube(100,100,0,50)
+_3d.createCube(0,0,0,50)
 
 rotationSpeed = 1
 baseAngle = 0
@@ -528,5 +580,11 @@ while _3d.start:
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
 
+    #canvas.create_line(0, root.winfo_screenheight()/2,root.winfo_screenwidth(), root.winfo_screenheight()/2,fill = 'red')
+    #canvas.create_line(root.winfo_screenwidth()/2,0,root.winfo_screenwidth()/2,root.winfo_screenheight(),fill = 'green')
+    point1 = _3d.projectSingle([0,0, _3d.camPos[2]])
+    point2 = _3d.projectSingle([0,0,100000000000000])
+    print(point2)
+    canvas.create_line(point1[0],point1[1],point2[0],point2[1],fill='blue')
     canvas.create_oval(root.winfo_screenwidth()/2-5,root.winfo_screenheight()/2-5,root.winfo_screenwidth()/2+5,root.winfo_screenheight()/2+5,fill='black')
     root.update()
