@@ -580,11 +580,18 @@ while _3d.start:
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
 
-    #canvas.create_line(0, root.winfo_screenheight()/2,root.winfo_screenwidth(), root.winfo_screenheight()/2,fill = 'red')
-    #canvas.create_line(root.winfo_screenwidth()/2,0,root.winfo_screenwidth()/2,root.winfo_screenheight(),fill = 'green')
+    #drawing the X axis
+    point1 = _3d.projectSingle([_3d.camPos[0],0,0])
+    point2 = [root.winfo_screenwidth()/2-(point1[0]-root.winfo_screenwidth()/2),root.winfo_screenheight()/2-(point1[1]-root.winfo_screenheight()/2)]#_3d.projectSingle([0,0,100000000000000])
+    canvas.create_line(point1[0],point1[1],point2[0],point2[1],fill='red')
+    #drawing the Y axis
+    point1 = _3d.projectSingle([0,_3d.camPos[1],0])
+    point2 = [root.winfo_screenwidth()/2-(point1[0]-root.winfo_screenwidth()/2),root.winfo_screenheight()/2-(point1[1]-root.winfo_screenheight()/2)]#_3d.projectSingle([0,0,100000000000000])
+    canvas.create_line(point1[0],point1[1],point2[0],point2[1],fill='green')
+    #drawing the Z axis
     point1 = _3d.projectSingle([0,0, _3d.camPos[2]])
-    point2 = _3d.projectSingle([0,0,100000000000000])
-    print(point2)
+    point2 = [root.winfo_screenwidth()/2-(point1[0]-root.winfo_screenwidth()/2),root.winfo_screenheight()/2-(point1[1]-root.winfo_screenheight()/2)]#_3d.projectSingle([0,0,100000000000000])
     canvas.create_line(point1[0],point1[1],point2[0],point2[1],fill='blue')
+
     canvas.create_oval(root.winfo_screenwidth()/2-5,root.winfo_screenheight()/2-5,root.winfo_screenwidth()/2+5,root.winfo_screenheight()/2+5,fill='black')
     root.update()
