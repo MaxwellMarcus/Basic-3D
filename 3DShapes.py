@@ -12,8 +12,8 @@ root = Tk()
 canvas = Canvas(root,width = root.winfo_screenwidth(),height = root.winfo_screenheight())
 canvas.pack()
 
-class _3D:
-    def __init__(self,fl):
+class _3D:# the class that handles everything
+    def __init__(self,fl):#setting a few variables and binding a few keys on initiation
         self.fl = fl
         self.radius = 1000
         self.centerZ = 0
@@ -42,11 +42,11 @@ class _3D:
         root.bind('<Button-3>',self.mouse2Press)
         root.bind('<ButtonRelease-3>',self.mouse2Release)
 
-    def mouseSet(self,event):
+    def mouseSet(self,event):#sets the class variables to the position of the mouse when the mouse is moved
         self.mouseX = event.x
         self.mouseY = event.y
 
-    def zsort(self,num,smallest=False):
+    def zsort(self,num,smallest=False):#sorts something based on the Z values not currently used
         olen = len(num)
 
         ans = []
@@ -105,14 +105,14 @@ class _3D:
                     num.remove(num[0])
         return ans
 
-    def perspectify(self,shape,color='black',xRad=2,yRad=2):
+    def perspectify(self,shape,color='black',xRad=2,yRad=2):#changes X and Y based on Z position used for postcards in space not currently used
         perspective = self.fl/(self.fl+shape[2])
         radiusX = xRad * perspective
         radiusY = yRad * perspective
         shapeMod = [shape[0]*perspective + root.winfo_screenwidth()/2,shape[1]*perspective+root.winfo_screenheight()/2]
         return shapeMod
 
-    def projectSingle(self,point):
+    def projectSingle(self,point):# changes X and Y based on Z position used for a single point
         p = point
         cosX = math.cos(self.camRot[0])
         sinX = math.sin(self.camRot[0])
@@ -164,7 +164,7 @@ class _3D:
             newY = newY * scale - self.camPos[1] * scale
 
         return newX + root.winfo_screenwidth()/2, newY + root.winfo_screenheight()/2
-    def project(self,points):
+    def project(self,points):# changes X and Y based on Z position used for a list of positions, I use it for cubes
         for i in range(len(points)-1):
             p = points[i+1]
             cosX = math.cos(self.camRot[0])
@@ -235,7 +235,7 @@ class _3D:
             f+=10
 
         return points
-    def drawLines(self,points,indexes):
+    def drawLines(self,points,indexes):# draws a line from given indexes of a list of points not currently in use
         for i in range(len(indexes)-1):
             p = points[indexes[i]]
             nextP = points[indexes[i+1]]
@@ -244,7 +244,7 @@ class _3D:
                 y = root.winfo_screenheight()/2
                 canvas.create_line(p[3]+x,p[4]+y,nextP[3]+x,nextP[4]+y)
 
-    def drawFace(self,points,indexes,color='red',lines='black'):
+    def drawFace(self,points,indexes,color='red',lines='black'):# draws a face using all indexes given
         face = []
         for i in indexes:
             p = points[i]
@@ -290,21 +290,23 @@ class _3D:
                 face.append(points[i][4] + root.winfo_screenheight()/2)
             if len(face) > 0:
                 canvas.create_polygon(face,fill=color,outline = lines)
-    def translate(self,points,x=0,y=0,z=0):
+    def translate(self,points,x=0,y=0,z=0):# moves the x, and/or y, and/or z on each of the points in a list
         for i in range(len(points)):
             points[i][0] += x
             points[i][1] += y
             points[i][2] += z
         return points
-    def camTranslate(self,x=0,y=0,z=0):
+    def camTranslate(self,x=0,y=0,z=0):# same as translate, but instead of points it transleates the camera. This is taken into account during the project and project single functions
         self.camPos[0] += x
         self.camPos[1] += y
         self.camPos[2] += z
-    def camRotate(self,x=0,y=0,z=0):
+    def camRotate(self,x=0,y=0,z=0):# rotates the camera. This is taken into acount during the project and projectSingle functions. it is not completly workiong correctly. I am currently trying to fix it
         self.camRot[0] += x
         self.camRot[1] += y
         self.camRot[2] += z
-    def rotateX(self,points,angle):
+
+    #these rotates the points that are provided
+    def rotateX(self,points,angle):#this one
         cos = math.cos(angle)
         sin = math.sin(angle)
         radiusX = points[0][1]
@@ -312,7 +314,7 @@ class _3D:
         for i in points:
             i[1] = ((i[1]-radiusX) * cos - (i[2]-radiusX) * sin)+radiusX
             i[2] = ((i[2]-radiusY) * cos + (i[1]-radiusY) * sin)+radiusY
-    def rotateY(self,points,angle):
+    def rotateY(self,points,angle):#this one
         cos = math.cos(angle)
         sin = math.sin(angle)
         radiusX = points[0][0]
@@ -320,7 +322,7 @@ class _3D:
         for i in points:
             i[2] = ((i[2]-radiusX) * cos - (i[0]-radiusX) * sin)+radiusX
             i[0] = ((i[0]-radiusY) * cos + (i[2]-radiusY) * sin)+radiusY
-    def rotateZ(self,points,angle):
+    def rotateZ(self,points,angle):# and this one
         cos = math.cos(angle)
         sin = math.sin(angle)
         radiusX = points[0][1]
@@ -328,7 +330,8 @@ class _3D:
         for i in points:
             i[1] = ((i[1]-radiusY) * cos - (i[0]-radiusY) * sin)+radiusY
             i[0] = ((i[0]-radiusX) * cos + (i[1]-radiusX) * sin)+radiusX
-    def rotateAroundX(self,points,angle):
+    # these ones are the same as the last ones, but they rotate them around the camera or the 0,0 point
+    def rotateAroundX(self,points,angle):#this one
         cos = math.cos(angle)
         sin = math.sin(angle)
         radiusY = self.camPos[1]
@@ -345,7 +348,7 @@ class _3D:
             i[1] = ((i[1]-radiusx) * cos - (i[2]-radiusx) * sin)+radiusx
             i[2] = ((i[2]-radiusx) * cos + (i[1]-radiusx) * sin)+radiusx
         return points
-    def rotateAroundY(self,points,angle):
+    def rotateAroundY(self,points,angle):#this one
         cos = math.cos(angle)
         sin = math.sin(angle)
         radiusY = self.camPos[0]
@@ -361,7 +364,7 @@ class _3D:
             i[0] = ((i[0]-radiusx) * cos - (i[2]-radiusx) * sin)+radiusx
             i[2] = ((i[2]-radiusx) * cos + (i[0]-radiusx) * sin)+radiusx
         return points
-    def rotateAroundZ(self,points,angle):
+    def rotateAroundZ(self,points,angle):#and this one
         cos = math.cos(angle)
         sin = math.sin(angle)
         radiusX = self.camPos[0]
@@ -377,7 +380,7 @@ class _3D:
             i[0] = ((i[0]-radiusy) * cos - (i[1]-radiusy) * sin)+radiusy
             i[1] = ((i[1]-radiusy) * cos + (i[0]-radiusy) * sin)+radiusy
         return points
-    def createCube(self,x,y,z,radius):
+    def createCube(self,x,y,z,radius):#this function adds the a list of the points of a cube to a list
         points = [[x,y,z]]
         points.append([x+radius,y+radius,z+radius,0,0])#back square
         points.append([x-radius,y+radius,z+radius,0,0])
@@ -390,7 +393,7 @@ class _3D:
         points.append([x+radius,y-radius,z-radius,0,0])
 
         self.objects.append(points)
-    def returnCube(self,x,y,z,radius):
+    def returnCube(self,x,y,z,radius):# same as createCube, but instead of adding it to a list it returns the points
         points = [[x,y,z]]
         points.append([x+radius,y+radius,z+radius,0,0])#back square
         points.append([x-radius,y+radius,z+radius,0,0])
@@ -404,7 +407,7 @@ class _3D:
 
         points = self.project(points)
         return points
-    def ray(self,x1,y1,z1,x2=0,y2=0,z2=0,radius=1,range=100):
+    def ray(self,x1,y1,z1,x2=0,y2=0,z2=0,radius=1,range=100):# this function returns the first cube it hits. You provide the starting point and the increments it adds to the XYZ values.
         a = False
         b = None
         c = 0
@@ -422,7 +425,7 @@ class _3D:
             z += z2*200
             c += 1
         return b
-    def drawRay(self,x1,y1,z1,x2=0,y2=0,z2=0,radius=1,range=100,color='black'):
+    def drawRay(self,x1,y1,z1,x2=0,y2=0,z2=0,radius=1,range=100,color='black'):#this function does the same as the ray function, but instead of returning the first cube it hits it draws a line there
         a = False
         c = 0
         x = x1
@@ -459,12 +462,12 @@ class _3D:
             p2y = y * scale - self.camPos[1] * scale
 
             canvas.create_line(p1x,p1y,p2x,p2y,fill = color)
-    def sameCubePos(self, cube1, cube2):
+    def sameCubePos(self, cube1, cube2):# this detects if two cubes have the same position
         if cube1[0][0] == cube2[0][0] and cube1[0][1] == cube2[0][1] and cube1[0][2] == cube2[0][2]:
             return True
         else:
             return False
-    def collision(self,cube1,cube2):
+    def collision(self,cube1,cube2):#this detects if two cubes are touching each other
         r1 = abs(cube1[0][0]-cube1[1][0])
         r2 = abs(cube2[0][0]-cube2[1][0])
         x1,y1,z1 = cube1[0][0],cube1[0][1],cube1[0][2]
@@ -474,29 +477,32 @@ class _3D:
             return True
         else:
             return False
-    def draw_square(self,x,y,radius,color='black'):
+    def draw_square(self,x,y,radius,color='black'):#not used
         canvas.create_rectangle(x-radius,y-radius,x+radius,y+radius,fill=color)
-    def keyPressed(self,event):
+    def keyPressed(self,event):#adds a keysym to the list of keys pressed
         self.keysPressed.append(event.keysym)
-    def KeyReleased(self,event):
+    def KeyReleased(self,event):#takes a keysym of the list of keys pressed
         i = 0
         while i < self.keysPressed.count(event.keysym):
             self.keysPressed.remove(event.keysym)
             i=0
-    def mousePress(self,event):
+    def mousePress(self,event):#changes the variable mousePressed to true if left mouse button is pressed
         self.mousePressed = True
-    def mouseRelease(self,event):
+    def mouseRelease(self,event):#changes the variable mousePressed to false if left mouse button is released
         self.mousePressed = False
-    def mouse2Press(self,event):
+    def mouse2Press(self,event):#changes the variable mouse2Pressed to true if right mouse button is pressed or the scroll wheel is pressed, I might give them two seperate variable in the future
         self.mouse2Pressed = True
-    def mouse2Release(self,event):
+    def mouse2Release(self,event):#changes the variable mouse2Pressed to false if right mouse button isn't released or the scroll wheel is relesed
         self.mouse2Pressed = False
 
-_3d = _3D(700)
+# initiating the class that handles everything
+_3d = _3D(500)
 #_3d.camRot = [0,0,math.pi*.5]
 
+#making the first cube
 _3d.createCube(0,0,0,50)
 
+#setting a few variables
 rotationSpeed = 1
 baseAngle = 0
 
@@ -505,32 +511,45 @@ lastMouseX = _3d.mouseX
 
 clickable = True
 clickable2 = True
+
+#the game loop
 while _3d.start:
+    #handling all things with input
+    #   handling exiting with no errors
     if 'Escape' in _3d.keysPressed:
         _3d.start = False
+    #   handling rotation
+    #       currently Z rotation
     if 'Up' in _3d.keysPressed:
-        _3d.camRotate(z=-.01)
+        _3d.camRotate(z=-.1)
     if 'Down' in _3d.keysPressed:
-        _3d.camRotate(z=.01)
+        _3d.camRotate(z=.1)
+    #       currently Y rotation, but it is not used
     if 'Left' in _3d.keysPressed:
         _3d.camRotate(y=.01)
     if 'Right' in _3d.keysPressed:
         _3d.camRotate(y=-.01)
+    #   handling movement
+    #       Z movement
     if 'w' in _3d.keysPressed:
         _3d.camTranslate(z=10)
     if 's' in _3d.keysPressed:
         _3d.camTranslate(z=-10)
+    #       X movement
     if 'a' in _3d.keysPressed:
         _3d.camTranslate(x=-10)
     if 'd' in _3d.keysPressed:
         _3d.camTranslate(x=10)
-    if 'r' in _3d.keysPressed:
-        _3d.camRot = [0,0,0]
-        _3d.camPos = [0,0,0]
+    #       Y movement
     if '??' in _3d.keysPressed or 'Shift_L' in _3d.keysPressed:
         _3d.camTranslate(y=10)
     if 'space' in _3d.keysPressed:
         _3d.camTranslate(y=-10)
+    #   resets the position and rotation
+    if 'r' in _3d.keysPressed:
+        _3d.camRot = [0,0,0]
+        _3d.camPos = [0,0,0]
+    #   handling creating cubes currently not used
     if _3d.mousePressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int and False:
         a = False
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
@@ -548,7 +567,7 @@ while _3d.start:
             cube = _3d.returnCube(x,y,z,100)
             _3d.objects.append(cube)
         clickable = False
-
+    #   handling deleting cubes currently not used
     if clickable2 and _3d.mouse2Pressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int and False:
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
         closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
@@ -560,13 +579,13 @@ while _3d.start:
         if cube in _3d.objects:
             _3d.objects.remove(cube)
         clickable2 = False
-
+    #   handling if the mouse has been pressed or is already pressed
     if not _3d.mousePressed:
         clickable = True
     if not _3d.mouse2Pressed:
         clickable2 = True
 
-
+    #drawing the cubes
     canvas.delete(ALL)
     for i in _3d.objects:
         i = _3d.project(i)
@@ -581,11 +600,11 @@ while _3d.start:
     lastMouseY = _3d.mouseY
 
     #drawing the X axis
-    point1 = _3d.projectSingle([_3d.camPos[0],0,0])
+    point1 = [root.winfo_screenwidth(),root.winfo_screenheight()/2]
     point2 = [root.winfo_screenwidth()/2-(point1[0]-root.winfo_screenwidth()/2),root.winfo_screenheight()/2-(point1[1]-root.winfo_screenheight()/2)]#_3d.projectSingle([0,0,100000000000000])
     canvas.create_line(point1[0],point1[1],point2[0],point2[1],fill='red')
     #drawing the Y axis
-    point1 = _3d.projectSingle([0,_3d.camPos[1],0])
+    point1 = [root.winfo_screenwidth()/2,root.winfo_screenheight()]
     point2 = [root.winfo_screenwidth()/2-(point1[0]-root.winfo_screenwidth()/2),root.winfo_screenheight()/2-(point1[1]-root.winfo_screenheight()/2)]#_3d.projectSingle([0,0,100000000000000])
     canvas.create_line(point1[0],point1[1],point2[0],point2[1],fill='green')
     #drawing the Z axis
