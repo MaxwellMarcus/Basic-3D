@@ -111,13 +111,12 @@ class _3D:# the class that handles everything
             centerX = self.camPos[0]
             centerY = self.camPos[1]
             centerZ = -self.fl+self.camPos[2]
-
             x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
             y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
             z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
             newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
-            newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
-            newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
+            newZ = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+            newY = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
 
             if p[2] > self.camPos[2]-self.fl:
                 l = [self.fl,self.camPos[2],newZ]
@@ -129,7 +128,23 @@ class _3D:# the class that handles everything
 
                 p[3] = newX * scale - self.camPos[0] * scale
                 p[4] = newY * scale - self.camPos[1] * scale
+        f = 0
+        while f < 500:
+            newX = ((p[0]-centerX) * math.cos(f) + (p[2]-centerZ) * math.sin(f))+centerX
+            newY = ((p[2]-centerZ) * math.cos(f) - (p[0]-centerX) * math.sin(f))+centerZ
+            newZ = p[2]
+            if p[2] > self.camPos[2]-self.fl:
+                l = [self.fl,self.camPos[2],newZ]
+                l = list(l)
+                first = float(l[0])
+                second = float(l[0]-l[1]+l[2])
 
+                scale = first/second
+
+                newX = newX * scale - self.camPos[0] * scale
+                newY = newY * scale - self.camPos[1] * scale
+                self.draw_square(newX+root.winfo_screenwidth()/2,newY+root.winfo_screenheight()/2,2)
+            f+=10
         return points
 
     def drawFace(self,points,indexes,color='red',lines=''):# draws a face using all indexes given
@@ -146,13 +161,12 @@ class _3D:# the class that handles everything
             centerX = self.camPos[0]
             centerY = self.camPos[1]
             centerZ = -self.fl+self.camPos[2]
-
             x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
             y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
             z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
             newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
-            newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
-            newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
+            newZ = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+            newY = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
 
             if newZ > -(self.fl-self.camPos[2]):
                 face.append(points[i][3] + root.winfo_screenwidth()/2)
@@ -296,7 +310,7 @@ class _3D:# the class that handles everything
 
 # initiating the class that handles everything
 _3d = _3D(500)
-
+_3d.camRot = [0,math.pi*.5,0]
 #making the first cube
 _3d.createCube(0,0,0,50)
 
