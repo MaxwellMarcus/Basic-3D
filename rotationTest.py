@@ -147,12 +147,12 @@ class _3D:# the class that handles everything
             centerY = self.camPos[1]
             centerZ = -self.fl+self.camPos[2]
 
-            newX = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
-            newY = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
-            newZ = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
-            newX = ((newX-centerX) * cosZ + (newY-centerY) * sinZ)+centerX
-            newY = ((newY-centerY) * cosZ - (newX-centerX) * sinZ)+centerY
-            newZ = ((newZ-centerZ) * cosY - (newX-centerX) * sinY)+centerZ
+            x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
+            y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
+            z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
+            newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
+            newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+            newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
 
             if newZ > -(self.fl-self.camPos[2]):
                 face.append(points[i][3] + root.winfo_screenwidth()/2)

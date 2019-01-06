@@ -125,32 +125,12 @@ class _3D:# the class that handles everything
         centerY = self.camPos[1]
         centerZ = -self.fl+self.camPos[2]
 
-        lz=[abs(centerX),abs(centerY)]
-        radiusz = max(lz)
-        if radiusz == abs(centerX):
-            radiusz = centerX
-        else:
-            radiusz = centerY
-        lx=[abs(centerZ),abs(centerY)]
-        radiusx = max(lx)
-        if radiusx == abs(centerZ):
-            radiusx = centerZ
-        else:
-            radiusx = centerY
-        ly=[abs(centerX),abs(centerZ)]
-        radiusy = max(lx)
-        if radiusy == abs(centerX):
-            radiusy = centerX
-        else:
-            radiusy = centerZ
-
-        #newX = ((p[0]-radiusy) * cosY + (p[2]-radiusy) * sinY)+radiusy
-        #newY = ((p[1]-radiusx) * cosX - (p[2]-radiusx) * sinX)+radiusx
-        #newZ = ((p[2]-radiusx) * cosX + (p[1]-radiusx) * sinX)+radiusx
-        newZ = p[2]
-        newX = ((p[0]-radiusz) * cosZ + (p[1]-radiusz) * sinZ)+radiusz
-        newY = ((p[1]-radiusz) * cosZ - (p[0]-radiusz) * sinZ)+radiusz
-        #newZ  = ((newZ-radiusy) * cosY - (newX-radiusy) * sinY)+radiusy
+        x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
+        y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
+        z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
+        newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
+        newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+        newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
 
         if p[2] > self.camPos[2]-self.fl:
             l = [self.fl,self.camPos[2],newZ]
@@ -178,32 +158,12 @@ class _3D:# the class that handles everything
             centerY = self.camPos[1]
             centerZ = -self.fl+self.camPos[2]
 
-            lz=[abs(centerX),abs(centerY)]
-            radiusz = max(lz)
-            if radiusz == abs(centerX):
-                radiusz = centerX
-            else:
-                radiusz = centerY
-            lx=[abs(centerZ),abs(centerY)]
-            radiusx = max(lx)
-            if radiusx == abs(centerZ):
-                radiusx = centerZ
-            else:
-                radiusx = centerY
-            ly=[abs(centerX),abs(centerZ)]
-            radiusy = max(lx)
-            if radiusy == abs(centerX):
-                radiusy = centerX
-            else:
-                radiusy = centerZ
-
-            #newX = ((p[0]-radiusy) * cosY + (p[2]-radiusy) * sinY)+radiusy
-            #newY = ((p[1]-radiusx) * cosX - (p[2]-radiusx) * sinX)+radiusx
-            #newZ = ((p[2]-radiusx) * cosX + (p[1]-radiusx) * sinX)+radiusx
-            newZ = p[2]
-            newX = ((p[0]-radiusz) * cosZ + (p[1]-radiusz) * sinZ)+radiusz
-            newY = ((p[1]-radiusz) * cosZ - (p[0]-radiusz) * sinZ)+radiusz
-            #newZ  = ((newZ-radiusy) * cosY - (newX-radiusy) * sinY)+radiusy
+            x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
+            y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
+            z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
+            newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
+            newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+            newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
 
             if p[2] > self.camPos[2]-self.fl:
                 l = [self.fl,self.camPos[2],newZ]
@@ -215,24 +175,6 @@ class _3D:# the class that handles everything
 
                 p[3] = newX * scale - self.camPos[0] * scale
                 p[4] = newY * scale - self.camPos[1] * scale
-
-        f = 0
-        while f < 500:
-            newX = ((p[0]-radiusz) * math.cos(f) + (p[1]-radiusz) * math.sin(f))+radiusz
-            newY = ((p[1]-radiusz) * math.cos(f) - (p[0]-radiusz) * math.sin(f))+radiusz
-            newZ = p[2]
-            if p[2] > self.camPos[2]-self.fl:
-                l = [self.fl,self.camPos[2],newZ]
-                l = list(l)
-                first = float(l[0])
-                second = float(l[0]-l[1]+l[2])
-
-                scale = first/second
-
-                newX = newX * scale - self.camPos[0] * scale
-                newY = newY * scale - self.camPos[1] * scale
-                self.draw_square(newX+root.winfo_screenwidth()/2,newY+root.winfo_screenheight()/2,2)
-            f+=10
 
         return points
     def drawLines(self,points,indexes):# draws a line from given indexes of a list of points not currently in use
@@ -255,36 +197,16 @@ class _3D:# the class that handles everything
             cosZ = math.cos(self.camRot[2])
             sinZ = math.sin(self.camRot[2])
 
-            radiusX = self.camPos[0]
-            radiusY = self.camPos[1]
-            radiusZ = -self.fl+self.camPos[2]
+            centerX = self.camPos[0]
+            centerY = self.camPos[1]
+            centerZ = -self.fl+self.camPos[2]
 
-            lz=[abs(radiusX),abs(radiusY)]
-            radiusz = max(lz)
-            if radiusz == abs(radiusX):
-                radiusz = radiusX
-            else:
-                radiusz = radiusY
-            lx=[abs(radiusZ),abs(radiusY)]
-            radiusx = max(lx)
-            if radiusx == abs(radiusZ):
-                radiusx = radiusZ
-            else:
-                radiusx = radiusY
-            ly=[abs(radiusX),abs(radiusZ)]
-            radiusy = max(lx)
-            if radiusy == abs(radiusX):
-                radiusy = radiusX
-            else:
-                radiusy = radiusZ
-
-            newX = ((p[0]-radiusy) * cosY + (p[2]-radiusy) * sinY)+radiusy
-            newY = ((p[1]-radiusx) * cosX - (p[2]-radiusx) * sinX)+radiusx
-            newZ = ((p[2]-radiusx) * cosX + (p[1]-radiusx) * sinX)+radiusx
-
-            newX = ((newX-radiusz) * cosZ + (newY-radiusz) * sinZ)+radiusz
-            newY = ((newY-radiusz) * cosZ - (newX-radiusz) * sinZ)+radiusz
-            newZ = ((newZ-radiusy) * cosY - (newX-radiusy) * sinY)+radiusy
+            x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
+            y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
+            z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
+            newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
+            newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+            newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
             if newZ > -(self.fl-self.camPos[2]):
                 face.append(points[i][3] + root.winfo_screenwidth()/2)
                 face.append(points[i][4] + root.winfo_screenheight()/2)
@@ -496,8 +418,7 @@ class _3D:# the class that handles everything
         self.mouse2Pressed = False
 
 # initiating the class that handles everything
-_3d = _3D(500)
-#_3d.camRot = [0,0,math.pi*.5]
+_3d = _3D(400)
 
 #making the first cube
 _3d.createCube(0,0,0,50)
@@ -521,9 +442,9 @@ while _3d.start:
     #   handling rotation
     #       currently Z rotation
     if 'Up' in _3d.keysPressed:
-        _3d.camRotate(z=-.1)
+        _3d.camRotate(x=-.01)
     if 'Down' in _3d.keysPressed:
-        _3d.camRotate(z=.1)
+        _3d.camRotate(x=.01)
     #       currently Y rotation, but it is not used
     if 'Left' in _3d.keysPressed:
         _3d.camRotate(y=.01)
@@ -550,8 +471,7 @@ while _3d.start:
         _3d.camRot = [0,0,0]
         _3d.camPos = [0,0,0]
     #   handling creating cubes currently not used
-    if _3d.mousePressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int and False:
-        a = False
+    if _3d.mousePressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int:
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
         closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)
         x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
@@ -563,12 +483,12 @@ while _3d.start:
                     a = True
         if a:
             z -= 200
-        if clickable and False:
+        if clickable:
             cube = _3d.returnCube(x,y,z,100)
             _3d.objects.append(cube)
         clickable = False
     #   handling deleting cubes currently not used
-    if clickable2 and _3d.mouse2Pressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int and False:
+    if clickable2 and _3d.mouse2Pressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int:
         cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
         closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
         x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
@@ -590,26 +510,14 @@ while _3d.start:
     for i in _3d.objects:
         i = _3d.project(i)
         if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
-            _3d.drawFace(i,[5,6,7,8])
-            _3d.drawFace(i,[2,3,7,6])
-            _3d.drawFace(i,[1,4,8,5])
-            _3d.drawFace(i,[3,4,8,7])
-            _3d.drawFace(i,[2,1,5,6])
+            _3d.drawFace(i,[5,6,7,8],color='green')
+            _3d.drawFace(i,[2,3,7,6],color='blue')
+            _3d.drawFace(i,[1,4,8,5],color='red')
+            _3d.drawFace(i,[3,4,8,7],color='orange')
+            _3d.drawFace(i,[2,1,5,6],color='white',lines='black')
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
-
-    #drawing the X axis
-    point1 = [root.winfo_screenwidth(),root.winfo_screenheight()/2]
-    point2 = [root.winfo_screenwidth()/2-(point1[0]-root.winfo_screenwidth()/2),root.winfo_screenheight()/2-(point1[1]-root.winfo_screenheight()/2)]#_3d.projectSingle([0,0,100000000000000])
-    canvas.create_line(point1[0],point1[1],point2[0],point2[1],fill='red')
-    #drawing the Y axis
-    point1 = [root.winfo_screenwidth()/2,root.winfo_screenheight()]
-    point2 = [root.winfo_screenwidth()/2-(point1[0]-root.winfo_screenwidth()/2),root.winfo_screenheight()/2-(point1[1]-root.winfo_screenheight()/2)]#_3d.projectSingle([0,0,100000000000000])
-    canvas.create_line(point1[0],point1[1],point2[0],point2[1],fill='green')
-    #drawing the Z axis
-    point1 = _3d.projectSingle([0,0, _3d.camPos[2]*2])
-    canvas.create_line(point1[0],point1[1],root.winfo_screenwidth()/2,root.winfo_screenheight()/2,fill='blue')
 
     canvas.create_oval(root.winfo_screenwidth()/2-5,root.winfo_screenheight()/2-5,root.winfo_screenwidth()/2+5,root.winfo_screenheight()/2+5,fill='black')
     root.update()
