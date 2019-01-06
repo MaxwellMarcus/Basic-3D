@@ -46,72 +46,6 @@ class _3D:# the class that handles everything
         self.mouseX = event.x
         self.mouseY = event.y
 
-    def zsort(self,num,smallest=False):#sorts something based on the Z values not currently used
-        olen = len(num)
-
-        ans = []
-
-        added = False
-
-        if smallest:
-            i = 0
-            while len(num) > 0:
-                added = False
-                if len(num) == olen:
-                    ans.append(num[0])
-                    num.remove(num[0])
-                    added = True
-                elif num[0][2] < ans[0][2]:
-                    ans.insert(0,num[0])
-                    num.remove(num[0])
-                    added = True
-                else:
-                    i = 0
-                    while i < len(ans):
-                        if num[0][2] < ans[i][2]:
-                            ans.insert(i,num[0])
-                            num.remove(num[0])
-                            added = True
-                            break
-                        i += 1
-
-                if not added:
-                    ans.append(num[0])
-                    num.remove(num[0])
-        else:
-            i = 0
-            while len(num) > 0:
-                added = False
-                if len(num) == olen:
-                    ans.append(num[0])
-                    num.remove(num[0])
-                    added = True
-                elif num[0][2] > ans[0][2]:
-                    ans.insert(0,num[0])
-                    num.remove(num[0])
-                    added = True
-                else:
-                    i = 0
-                    while i < len(ans):
-                        if num[0][2] > ans[i][2]:
-                            ans.insert(i,num[0])
-                            num.remove(num[0])
-                            added = True
-                            break
-                        i += 1
-
-                if not added:
-                    ans.append(num[0])
-                    num.remove(num[0])
-        return ans
-
-    def perspectify(self,shape,color='black',xRad=2,yRad=2):#changes X and Y based on Z position used for postcards in space not currently used
-        perspective = self.fl/(self.fl+shape[2])
-        radiusX = xRad * perspective
-        radiusY = yRad * perspective
-        shapeMod = [shape[0]*perspective + root.winfo_screenwidth()/2,shape[1]*perspective+root.winfo_screenheight()/2]
-        return shapeMod
-
     def projectSingle(self,point):# changes X and Y based on Z position used for a single point
         p = point
         cosX = math.cos(self.camRot[0])
@@ -235,14 +169,6 @@ class _3D:# the class that handles everything
             f+=10
 
         return points
-    def drawLines(self,points,indexes):# draws a line from given indexes of a list of points not currently in use
-        for i in range(len(indexes)-1):
-            p = points[indexes[i]]
-            nextP = points[indexes[i+1]]
-            if p[2] > -self.fl and p[0] > 0 and p[1] > 0 and p[0] < root.winfo_screenwidth() and p[1] < root.winfo_screenheight():
-                x = root.winfo_screenwidth()/2
-                y = root.winfo_screenheight()/2
-                canvas.create_line(p[3]+x,p[4]+y,nextP[3]+x,nextP[4]+y)
 
     def drawFace(self,points,indexes,color='red',lines='black'):# draws a face using all indexes given
         face = []
@@ -407,76 +333,6 @@ class _3D:# the class that handles everything
 
         points = self.project(points)
         return points
-    def ray(self,x1,y1,z1,x2=0,y2=0,z2=0,radius=1,range=100):# this function returns the first cube it hits. You provide the starting point and the increments it adds to the XYZ values.
-        a = False
-        b = None
-        c = 0
-        x = x1
-        y = y1
-        z = z1
-        while not a and c < range:
-            cube = self.returnCube(x,y,z,radius)
-            for i in self.objects:
-                if self.collision(cube,i) == True:
-                    b = self.objects.index(i)
-                    a = True
-            x += x2*200
-            y += y2*200
-            z += z2*200
-            c += 1
-        return b
-    def drawRay(self,x1,y1,z1,x2=0,y2=0,z2=0,radius=1,range=100,color='black'):#this function does the same as the ray function, but instead of returning the first cube it hits it draws a line there
-        a = False
-        c = 0
-        x = x1
-        y = y1
-        z = z1
-        while not a and c < range:
-            cube = self.returnCube(x,y,z,radius)
-            for i in self.objects:
-                if self.collision(cube,i) == True:
-                    a = True
-            x += x2*200
-            y += y2*200
-            z += z2*200
-            c += 1
-        if a:
-            l = [self.fl,self.camPos[2],z1]
-            l = list(l)
-            first = float(l[0])
-            second = float(l[0]-l[1]+l[2])
-
-            scale = first/second
-
-            p1x = x1 * scale - self.camPos[0] * scale
-            p1y = y1 * scale - self.camPos[1] * scale
-
-            l = [self.fl,self.camPos[2],z]
-            l = list(l)
-            first = float(l[0])
-            second = float(l[0]-l[1]+l[2])
-
-            scale = first/second
-
-            p2x = x * scale - self.camPos[1] * scale
-            p2y = y * scale - self.camPos[1] * scale
-
-            canvas.create_line(p1x,p1y,p2x,p2y,fill = color)
-    def sameCubePos(self, cube1, cube2):# this detects if two cubes have the same position
-        if cube1[0][0] == cube2[0][0] and cube1[0][1] == cube2[0][1] and cube1[0][2] == cube2[0][2]:
-            return True
-        else:
-            return False
-    def collision(self,cube1,cube2):#this detects if two cubes are touching each other
-        r1 = abs(cube1[0][0]-cube1[1][0])
-        r2 = abs(cube2[0][0]-cube2[1][0])
-        x1,y1,z1 = cube1[0][0],cube1[0][1],cube1[0][2]
-        x2,y2,z2 = cube2[0][0],cube2[0][1],cube2[0][2]
-
-        if x1+r1 > x2-r2 and x1-r1 < x2+r2 and y1+r1 > y2-r2 and y1-r1 < y2+r2 and z1+r1 > z2-r2 and z1-r1 < z2+r2:
-            return True
-        else:
-            return False
     def draw_square(self,x,y,radius,color='black'):#not used
         canvas.create_rectangle(x-radius,y-radius,x+radius,y+radius,fill=color)
     def keyPressed(self,event):#adds a keysym to the list of keys pressed
@@ -508,9 +364,6 @@ baseAngle = 0
 
 lastMouseY = _3d.mouseY
 lastMouseX = _3d.mouseX
-
-clickable = True
-clickable2 = True
 
 #the game loop
 while _3d.start:
@@ -549,41 +402,6 @@ while _3d.start:
     if 'r' in _3d.keysPressed:
         _3d.camRot = [0,0,0]
         _3d.camPos = [0,0,0]
-    #   handling creating cubes currently not used
-    if _3d.mousePressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int and False:
-        a = False
-        cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
-        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)
-        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
-
-        for i in _3d.objects:
-            for k in range(len(i)-1):
-                f = i[k]
-                if (f[0] - 100 < cube[k][0] + 100 and f[0] + 100 > cube[k][0] - 100 and f[1] - 100 < cube[k][1] + 100 and f[1] + 100 > cube[k][1] - 100 and f[2] - 100 < cube[k][2] + 100 and f[2] + 100 > cube[k][2] - 100):
-                    a = True
-        if a:
-            z -= 200
-        if clickable and False:
-            cube = _3d.returnCube(x,y,z,100)
-            _3d.objects.append(cube)
-        clickable = False
-    #   handling deleting cubes currently not used
-    if clickable2 and _3d.mouse2Pressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int and False:
-        cube = _3d.returnCube(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2]+100,100)
-        closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=1000)
-        x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]
-        x = (x//200)*200
-        y = (y//200)*200
-        z = (z//200)*200
-        cube = _3d.returnCube(x,y,z,100)
-        if cube in _3d.objects:
-            _3d.objects.remove(cube)
-        clickable2 = False
-    #   handling if the mouse has been pressed or is already pressed
-    if not _3d.mousePressed:
-        clickable = True
-    if not _3d.mouse2Pressed:
-        clickable2 = True
 
     #drawing the cubes
     canvas.delete(ALL)
