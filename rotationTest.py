@@ -111,11 +111,10 @@ class _3D:# the class that handles everything
             centerX = self.camPos[0]
             centerY = self.camPos[1]
             centerZ = -self.fl+self.camPos[2]
-            x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
+            x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX#Y rotation isn't working properly
             y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
             z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
-            print(int(y) is p[1])
-            newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
+            newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX# I think it has to do with using x,y, and z variables instead of p[0],p[1], and p[2]
             newZ = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
             newY = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
 
