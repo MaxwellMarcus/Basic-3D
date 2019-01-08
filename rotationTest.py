@@ -111,11 +111,12 @@ class _3D:# the class that handles everything
             centerX = self.camPos[0]
             centerY = self.camPos[1]
             centerZ = -self.fl+self.camPos[2]
-            x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX#Y rotation isn't working properly
+            x = p[0]#Y rotation isn't working properly
             y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
             z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
             newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX# I think it has to do with using x,y, and z variables instead of p[0],p[1], and p[2]
-            newZ = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+            newZ = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY# I am pretty sure it has to do with having half of the equation using the actual values and the other half using previously found values
+            newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX
             newY = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
 
             if p[2] > self.camPos[2]-self.fl:
@@ -149,7 +150,7 @@ class _3D:# the class that handles everything
 
                 self.draw_square(newX+root.winfo_screenwidth()/2,newY+root.winfo_screenheight()/2,2)
 
-            f+=.01
+            f+=.1
         return points
 
     def drawFace(self,points,indexes,color='red',lines=''):# draws a face using all indexes given

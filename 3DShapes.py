@@ -156,14 +156,15 @@ class _3D:# the class that handles everything
 
             centerX = self.camPos[0]
             centerY = self.camPos[1]
-            centerZ = -self.fl+self.camPos[2]
+            centerZ = self.camPos[2]
 
-            x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
+            x = p[0]
             y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
             z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
             newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
-            newZ = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
-            newY = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
+            newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+            newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
+            newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX
 
             if p[2] > self.camPos[2]-self.fl:
                 l = [self.fl,self.camPos[2],newZ]
@@ -204,12 +205,13 @@ class _3D:# the class that handles everything
                 centerY = self.camPos[1]
                 centerZ = -self.fl+self.camPos[2]
 
-                x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
+                x = p[0]
                 y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
                 z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
                 newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
-                newZ = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
-                newY = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
+                newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+                newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
+                newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX
                 if newZ > -(self.fl-self.camPos[2]):
                     face.append(points[i][3] + root.winfo_screenwidth()/2)
                     face.append(points[i][4] + root.winfo_screenheight()/2)
