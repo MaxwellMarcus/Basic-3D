@@ -123,7 +123,7 @@ class _3D:# the class that handles everything
 
         centerX = self.camPos[0]
         centerY = self.camPos[1]
-        centerZ = -self.fl+self.camPos[2]
+        centerZ = self.camPos[2]
 
         x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
         y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
@@ -132,11 +132,11 @@ class _3D:# the class that handles everything
         newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
         newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
 
-        if p[2] > self.camPos[2]-self.fl:
+        if -p[2] == self.camPos[2]:
             l = [self.fl,self.camPos[2],newZ]
             l = list(l)
             first = float(l[0])
-            second = float(l[0]-l[1]+l[2])
+            second = float(l[1]+l[2])
 
             scale = first/second
 
@@ -156,7 +156,7 @@ class _3D:# the class that handles everything
 
             centerX = self.camPos[0]
             centerY = self.camPos[1]
-            centerZ = self.camPos[2]
+            centerZ = -self.camPos[2]
 
             x = p[0]
             y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
@@ -166,14 +166,14 @@ class _3D:# the class that handles everything
             newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
             newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX
 
-            if p[2] > self.camPos[2]-self.fl:
+            if not -p[2] == self.camPos[2]:
                 l = [self.fl,self.camPos[2],newZ]
                 l = list(l)
                 first = float(l[0])
-                second = float(l[0]-l[1]+l[2])
+                second = float(l[1]+l[2])
 
                 scale = first/second
-                p[3] = newX * scale - self.camPos[0] * scale
+                p[3] = newX * scale + self.camPos[0] * scale
                 p[4] = newY * scale - self.camPos[1] * scale
             else:
                 p[3] = False
@@ -203,7 +203,7 @@ class _3D:# the class that handles everything
 
                 centerX = self.camPos[0]
                 centerY = self.camPos[1]
-                centerZ = -self.fl+self.camPos[2]
+                centerZ = self.camPos[2]
 
                 x = p[0]
                 y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
@@ -212,7 +212,7 @@ class _3D:# the class that handles everything
                 newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
                 newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
                 newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX
-                if newZ > -(self.fl-self.camPos[2]):
+                if newZ > self.camPos[2]:
                     face.append(points[i][3] + root.winfo_screenwidth()/2)
                     face.append(points[i][4] + root.winfo_screenheight()/2)
                 if len(face) > 0:
@@ -262,7 +262,7 @@ class _3D:# the class that handles everything
         cos = math.cos(angle)
         sin = math.sin(angle)
         radiusY = self.camPos[1]
-        radiusZ = -self.fl+self.camPos[2]
+        radiusZ = self.camPos[2]
         for i in points:
             i[1] = ((i[1]-radiusY) * cos - (i[2]-radiusZ) * sin)+radiusY
             i[2] = ((i[2]-radiusZ) * cos + (i[1]-radiusY) * sin)+radiusZ
@@ -271,7 +271,7 @@ class _3D:# the class that handles everything
         cos = math.cos(angle)
         sin = math.sin(angle)
         radiusX = self.camPos[0]
-        radiusZ = -self.fl+self.camPos[2]
+        radiusZ = self.camPos[2]
         for i in points:
             i[0] = ((i[0]-radiusX) * cos - (i[2]-radiusZ) * sin)+radiusX
             i[2] = ((i[2]-radiusZ) * cos + (i[0]-radiusX) * sin)+radiusZ
@@ -349,7 +349,7 @@ class _3D:# the class that handles everything
             l = [self.fl,self.camPos[2],z1]
             l = list(l)
             first = float(l[0])
-            second = float(l[0]-l[1]+l[2])
+            second = float(l[1]+l[2])
 
             scale = first/second
 
@@ -359,7 +359,7 @@ class _3D:# the class that handles everything
             l = [self.fl,self.camPos[2],z]
             l = list(l)
             first = float(l[0])
-            second = float(l[0]-l[1]+l[2])
+            second = float(l[1]+l[2])
 
             scale = first/second
 
@@ -401,7 +401,7 @@ class _3D:# the class that handles everything
         self.mouse2Pressed = False
 
 # initiating the class that handles everything
-_3d = _3D(400)
+_3d = _3D(350)
 
 #making the first cubes
 _3d.createCube(0,0,0,100)
@@ -425,9 +425,9 @@ while _3d.start:
     #   handling rotation
     #       currently Z rotation
     if 'Up' in _3d.keysPressed:
-        _3d.camRotate(x=-.01)
+        _3d.camRotate(z=-.01)
     if 'Down' in _3d.keysPressed:
-        _3d.camRotate(x=.01)
+        _3d.camRotate(z=.01)
     #       currently Y rotation, but it is not used
     if 'Left' in _3d.keysPressed:
         _3d.camRotate(y=.01)
