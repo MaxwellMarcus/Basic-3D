@@ -385,7 +385,7 @@ class _3D:# the class that handles everything
     def visable(self):
         things = []
         for p in self.objects:things.append(self.applyCamRot(p[0],p[1],p[2]))
-
+        
     def applyCamRot(self,x,y,z):
         cosX = math.cos(self.camRot[0])
         sinX = math.sin(self.camRot[0])
