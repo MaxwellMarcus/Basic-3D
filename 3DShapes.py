@@ -384,8 +384,14 @@ class _3D:# the class that handles everything
             return False
     def visable(self):
         things = []
-        for p in self.objects:things.append(self.applyCamRot(p[0],p[1],p[2]))
-        
+        for p in self.objects:
+            for i in
+            newPos = self.applyCamRot(p[0],p[1],p[2])
+            if newPos[2] > self.camPos[2]:
+                things.append(newPos)
+        if
+            return self.zsort(things)
+
     def applyCamRot(self,x,y,z):
         cosX = math.cos(self.camRot[0])
         sinX = math.sin(self.camRot[0])
