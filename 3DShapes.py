@@ -382,6 +382,30 @@ class _3D:# the class that handles everything
             return True
         else:
             return False
+    def visable(self):
+        things = []
+        for p in self.objects:things.append(self.applyCamRot(p[0],p[1],p[2]))
+
+    def applyCamRot(self,x,y,z):
+        cosX = math.cos(self.camRot[0])
+        sinX = math.sin(self.camRot[0])
+        cosY = math.cos(self.camRot[1])
+        sinY = math.sin(self.camRot[1])
+        cosZ = math.cos(self.camRot[2])
+        sinZ = math.sin(self.camRot[2])
+
+        centerX = self.camPos[0]
+        centerY = self.camPos[1]
+        centerZ = -self.camPos[2]
+
+        y = ((y-centerY) * cosX - (z-centerZ) * sinX)+centerY
+        z = ((z-centerZ) * cosX + (y-centerY) * sinX)+centerZ
+        newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
+        newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+        newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
+        newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX
+
+        return [x,y,z]
     def draw_square(self,x,y,radius,color='black'):#not used
         canvas.create_rectangle(x-radius,y-radius,x+radius,y+radius,fill=color)
     def keyPressed(self,event):#adds a keysym to the list of keys pressed
