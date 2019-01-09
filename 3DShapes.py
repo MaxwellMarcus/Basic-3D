@@ -46,64 +46,21 @@ class _3D:# the class that handles everything
         self.mouseX = event.x
         self.mouseY = event.y
 
-    def zsort(self,num,smallest=False):#sorts something based on the Z values not currently used
-        olen = len(num)
-
-        ans = []
-
-        added = False
-
-        if smallest:
-            i = 0
-            while len(num) > 0:
-                added = False
-                if len(num) == olen:
-                    ans.append(num[0])
-                    num.remove(num[0])
-                    added = True
-                elif num[0][2] < ans[0][2]:
-                    ans.insert(0,num[0])
-                    num.remove(num[0])
-                    added = True
-                else:
-                    i = 0
-                    while i < len(ans):
-                        if num[0][2] < ans[i][2]:
-                            ans.insert(i,num[0])
-                            num.remove(num[0])
-                            added = True
-                            break
-                        i += 1
-
-                if not added:
-                    ans.append(num[0])
-                    num.remove(num[0])
-        else:
-            i = 0
-            while len(num) > 0:
-                added = False
-                if len(num) == olen:
-                    ans.append(num[0])
-                    num.remove(num[0])
-                    added = True
-                elif num[0][2] > ans[0][2]:
-                    ans.insert(0,num[0])
-                    num.remove(num[0])
-                    added = True
-                else:
-                    i = 0
-                    while i < len(ans):
-                        if num[0][2] > ans[i][2]:
-                            ans.insert(i,num[0])
-                            num.remove(num[0])
-                            added = True
-                            break
-                        i += 1
-
-                if not added:
-                    ans.append(num[0])
-                    num.remove(num[0])
-        return ans
+    def zsort(self,list):#sorts something based on the Z values not currently used
+        sorted = []
+        for i in list:
+            if len(sorted)==0:
+                first = False
+                sorted.append(i)
+            elif i[0][2] < sorted[0][0][2]:
+                sorted.insert(0,i)
+            elif not i[0][2] > sorted[len(sorted)-1][0][2]:
+                for k in sorted:
+                    if i[0][2] > k[0][2]:
+                        sorted.insert(sorted.index(k),i)
+            else:
+                sorted.append(i)
+        return sorted
 
     def perspectify(self,shape,color='black',xRad=2,yRad=2):#changes X and Y based on Z position used for postcards in space not currently used
         perspective = self.fl/(self.fl+shape[2])
@@ -174,7 +131,7 @@ class _3D:# the class that handles everything
 
                 scale = first/second
                 p[3] = newX * scale + self.camPos[0] * scale
-                p[4] = newY * scale - self.camPos[1] * scale
+                p[4] = newY * scale + self.camPos[1] * scale
             else:
                 p[3] = False
                 p[4] = False
@@ -385,12 +342,13 @@ class _3D:# the class that handles everything
     def visable(self):
         things = []
         for p in self.objects:
-            for i in
-            newPos = self.applyCamRot(p[0],p[1],p[2])
+            newPos = []
+            for i in p:
+                newPos.append(self.applyCamRot(i[0],i[1],i[2]))
             if newPos[2] > self.camPos[2]:
                 things.append(newPos)
-        if
-            return self.zsort(things)
+
+        self.zsort(things)
 
     def applyCamRot(self,x,y,z):
         cosX = math.cos(self.camRot[0])
