@@ -351,8 +351,13 @@ class _3D:# the class that handles everything
                 newCube.append(newPos)
             if newCube[0][2] > self.camPos[2]:
                 things.append(newCube)
-        print(len(things))
         return self.zsort(things)
+    def visibleFace(self,cube):
+        newOrder = []
+        for i in cube:
+            if not cube.index(i) == 0:
+                avg = 
+
 
     def applyCamRot(self,x,y,z):
         cosX = math.cos(self.camRot[0])
@@ -484,10 +489,9 @@ while _3d.start:
 
     #drawing the cubes
     canvas.delete(ALL)
-    print('')
+
     for i in _3d.visible():
         i = _3d.project(i)
-        print(len(_3d.visible()))#i[0][2]/200)
         if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
             _3d.drawFace(i,[5,6,7,8],color='green')
             _3d.drawFace(i,[2,3,7,6],color='blue')
