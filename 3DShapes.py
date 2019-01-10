@@ -52,12 +52,13 @@ class _3D:# the class that handles everything
             if len(sorted)==0:
                 first = False
                 sorted.append(i)
-            elif i[0][2] < sorted[0][0][2]:
+            elif i[0][2] > sorted[0][0][2]:
                 sorted.insert(0,i)
             elif not i[0][2] > sorted[len(sorted)-1][0][2]:
                 for k in sorted:
                     if i[0][2] > k[0][2]:
                         sorted.insert(sorted.index(k),i)
+                        break
             else:
                 sorted.append(i)
         return sorted
@@ -243,7 +244,7 @@ class _3D:# the class that handles everything
             i[1] = ((i[1]-radiusY) * cos + (i[0]-radiusX) * sin)+radiusY
         return points
     def createCube(self,x,y,z,radius):#this function adds the a list of the points of a cube to a list
-        points = [[x,y,z]]
+        points = [[x,y,z,0,0]]
         points.append([x+radius,y+radius,z+radius,0,0])#back square
         points.append([x-radius,y+radius,z+radius,0,0])
         points.append([x-radius,y-radius,z+radius,0,0])
@@ -342,11 +343,14 @@ class _3D:# the class that handles everything
     def visible(self):
         things = []
         for p in self.objects:
-            newPos = []
+            newCube=[]
             for i in p:
-                newPos.append(self.applyCamRot(i[0],i[1],i[2]))
-            if newPos[0][2] > self.camPos[2]:
-                things.append(newPos)
+                newPos = self.applyCamRot(i[0],i[1],i[2])
+                newPos.append(i[3])
+                newPos.append(i[4])
+                newCube.append(newPos)
+            if newCube[0][2] > self.camPos[2]:
+                things.append(newCube)
         return self.zsort(things)
 
     def applyCamRot(self,x,y,z):
@@ -391,10 +395,11 @@ class _3D:# the class that handles everything
 _3d = _3D(350)
 
 #making the first cubes
-i = 100
-while i > 0:
-    _3d.createCube(0,0,i,100)#random.randint(1,1000),100)
-    i -= 1
+i = 0
+while i < 10:
+    l = random.randint(1,10)
+    _3d.createCube(0,0,l*200,100)
+    i += 1
 
 #setting a few variables
 rotationSpeed = 1
@@ -444,7 +449,7 @@ while _3d.start:
         _3d.camRot = [0,0,0]
         _3d.camPos = [0,0,0]
     #   handling creating cubes currently not used
-    if _3d.mousePressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int:
+    if _3d.mousePressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int and False:
         closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)
         x,y,z = _3d.objects[closest][0][0], _3d.objects[closest][0][1], _3d.objects[closest][0][2]-200
         cube = _3d.returnCube(x,y,z,100)
@@ -477,18 +482,17 @@ while _3d.start:
         clickable2 = True
 
     #drawing the cubes
-    for i in _3d.visible():
-        print(i[0][2])
-    quit()
-    '''canvas.delete(ALL)
+    canvas.delete(ALL)
+    print('')
     for i in _3d.visible():
         i = _3d.project(i)
+        print(len(_3d.visible()))#i[0][2]/200)
         if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
             _3d.drawFace(i,[5,6,7,8],color='green')
             _3d.drawFace(i,[2,3,7,6],color='blue')
             _3d.drawFace(i,[1,4,8,5],color='red')
             _3d.drawFace(i,[3,4,8,7],color='orange')
-            _3d.drawFace(i,[2,1,5,6],color='white',lines='black')'''
+            _3d.drawFace(i,[2,1,5,6],color='white',lines='black')
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
