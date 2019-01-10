@@ -339,16 +339,15 @@ class _3D:# the class that handles everything
             return True
         else:
             return False
-    def visable(self):
+    def visible(self):
         things = []
         for p in self.objects:
             newPos = []
             for i in p:
                 newPos.append(self.applyCamRot(i[0],i[1],i[2]))
-            if newPos[2] > self.camPos[2]:
+            if newPos[0][2] > self.camPos[2]:
                 things.append(newPos)
-
-        self.zsort(things)
+        return self.zsort(things)
 
     def applyCamRot(self,x,y,z):
         cosX = math.cos(self.camRot[0])
@@ -392,7 +391,10 @@ class _3D:# the class that handles everything
 _3d = _3D(350)
 
 #making the first cubes
-_3d.createCube(0,0,0,100)
+i = 100
+while i > 0:
+    _3d.createCube(0,0,i,100)#random.randint(1,1000),100)
+    i -= 1
 
 #setting a few variables
 rotationSpeed = 1
@@ -475,15 +477,18 @@ while _3d.start:
         clickable2 = True
 
     #drawing the cubes
-    canvas.delete(ALL)
-    for i in _3d.objects:
+    for i in _3d.visible():
+        print(i[0][2])
+    quit()
+    '''canvas.delete(ALL)
+    for i in _3d.visible():
         i = _3d.project(i)
         if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
             _3d.drawFace(i,[5,6,7,8],color='green')
             _3d.drawFace(i,[2,3,7,6],color='blue')
             _3d.drawFace(i,[1,4,8,5],color='red')
             _3d.drawFace(i,[3,4,8,7],color='orange')
-            _3d.drawFace(i,[2,1,5,6],color='white',lines='black')
+            _3d.drawFace(i,[2,1,5,6],color='white',lines='black')'''
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
