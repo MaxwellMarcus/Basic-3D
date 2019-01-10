@@ -54,7 +54,7 @@ class _3D:# the class that handles everything
                 sorted.append(i)
             elif i[0][2] > sorted[0][0][2]:
                 sorted.insert(0,i)
-            elif not i[0][2] > sorted[len(sorted)-1][0][2]:
+            elif not i[0][2] < sorted[len(sorted)-1][0][2]:
                 for k in sorted:
                     if i[0][2] > k[0][2]:
                         sorted.insert(sorted.index(k),i)
@@ -351,6 +351,7 @@ class _3D:# the class that handles everything
                 newCube.append(newPos)
             if newCube[0][2] > self.camPos[2]:
                 things.append(newCube)
+        print(len(things))
         return self.zsort(things)
 
     def applyCamRot(self,x,y,z):
