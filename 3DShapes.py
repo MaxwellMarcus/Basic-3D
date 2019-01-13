@@ -62,7 +62,22 @@ class _3D:# the class that handles everything
             else:
                 sorted.append(i)
         return sorted
-
+    def sort(self,list):
+        sorted = []
+        for i in list:
+            if len(sorted)==0:
+                first = False
+                sorted.append(i)
+            elif i > sorted[0]:
+                sorted.insert(0,i)
+            elif not i < sorted[len(sorted)-1]:
+                for k in sorted:
+                    if i > k:
+                        sorted.insert(sorted.index(k),i)
+                        break
+            else:
+                sorted.append(i)
+        return sorted
     def perspectify(self,shape,color='black',xRad=2,yRad=2):#changes X and Y based on Z position used for postcards in space not currently used
         perspective = self.fl/(self.fl+shape[2])
         radiusX = xRad * perspective
@@ -149,8 +164,7 @@ class _3D:# the class that handles everything
 
     def drawFace(self,points,indexes,color='red',lines='black'):# draws a face using all indexes given
         face = []
-        for i in indexes:
-            p = points[i]
+        for p in indexes:
             if p[3]:
                 cosX = math.cos(self.camRot[0])
                 sinX = math.sin(self.camRot[0])
@@ -171,8 +185,8 @@ class _3D:# the class that handles everything
                 newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
                 newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX
                 if newZ > self.camPos[2]:
-                    face.append(points[i][3] + root.winfo_screenwidth()/2)
-                    face.append(points[i][4] + root.winfo_screenheight()/2)
+                    face.append(p[3] + root.winfo_screenwidth()/2)
+                    face.append(p[4] + root.winfo_screenheight()/2)
                 if len(face) > 0:
                     canvas.create_polygon(face,fill=color,outline = lines)
     def translate(self,points,x=0,y=0,z=0):# moves the x, and/or y, and/or z on each of the points in a list
@@ -352,13 +366,45 @@ class _3D:# the class that handles everything
             if newCube[0][2] > self.camPos[2]:
                 things.append(newCube)
         return self.zsort(things)
-    def visibleFace(self,cube):
-        newOrder = []
-        for i in cube:
-            if not cube.index(i) == 0:
-                avg = 
+    def visibleFace(self,c):
+        face1 = [c[5],c[6],c[7],c[8]]
+        face1avg = (face1[0][2]+face1[1][2]+face1[2][2]+face1[3][2])/4
+        face1.append(face1avg)
+        face2 = [c[2],c[3],c[7],c[6]]
+        face2avg = (face2[0][2]+face2[1][2]+face2[2][2]+face2[3][2])/4
+        face2.append(face2avg)
+        face3 = [c[1],c[3],c[8],c[5]]
+        face3avg = (face3[0][2]+face3[1][2]+face3[2][2]+face3[3][2])/4
+        face3.append(face3avg)
+        face4 = [c[3],c[4],c[8],c[7]]
+        face4avg = (face4[0][2]+face4[1][2]+face4[2][2]+face4[3][2])/4
+        face4.append(face4avg)
+        face5 = [c[2],c[1],c[5],c[6]]
+        face5avg = (face5[0][2]+face5[1][2]+face5[2][2]+face5[3][2])/4
+        face5.append(face5avg)
+        face6 = [c[1],c[2],c[3],c[4]]
+        face6avg = (face6[0][2]+face6[1][2]+face6[2][2]+face6[3][2])/4
+        face6.append(face6avg)
 
+        list = [face1,face2,face3,face4,face5,face6]
+        sorted = []
+        for i in list:
+            if len(sorted)==0:
+                first = False
+                sorted.append(i)
+            elif i[4] > sorted[0][4]:
+                sorted.insert(0,i)
+            elif not i[4] < sorted[len(sorted)-1][4]:
+                for k in sorted:
+                    if i[4] > k[4]:
+                        sorted.insert(sorted.index(k),i)
+                        break
+            else:
+                sorted.append(i)
+        for i in range(len(sorted)):
+            sorted[i].remove(sorted[i][4])
 
+        return sorted
     def applyCamRot(self,x,y,z):
         cosX = math.cos(self.camRot[0])
         sinX = math.sin(self.camRot[0])
@@ -486,18 +532,19 @@ while _3d.start:
         clickable = True
     if not _3d.mouse2Pressed:
         clickable2 = True
-
     #drawing the cubes
     canvas.delete(ALL)
 
     for i in _3d.visible():
         i = _3d.project(i)
         if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
-            _3d.drawFace(i,[5,6,7,8],color='green')
-            _3d.drawFace(i,[2,3,7,6],color='blue')
-            _3d.drawFace(i,[1,4,8,5],color='red')
-            _3d.drawFace(i,[3,4,8,7],color='orange')
-            _3d.drawFace(i,[2,1,5,6],color='white',lines='black')
+            face = _3d.visibleFace(i)
+            _3d.drawFace(i,face[0],lines='black')
+            _3d.drawFace(i,face[1],lines='black')
+            _3d.drawFace(i,face[2],lines='black')
+            _3d.drawFace(i,face[3],lines='black')
+            _3d.drawFace(i,face[4],lines='black')
+            _3d.drawFace(i,face[5],lines='black')
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
