@@ -368,7 +368,10 @@ class _3D:# the class that handles everything
         return self.zsort(things)
     def visibleFace(self,c):
         face1 = [c[5],c[6],c[7],c[8]]
-        face1avg = (face1[0][2]+face1[1][2]+face1[2][2]+face1[3][2])/4
+        face1avgZ = (face1[0][2]+face1[1][2]+face1[2][2]+face1[3][2])/4
+        face1avgX = (face1[0][0]+face1[1][0]+face1[2][0]+face1[3][0])/4
+        face1avgY = (face1[0][1]+face1[1][1]+face1[2][1]+face1[3][1])/4
+        
         face1.append(face1avg)
         face2 = [c[2],c[3],c[7],c[6]]
         face2avg = (face2[0][2]+face2[1][2]+face2[2][2]+face2[3][2])/4
