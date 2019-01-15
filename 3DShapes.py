@@ -162,7 +162,7 @@ class _3D:# the class that handles everything
                 y = root.winfo_screenheight()/2
                 canvas.create_line(p[3]+x,p[4]+y,nextP[3]+x,nextP[4]+y)
 
-    def drawFace(self,points,indexes,color='red',lines='black'):# draws a face using all indexes given
+    def drawFace(self,points,indexes,color='',lines='black'):# draws a face using all indexes given
         face = []
         for p in indexes:
             if p[3]:
@@ -187,8 +187,9 @@ class _3D:# the class that handles everything
                 if newZ > self.camPos[2]:
                     face.append(p[3] + root.winfo_screenwidth()/2)
                     face.append(p[4] + root.winfo_screenheight()/2)
-                if len(face) > 0:
-                    canvas.create_polygon(face,fill=color,outline = lines)
+
+        if len(face) > 0:
+            canvas.create_polygon(face,fill=color,outline = lines)
     def translate(self,points,x=0,y=0,z=0):# moves the x, and/or y, and/or z on each of the points in a list
         for i in range(len(points)):
             points[i][0] += x
@@ -345,8 +346,8 @@ class _3D:# the class that handles everything
         else:
             return False
     def collision(self,cube1,cube2):#this detects if two cubes are touching each other
-        r1 = abs(cube1[0][0]-cube1[1][0])
-        r2 = abs(cube2[0][0]-cube2[1][0])
+        r1 = (cube1[0][0]-cube1[1][0])
+        r2 = (cube2[0][0]-cube2[1][0])
         x1,y1,z1 = cube1[0][0],cube1[0][1],cube1[0][2]
         x2,y2,z2 = cube2[0][0],cube2[0][1],cube2[0][2]
 
@@ -371,49 +372,49 @@ class _3D:# the class that handles everything
         face1avgZ = (face1[0][2]+face1[1][2]+face1[2][2]+face1[3][2])/4
         face1avgX = (face1[0][0]+face1[1][0]+face1[2][0]+face1[3][0])/4
         face1avgY = (face1[0][1]+face1[1][1]+face1[2][1]+face1[3][1])/4
-        face1distX = abs(abs(face1avgX)-abs(self.camPos[0]))
-        face1distY = abs(abs(face1avgY)-abs(self.camPos[1]))
-        face1distZ = abs(abs(face1avgZ)-abs(self.camPos[2]))
+        face1distX = ((face1avgX)-(self.camPos[0]))
+        face1distY = ((face1avgY)-(self.camPos[1]))
+        face1distZ = ((face1avgZ)-(self.camPos[2]))
         face1.append(face1distX+face1distY+face1distZ)
         face2 = [c[2],c[3],c[7],c[6]]
         face2avgZ = (face2[0][2]+face2[1][2]+face2[2][2]+face2[3][2])/4
         face2avgX = (face2[0][0]+face2[1][0]+face2[2][0]+face2[3][0])/4
         face2avgY = (face2[0][1]+face2[1][1]+face2[2][1]+face2[3][1])/4
-        face2distX = abs(abs(face2avgX)-abs(self.camPos[0]))
-        face2distZ = abs(abs(face2avgZ)-abs(self.camPos[2]))
-        face2distY = abs(abs(face2avgY)-abs(self.camPos[1]))
+        face2distX = ((face2avgX)-(self.camPos[0]))
+        face2distZ = ((face2avgZ)-(self.camPos[2]))
+        face2distY = ((face2avgY)-(self.camPos[1]))
         face2.append(face2distX+face2distY+face2distZ)
-        face3 = [c[1],c[3],c[8],c[5]]
+        face3 = [c[1],c[4],c[8],c[5]]
         face3avgZ = (face3[0][2]+face3[1][2]+face3[2][2]+face3[3][2])/4
         face3avgX = (face3[0][0]+face3[1][0]+face3[2][0]+face3[3][0])/4
         face3avgY = (face3[0][1]+face3[1][1]+face3[2][1]+face3[3][1])/4
-        face3distX = abs(abs(face3avgX)-abs(self.camPos[0]))
-        face3distY = abs(abs(face3avgY)-abs(self.camPos[1]))
-        face3distZ = abs(abs(face3avgZ)-abs(self.camPos[2]))
+        face3distX = ((face3avgX)-(self.camPos[0]))
+        face3distY = ((face3avgY)-(self.camPos[1]))
+        face3distZ = ((face3avgZ)-(self.camPos[2]))
         face3.append(face3distX+face3distY+face3distZ)
         face4 = [c[3],c[4],c[8],c[7]]
         face4avgZ = (face4[0][2]+face4[1][2]+face4[2][2]+face4[3][2])/4
         face4avgX = (face4[0][0]+face4[1][0]+face4[2][0]+face4[3][0])/4
         face4avgY = (face4[0][1]+face4[1][1]+face4[2][1]+face4[3][1])/4
-        face4distX = abs(abs(face4avgX)-abs(self.camPos[0]))
-        face4distY = abs(abs(face4avgY)-abs(self.camPos[1]))
-        face4distZ = abs(abs(face4avgZ)-abs(self.camPos[2]))
+        face4distX = ((face4avgX)-(self.camPos[0]))
+        face4distY = ((face4avgY)-(self.camPos[1]))
+        face4distZ = ((face4avgZ)-(self.camPos[2]))
         face4.append(face4distX+face4distY+face4distZ)
         face5 = [c[2],c[1],c[5],c[6]]
         face5avgZ = (face5[0][2]+face5[1][2]+face5[2][2]+face5[3][2])/4
         face5avgX = (face5[0][0]+face5[1][0]+face5[2][0]+face5[3][0])/4
         face5avgY = (face5[0][1]+face5[1][1]+face5[2][1]+face5[3][1])/4
-        face5distX = abs(abs(face5avgX)-abs(self.camPos[0]))
-        face5distY = abs(abs(face5avgY)-abs(self.camPos[1]))
-        face5distZ = abs(abs(face5avgZ)-abs(self.camPos[2]))
+        face5distX = ((face5avgX)-(self.camPos[0]))
+        face5distY = ((face5avgY)-(self.camPos[1]))
+        face5distZ = ((face5avgZ)-(self.camPos[2]))
         face5.append(face5distX+face5distY+face5distZ)
         face6 = [c[1],c[2],c[3],c[4]]
         face6avgZ = (face6[0][2]+face6[1][2]+face6[2][2]+face6[3][2])/4
         face6avgX = (face6[0][0]+face6[1][0]+face6[2][0]+face6[3][0])/4
         face6avgY = (face6[0][1]+face6[1][1]+face6[2][1]+face6[3][1])/4
-        face6distX = abs(abs(face6avgX)-abs(self.camPos[0]))
-        face6distY = abs(abs(face6avgY)-abs(self.camPos[1]))
-        face6distZ = abs(abs(face6avgZ)-abs(self.camPos[2]))
+        face6distX = ((face6avgX)-(self.camPos[0]))
+        face6distY = ((face6avgY)-(self.camPos[1]))
+        face6distZ = ((face6avgZ)-(self.camPos[2]))
         face6.append(face6distX+face6distY+face6distZ)
 
         list = [face1,face2,face3,face4,face5,face6]
@@ -422,24 +423,18 @@ class _3D:# the class that handles everything
             if len(sorted)==0:
                 first = False
                 sorted.append(i)
-                print(list.index(i),'begining')
             elif i[4] > sorted[0][4]:
                 sorted.insert(0,i)
-                print(list.index(i),'front')
-            elif not i[4] < sorted[len(sorted)-1][4] and i[4] != sorted[len(sorted)-1][4]:
+            elif not i[4] > sorted[len(sorted)-1][4] and i[4] != sorted[len(sorted)-1][4]:
                 for k in sorted:
-                    if i[4] > k[4]:
+                    if i[4] < k[4]:
                         sorted.insert(sorted.index(k),i)
-                        print(list.index(i),'middle')
                         break
             else:
                 sorted.append(i)
-                print(list.index(i),'else')
-        for i in list:
-            print(i[4])
         for i in range(len(sorted)):
             sorted[i].remove(sorted[i][4])
-            #print(sorted[i])
+        print(list.index(sorted[1]))
         return sorted
     def applyCamRot(self,x,y,z):
         cosX = math.cos(self.camRot[0])
@@ -570,12 +565,12 @@ while _3d.start:
         i = _3d.project(i)
         if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
             face = _3d.visibleFace(i)
-            _3d.drawFace(i,face[0],lines='black')
-            _3d.drawFace(i,face[1],lines='black')
-            _3d.drawFace(i,face[2],lines='black')
-            _3d.drawFace(i,face[3],lines='black')
-            _3d.drawFace(i,face[4],lines='black')
-            _3d.drawFace(i,face[5],lines='black')
+            _3d.drawFace(i,face[0],color='black')
+            _3d.drawFace(i,face[1],color='red')
+            _3d.drawFace(i,face[2],color='green')
+            _3d.drawFace(i,face[3],color='blue')
+            _3d.drawFace(i,face[4],color='yellow')
+            _3d.drawFace(i,face[5],color='purple')
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
