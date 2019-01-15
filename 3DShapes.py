@@ -371,49 +371,49 @@ class _3D:# the class that handles everything
         face1avgZ = (face1[0][2]+face1[1][2]+face1[2][2]+face1[3][2])/4
         face1avgX = (face1[0][0]+face1[1][0]+face1[2][0]+face1[3][0])/4
         face1avgY = (face1[0][1]+face1[1][1]+face1[2][1]+face1[3][1])/4
-        face1distX = abs((face1avgX)-(self.camPos[0]))
-        face1distY = abs((face1avgY)-(self.camPos[1]))
-        face1distZ = abs((face1avgZ)-(self.camPos[2]))
+        face1distX = abs(abs(face1avgX)-abs(self.camPos[0]))
+        face1distY = abs(abs(face1avgY)-abs(self.camPos[1]))
+        face1distZ = abs(abs(face1avgZ)-abs(self.camPos[2]))
         face1.append(face1distX+face1distY+face1distZ)
         face2 = [c[2],c[3],c[7],c[6]]
         face2avgZ = (face2[0][2]+face2[1][2]+face2[2][2]+face2[3][2])/4
         face2avgX = (face2[0][0]+face2[1][0]+face2[2][0]+face2[3][0])/4
         face2avgY = (face2[0][1]+face2[1][1]+face2[2][1]+face2[3][1])/4
-        face2distX = abs((face2avgX)-(self.camPos[0]))
-        face2distZ = abs((face2avgZ)-(self.camPos[2]))
-        face2distY = abs((face2avgY)-(self.camPos[1]))
+        face2distX = abs(abs(face2avgX)-abs(self.camPos[0]))
+        face2distZ = abs(abs(face2avgZ)-abs(self.camPos[2]))
+        face2distY = abs(abs(face2avgY)-abs(self.camPos[1]))
         face2.append(face2distX+face2distY+face2distZ)
         face3 = [c[1],c[3],c[8],c[5]]
         face3avgZ = (face3[0][2]+face3[1][2]+face3[2][2]+face3[3][2])/4
         face3avgX = (face3[0][0]+face3[1][0]+face3[2][0]+face3[3][0])/4
         face3avgY = (face3[0][1]+face3[1][1]+face3[2][1]+face3[3][1])/4
-        face3distX = abs((face3avgX)-(self.camPos[0]))
-        face3distY = abs((face3avgY)-(self.camPos[1]))
-        face3distZ = abs((face3avgZ)-(self.camPos[2]))
+        face3distX = abs(abs(face3avgX)-abs(self.camPos[0]))
+        face3distY = abs(abs(face3avgY)-abs(self.camPos[1]))
+        face3distZ = abs(abs(face3avgZ)-abs(self.camPos[2]))
         face3.append(face3distX+face3distY+face3distZ)
         face4 = [c[3],c[4],c[8],c[7]]
         face4avgZ = (face4[0][2]+face4[1][2]+face4[2][2]+face4[3][2])/4
         face4avgX = (face4[0][0]+face4[1][0]+face4[2][0]+face4[3][0])/4
         face4avgY = (face4[0][1]+face4[1][1]+face4[2][1]+face4[3][1])/4
-        face4distX = abs((face4avgX)-(self.camPos[0]))
-        face4distY = abs((face4avgY)-(self.camPos[1]))
-        face4distZ = abs((face4avgZ)-(self.camPos[2]))
+        face4distX = abs(abs(face4avgX)-abs(self.camPos[0]))
+        face4distY = abs(abs(face4avgY)-abs(self.camPos[1]))
+        face4distZ = abs(abs(face4avgZ)-abs(self.camPos[2]))
         face4.append(face4distX+face4distY+face4distZ)
         face5 = [c[2],c[1],c[5],c[6]]
         face5avgZ = (face5[0][2]+face5[1][2]+face5[2][2]+face5[3][2])/4
         face5avgX = (face5[0][0]+face5[1][0]+face5[2][0]+face5[3][0])/4
         face5avgY = (face5[0][1]+face5[1][1]+face5[2][1]+face5[3][1])/4
-        face5distX = abs((face5avgX)-(self.camPos[0]))
-        face5distY = abs((face5avgY)-(self.camPos[1]))
-        face5distZ = abs((face5avgZ)-(self.camPos[2]))
+        face5distX = abs(abs(face5avgX)-abs(self.camPos[0]))
+        face5distY = abs(abs(face5avgY)-abs(self.camPos[1]))
+        face5distZ = abs(abs(face5avgZ)-abs(self.camPos[2]))
         face5.append(face5distX+face5distY+face5distZ)
         face6 = [c[1],c[2],c[3],c[4]]
         face6avgZ = (face6[0][2]+face6[1][2]+face6[2][2]+face6[3][2])/4
         face6avgX = (face6[0][0]+face6[1][0]+face6[2][0]+face6[3][0])/4
         face6avgY = (face6[0][1]+face6[1][1]+face6[2][1]+face6[3][1])/4
-        face6distX = abs((face6avgX)-(self.camPos[0]))
-        face6distY = abs((face6avgY)-(self.camPos[1]))
-        face6distZ = abs((face6avgZ)-(self.camPos[2]))
+        face6distX = abs(abs(face6avgX)-abs(self.camPos[0]))
+        face6distY = abs(abs(face6avgY)-abs(self.camPos[1]))
+        face6distZ = abs(abs(face6avgZ)-abs(self.camPos[2]))
         face6.append(face6distX+face6distY+face6distZ)
 
         list = [face1,face2,face3,face4,face5,face6]
