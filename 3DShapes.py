@@ -385,6 +385,7 @@ class _3D:# the class that handles everything
         face1distX = abs((face1avgX)-(self.camPos[0]))*originDistX
         face1distZ = abs((face1avgZ)-(self.camPos[2]))*originDistZ
         face1.append(face1distX+face1distY+face1distZ)
+        face1.append('white')
         face2 = [c[2],c[3],c[7],c[6]]
         face2avgZ = (face2[0][2]+face2[1][2]+face2[2][2]+face2[3][2])/4
         face2avgX = (face2[0][0]+face2[1][0]+face2[2][0]+face2[3][0])/4
@@ -393,6 +394,7 @@ class _3D:# the class that handles everything
         face2distZ = abs((face2avgZ)-(self.camPos[2]))*originDistZ
         face2distY = abs((face2avgY)-(self.camPos[1]))*originDistY
         face2.append(face2distX+face2distY+face2distZ)
+        face2.append('orange')
         face3 = [c[1],c[4],c[8],c[5]]
         face3avgZ = (face3[0][2]+face3[1][2]+face3[2][2]+face3[3][2])/4
         face3avgX = (face3[0][0]+face3[1][0]+face3[2][0]+face3[3][0])/4
@@ -401,7 +403,8 @@ class _3D:# the class that handles everything
         face3distY = abs((face3avgY)-(self.camPos[1]))*originDistY
         face3distZ = abs((face3avgZ)-(self.camPos[2]))*originDistZ
         face3.append(face3distX+face3distY+face3distZ)
-        face4 = [c[3],c[4],c[8],c[7]]
+        face3.append('red')
+        face4 = [c[3],c[4],c[8],c[7],]
         face4avgZ = (face4[0][2]+face4[1][2]+face4[2][2]+face4[3][2])/4
         face4avgX = (face4[0][0]+face4[1][0]+face4[2][0]+face4[3][0])/4
         face4avgY = (face4[0][1]+face4[1][1]+face4[2][1]+face4[3][1])/4
@@ -409,6 +412,7 @@ class _3D:# the class that handles everything
         face4distY = abs((face4avgY)-(self.camPos[1]))*originDistY
         face4distZ = abs((face4avgZ)-(self.camPos[2]))*originDistZ
         face4.append(face4distX+face4distY+face4distZ)
+        face4.append('green')
         face5 = [c[2],c[1],c[5],c[6]]
         face5avgZ = (face5[0][2]+face5[1][2]+face5[2][2]+face5[3][2])/4
         face5avgX = (face5[0][0]+face5[1][0]+face5[2][0]+face5[3][0])/4
@@ -417,6 +421,7 @@ class _3D:# the class that handles everything
         face5distY = abs((face5avgY)-(self.camPos[1]))*originDistY
         face5distZ = abs((face5avgZ)-(self.camPos[2]))*originDistZ
         face5.append(face5distX+face5distY+face5distZ)
+        face5.append('blue')
         face6 = [c[1],c[2],c[3],c[4]]
         face6avgZ = (face6[0][2]+face6[1][2]+face6[2][2]+face6[3][2])/4
         face6avgX = (face6[0][0]+face6[1][0]+face6[2][0]+face6[3][0])/4
@@ -425,6 +430,7 @@ class _3D:# the class that handles everything
         face6distY = abs((face6avgY)-(self.camPos[1]))*originDistY
         face6distZ = abs((face6avgZ)-(self.camPos[2]))*originDistZ
         face6.append(face6distX+face6distY+face6distZ)
+        face6.append('yellow')
         list = [face1,face2,face3,face4,face5,face6]
         sorted = []
         for i in list:
@@ -488,10 +494,16 @@ class _3D:# the class that handles everything
         self.mouse2Pressed = False
 
 # initiating the class that handles everything
-_3d = _3D(350)
+_3d = _3D(500)
 
 #making the first cubes
-_3d.createCube(0,0,100,100)
+#_3d.createCube(0,0,0,100)
+#_3d.createCube(0,0,0,100)
+#_3d.createCube(0,0,0,100)
+_3d.createCube(0,100,0,100)
+_3d.createCube(0,-100,0,100)
+_3d.createCube(100,0,0,100)
+_3d.createCube(-100,0,0,100)
 
 #setting a few variables
 rotationSpeed = 1
@@ -578,12 +590,12 @@ while _3d.start:
         i = _3d.project(i)
         if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
             face = _3d.visibleFace(i)
-            _3d.drawFace(i,face[0],color='black')
-            _3d.drawFace(i,face[1],color='red')
-            _3d.drawFace(i,face[2],color='green')
-            _3d.drawFace(i,face[3],color='blue')
-            _3d.drawFace(i,face[4],color='yellow')
-            _3d.drawFace(i,face[5],color='purple')
+            _3d.drawFace(i,face[0][0:4],color=face[0][4],lines='black')
+            _3d.drawFace(i,face[1][0:4],color=face[1][4],lines='black')
+            _3d.drawFace(i,face[2][0:4],color=face[2][4],lines='black')
+            _3d.drawFace(i,face[3][0:4],color=face[3][4],lines='black')
+            _3d.drawFace(i,face[4][0:4],color=face[4][4],lines='black')
+            _3d.drawFace(i,face[5][0:4],color=face[5][4],lines='black')
 
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
