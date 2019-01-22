@@ -253,7 +253,7 @@ class _3D:# the class that handles everything
         radiusZ = rotationPointY
         for i in points:
             i[0] = ((i[0]-radiusX) * cos - (i[2]-radiusZ) * sin)+radiusX
-            i[2] = ((i[2]-radiusZ) * cos - (i[0]-radiusX) * sin)+radiusZ
+            i[2] = ((i[2]-radiusZ) * cos + (i[0]-radiusX) * sin)+radiusZ
         return points
     def rotateAroundZ(self,points,angle,rotationPointX,rotationPointY):#and this one
         cos = math.cos(angle)
@@ -476,6 +476,16 @@ class _3D:# the class that handles everything
         newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX
 
         return [x,y,z]
+    def drawRotationCircle(self,x,y,centerX,centerY):
+        i=0
+        while i <= math.pi*2:
+            sin = math.sin(i)
+            cos = math.cos(i)
+            x = ((x-centerX)*cos-(y-centerY)*sin)+centerX+root.winfo_screenwidth()/2
+            y = ((y-centerY)*cos+(x-centerX)*sin)+centerY+root.winfo_screenheight()/2
+            self.draw_square(x,y,2)
+            i += math.pi/180
+
     def draw_square(self,x,y,radius,color='black'):#not used
         canvas.create_rectangle(x-radius,y-radius,x+radius,y+radius,fill=color)
     def keyPressed(self,event):#adds a keysym to the list of keys pressed
@@ -531,24 +541,22 @@ while _3d.start:
     #   handling rotation
     #       currently Z rotation
     if 'Up' in _3d.keysPressed:
-        _3d.camRotate(z=-.01)
+        for i in _3d.objects:
+            for l in range(4):
+                _3d.rotateAroundX(i,math.pi/180,0,0)
     if 'Down' in _3d.keysPressed:
-        _3d.camRotate(z=.01)
+        for i in _3d.objects:
+            for l in range(4):
+                _3d.rotateAroundX(i,-math.pi/180,0,0)
     #       currently Y rotation, but it is not used
     if 'Left' in _3d.keysPressed:
         for i in _3d.objects:
-            _3d.rotateAroundY(i,math.pi,0,0)
+            for l in range(4):
+                _3d.rotateAroundY(i,math.pi/180,0,0)
     if 'Right' in _3d.keysPressed:
         for i in _3d.objects:
-            _3d.rotateAroundY(i,math.pi,0,0)
-    if 'j' in _3d.keysPressed:
-        for i in _3d.objects:
             for l in range(4):
-                _3d.rotateAroundY(i,math.pi/180,0,0)
-    if 'k' in _3d.keysPressed:
-        for i in _3d.objects:
-            for l in range(4):
-                _3d.rotateAroundY(i,math.pi/180,0,0)
+                _3d.rotateAroundY(i,-math.pi/180,0,0)
     #   handling movement
     #       Z movement
     if 'w' in _3d.keysPressed:
