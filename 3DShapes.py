@@ -49,14 +49,20 @@ class _3D:# the class that handles everything
     def zsort(self,list):#sorts something based on the Z values not currently used
         sorted = []
         for i in list:
+            originDistX = abs(i[0][0]-self.camPos[0])
+            originDistY = abs(i[0][1]-self.camPos[1])
+            originDistZ = abs(i[0][2]-self.camPos[2])
+            valueX = abs(i[0][0]-self.camPos[0])#*originDistX
+            valueY = abs(i[0][1]-self.camPos[1])#*originDistY
+            valueZ = abs(i[0][2]-self.camPos[2])#*originDistZ
+            value = valueX+valueY+valueZ
             if len(sorted)==0:
-                first = False
                 sorted.append(i)
-            elif i[0][2] > sorted[0][0][2]:
+            elif value < abs(sorted[0][0][0]-self.camPos[0])+abs(sorted[0][0][1]-self.camPos[1])+abs(sorted[0][0][2]-self.camPos[2]):
                 sorted.insert(0,i)
-            elif not i[0][2] < sorted[len(sorted)-1][0][2]:
+            elif not value > abs(sorted[len(sorted)-1][0][0]-self.camPos[0])+abs(sorted[len(sorted)-1][0][1]-self.camPos[1])+abs(sorted[len(sorted)-1][0][2]-self.camPos[2]):
                 for k in sorted:
-                    if i[0][2] > k[0][2]:
+                    if value <= abs(k[0][0]-self.camPos[0])+abs(k[0][1]-self.camPos[1])+abs(k[0][2]-self.camPos[2]):
                         sorted.insert(sorted.index(k),i)
                         break
             else:
@@ -231,29 +237,29 @@ class _3D:# the class that handles everything
             i[1] = ((i[1]-radiusY) * cos - (i[0]-radiusY) * sin)+radiusY
             i[0] = ((i[0]-radiusX) * cos + (i[1]-radiusX) * sin)+radiusX
     # these ones are the same as the last ones, but they rotate them around the camera or the 0,0 point
-    def rotateAroundX(self,points,angle):#this one
+    def rotateAroundX(self,points,angle,rotationPointX,rotationPointY):#this one
         cos = math.cos(angle)
         sin = math.sin(angle)
-        radiusY = self.camPos[1]
-        radiusZ = self.camPos[2]
+        radiusY = rotationPointX
+        radiusZ = rotationPointY
         for i in points:
             i[1] = ((i[1]-radiusY) * cos - (i[2]-radiusZ) * sin)+radiusY
             i[2] = ((i[2]-radiusZ) * cos + (i[1]-radiusY) * sin)+radiusZ
         return points
-    def rotateAroundY(self,points,angle):#this one
+    def rotateAroundY(self,points,angle,rotationPointX,rotationPointY):#this one
         cos = math.cos(angle)
         sin = math.sin(angle)
-        radiusX = self.camPos[0]
-        radiusZ = self.camPos[2]
+        radiusX = rotationPointX
+        radiusZ = rotationPointY
         for i in points:
             i[0] = ((i[0]-radiusX) * cos - (i[2]-radiusZ) * sin)+radiusX
-            i[2] = ((i[2]-radiusZ) * cos + (i[0]-radiusX) * sin)+radiusZ
+            i[2] = ((i[2]-radiusZ) * cos - (i[0]-radiusX) * sin)+radiusZ
         return points
-    def rotateAroundZ(self,points,angle):#and this one
+    def rotateAroundZ(self,points,angle,rotationPointX,rotationPointY):#and this one
         cos = math.cos(angle)
         sin = math.sin(angle)
-        radiusX = self.camPos[0]
-        radiusY = self.camPos[1]
+        radiusX = rotationPointX
+        radiusY = rotationPointY
         for i in points:
             i[0] = ((i[0]-radiusX) * cos - (i[1]-radiusY) * sin)+radiusZ
             i[1] = ((i[1]-radiusY) * cos + (i[0]-radiusX) * sin)+radiusY
@@ -448,7 +454,7 @@ class _3D:# the class that handles everything
                 sorted.append(i)
         for i in sorted:
             i.remove(i[4])
-        
+
         return sorted
     def applyCamRot(self,x,y,z):
         cosX = math.cos(self.camRot[0])
@@ -492,14 +498,20 @@ class _3D:# the class that handles everything
 _3d = _3D(500)
 
 #making the first cubes
-#_3d.createCube(0,0,0,100)
-#_3d.createCube(0,0,0,100)
-#_3d.createCube(0,0,0,100)
-_3d.createCube(0,200,200,100)
-_3d.createCube(0,-200,200,100)
-_3d.createCube(200,0,200,100)
-_3d.createCube(-200,0,200,100)
-
+for i in range(3):
+    _3d.createCube(200,200,(i-1)*200,100)
+    _3d.createCube(200,-200,(i-1)*200,100)
+    _3d.createCube(-200,200,(i-1)*200,100)
+    _3d.createCube(-200,-200,(i-1)*200,100)
+    _3d.createCube(0,200,(i-1)*200,100)
+    _3d.createCube(0,-200,(i-1)*200,100)
+    _3d.createCube(200,0,(i-1)*200,100)
+    _3d.createCube(-200,0,(i-1)*200,100)
+    _3d.createCube(0,0,(i-1)*200,100)
+'''for i in range(3):
+    for k in range(3):
+        for l in range(3):
+            _3d.createCube(i*100,k*100,l*100,200'''
 #setting a few variables
 rotationSpeed = 1
 baseAngle = 0
@@ -524,9 +536,17 @@ while _3d.start:
         _3d.camRotate(z=.01)
     #       currently Y rotation, but it is not used
     if 'Left' in _3d.keysPressed:
-        _3d.camRotate(y=.01)
+        for i in _3d.objects:
+            _3d.rotateAroundY(i,math.pi,0,0)
     if 'Right' in _3d.keysPressed:
-        _3d.camRotate(y=-.01)
+        for i in _3d.objects:
+            _3d.rotateAroundY(i,math.pi,0,0)
+    if 'j' in _3d.keysPressed:
+        for i in _3d.objects:
+            _3d.rotateAroundY(i,.5*math.pi,0,0)
+    if 'k' in _3d.keysPressed:
+        for i in _3d.objects:
+            _3d.rotateAroundY(i,-.5*math.pi,0,0)
     #   handling movement
     #       Z movement
     if 'w' in _3d.keysPressed:
@@ -591,7 +611,6 @@ while _3d.start:
             _3d.drawFace(i,face[3][0:4],color=face[3][4],lines='black')
             _3d.drawFace(i,face[4][0:4],color=face[4][4],lines='black')
             _3d.drawFace(i,face[5][0:4],color=face[5][4],lines='black')
-
     lastMouseX = _3d.mouseX
     lastMouseY = _3d.mouseY
 
