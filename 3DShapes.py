@@ -448,12 +448,7 @@ class _3D:# the class that handles everything
                 sorted.append(i)
         for i in sorted:
             i.remove(i[4])
-        '''    if i == face1:print('face1');print(face1)
-            elif i == face2:print('face2');print(face2)
-            elif i == face3:print('face3');print(face3)
-            elif i == face4:print('face4');print(face4)
-            elif i == face5:print('face5');print(face5)
-            else:print('face6');print(face6)'''
+        
         return sorted
     def applyCamRot(self,x,y,z):
         cosX = math.cos(self.camRot[0])
@@ -500,10 +495,10 @@ _3d = _3D(500)
 #_3d.createCube(0,0,0,100)
 #_3d.createCube(0,0,0,100)
 #_3d.createCube(0,0,0,100)
-_3d.createCube(0,100,0,100)
-_3d.createCube(0,-100,0,100)
-_3d.createCube(100,0,0,100)
-_3d.createCube(-100,0,0,100)
+_3d.createCube(0,200,200,100)
+_3d.createCube(0,-200,200,100)
+_3d.createCube(200,0,200,100)
+_3d.createCube(-200,0,200,100)
 
 #setting a few variables
 rotationSpeed = 1
