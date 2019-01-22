@@ -543,10 +543,12 @@ while _3d.start:
             _3d.rotateAroundY(i,math.pi,0,0)
     if 'j' in _3d.keysPressed:
         for i in _3d.objects:
-            _3d.rotateAroundY(i,.5*math.pi,0,0)
+            for l in range(4):
+                _3d.rotateAroundY(i,math.pi/180,0,0)
     if 'k' in _3d.keysPressed:
         for i in _3d.objects:
-            _3d.rotateAroundY(i,-.5*math.pi,0,0)
+            for l in range(4):
+                _3d.rotateAroundY(i,math.pi/180,0,0)
     #   handling movement
     #       Z movement
     if 'w' in _3d.keysPressed:
