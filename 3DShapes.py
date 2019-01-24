@@ -261,7 +261,7 @@ class _3D:# the class that handles everything
         radiusX = rotationPointX
         radiusY = rotationPointY
         for i in points:
-            i[0] = ((i[0]-radiusX) * cos - (i[1]-radiusY) * sin)+radiusZ
+            i[0] = ((i[0]-radiusX) * cos - (i[1]-radiusY) * sin)+radiusX
             i[1] = ((i[1]-radiusY) * cos + (i[0]-radiusX) * sin)+radiusY
         return points
     def createCube(self,x,y,z,radius):#this function adds the a list of the points of a cube to a list
@@ -542,21 +542,18 @@ while _3d.start:
     #       currently Z rotation
     if 'Up' in _3d.keysPressed:
         for i in _3d.objects:
-            for l in range(4):
-                _3d.rotateAroundX(i,math.pi/180,0,0)
+            _3d.rotateAroundX(i,math.pi/180,0,0)
     if 'Down' in _3d.keysPressed:
         for i in _3d.objects:
-            for l in range(4):
-                _3d.rotateAroundX(i,-math.pi/180,0,0)
+            _3d.rotateAroundX(i,-math.pi/180,0,0)
     #       currently Y rotation, but it is not used
     if 'Left' in _3d.keysPressed:
         for i in _3d.objects:
-            for l in range(4):
-                _3d.rotateAroundY(i,math.pi/180,0,0)
+            _3d.rotateAroundY(i,math.pi/180,0,0)
     if 'Right' in _3d.keysPressed:
         for i in _3d.objects:
-            for l in range(4):
-                _3d.rotateAroundY(i,-math.pi/180,0,0)
+            _3d.rotateAroundY(i,-math.pi/180,0,0)
+        _3d.keysPressed.remove('Right')
     #   handling movement
     #       Z movement
     if 'w' in _3d.keysPressed:
@@ -575,8 +572,24 @@ while _3d.start:
         _3d.camTranslate(y=-10)
     #   resets the position and rotation
     if 'r' in _3d.keysPressed:
+        _3d.objects = []
+        for i in range(3):
+            _3d.createCube(200,200,(i-1)*200,100)
+            _3d.createCube(200,-200,(i-1)*200,100)
+            _3d.createCube(-200,200,(i-1)*200,100)
+            _3d.createCube(-200,-200,(i-1)*200,100)
+            _3d.createCube(0,200,(i-1)*200,100)
+            _3d.createCube(0,-200,(i-1)*200,100)
+            _3d.createCube(200,0,(i-1)*200,100)
+            _3d.createCube(-200,0,(i-1)*200,100)
+            _3d.createCube(0,0,(i-1)*200,100)
+    if 'j' in _3d.keysPressed:
+        for i in range(9):
+            s = _3d.objects[i]
+            _3d.rotateAroundZ(s,math.pi/180,0,0)
+    if 'p' in _3d.keysPressed:
+        _3d.camPos = [0,0,-800]
         _3d.camRot = [0,0,0]
-        _3d.camPos = [0,0,0]
     #   handling creating cubes currently not used
     if _3d.mousePressed and type(_3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)) == int and False:
         closest = _3d.ray(_3d.camPos[0],_3d.camPos[1],_3d.camPos[2],z2=1,range=10)
