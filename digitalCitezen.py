@@ -22,8 +22,8 @@ class Game:
             self.text += [str(event.keysym)]
         if event.keysym == 'BackSpace' and len(self.text) > 0:
             self.text.remove(self.text[len(self.text)-1])
-        if event.keysym == 'Space':
-            self.text += [' ']
+        if event.keysym == 'space':
+            self.text.append(' ')
     def KeyReleased(self,event):
         for event.keysym in self.keys:
             self.keys.remove(event.keysym)
