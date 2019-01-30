@@ -49,20 +49,32 @@ class _3D:# the class that handles everything
     def zsort(self,list):#sorts something based on the Z values not currently used
         sorted = []
         for i in list:
-            originDistX = abs(i[0][0]-self.camPos[0])
-            originDistY = abs(i[0][1]-self.camPos[1])
-            originDistZ = abs(i[0][2]-self.camPos[2])
-            valueX = abs(i[0][0]-self.camPos[0])#*originDistX
-            valueY = abs(i[0][1]-self.camPos[1])#*originDistY
-            valueZ = abs(i[0][2]-self.camPos[2])#*originDistZ
+            cosX = math.cos(self.camRot[0])
+            sinX = math.sin(self.camRot[0])
+            cosY = math.cos(self.camRot[1])
+            sinY = math.sin(self.camRot[1])
+            cosZ = math.cos(self.camRot[2])
+            sinZ = math.sin(self.camRot[2])
+            centerX = self.camPos[0]
+            centerY = self.camPos[1]
+            centerZ = self.camPos[2]
+            newX = ((i[0][0]-centerX) * cosY - (i[0][2]-centerZ) * sinY)+centerX
+            newY = i[0][1]
+            newZ = ((i[0][2]-centerZ) * cosY + (i[0][0]-centerX) * sinY)+centerZ
+            originDistX = abs(newX-self.camPos[0])
+            originDistY = abs(newY-self.camPos[1])
+            originDistZ = abs(newZ-self.camPos[2])
+            valueX = abs(newX-self.camPos[0])#*originDistX
+            valueY = abs(newY-self.camPos[1])#*originDistY
+            valueZ = abs(newZ-self.camPos[2])#*originDistZ
             value = valueX+valueY+valueZ
             if len(sorted)==0:
                 sorted.append(i)
-            elif value < abs(sorted[0][0][0]-self.camPos[0])+abs(sorted[0][0][1]-self.camPos[1])+abs(sorted[0][0][2]-self.camPos[2]):
+            elif value > abs(sorted[0][0][0]-self.camPos[0])+abs(sorted[0][0][1]-self.camPos[1])+abs(sorted[0][0][2]-self.camPos[2]):
                 sorted.insert(0,i)
-            elif not value > abs(sorted[len(sorted)-1][0][0]-self.camPos[0])+abs(sorted[len(sorted)-1][0][1]-self.camPos[1])+abs(sorted[len(sorted)-1][0][2]-self.camPos[2]):
+            elif not value < abs(sorted[len(sorted)-1][0][0]-self.camPos[0])+abs(sorted[len(sorted)-1][0][1]-self.camPos[1])+abs(sorted[len(sorted)-1][0][2]-self.camPos[2]):
                 for k in sorted:
-                    if value <= abs(k[0][0]-self.camPos[0])+abs(k[0][1]-self.camPos[1])+abs(k[0][2]-self.camPos[2]):
+                    if value >= abs(k[0][0]-self.camPos[0])+abs(k[0][1]-self.camPos[1])+abs(k[0][2]-self.camPos[2]):
                         sorted.insert(sorted.index(k),i)
                         break
             else:
@@ -102,15 +114,16 @@ class _3D:# the class that handles everything
 
         centerX = self.camPos[0]
         centerY = self.camPos[1]
-        centerZ = self.camPos[2]
+        centerZ = -self.camPos[2]
 
-        x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
-        y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
-        z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
-        newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
-        newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
-        newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
-
+    #    x = ((p[0]-centerX) * cosY + (p[2]-centerZ) * sinY)+centerX
+    #    y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
+    #    z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
+    #    newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
+    #    newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+    #    newZ = ((z-centerZ) * cosY - (x-centerX) * sinY)+centerZ
+        newX = ((p[0]-centerX) * cosY - (p[2]-centerZ) * sinY)+centerX
+        newZ = ((p[2]-centerZ) * cosY - (p[0]-centerX) * sinY)+centerZ
         if -p[2] == self.camPos[2]:
             l = [self.fl,self.camPos[2],newZ]
             l = list(l)
@@ -134,15 +147,18 @@ class _3D:# the class that handles everything
             sinZ = math.sin(self.camRot[2])
             centerX = self.camPos[0]
             centerY = self.camPos[1]
-            centerZ = -self.camPos[2]
-            x = p[0]
-            y = ((p[1]) * cosX - (p[2]) * sinX)
-            z = ((p[2]) * cosX + (p[1]) * sinX)
-            newX = ((x) * cosZ + (y) * sinZ)
-            newY = ((y) * cosZ - (x) * sinZ)
-            newZ = ((z) * cosY - (x) * sinY)
-            newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX
-            if newZ > -self.camPos[2] and not newZ == -self.camPos[2]:
+            centerZ = self.camPos[2]
+        #    x = p[0]
+        #    y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
+        #    z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
+        #    newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
+        #    newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
+        #    newZ = ((z-centerZ) * cosY - (x-centerZ) * sinY)+centerZ
+        #    newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX+centerX
+            newX = ((p[0]-centerX) * cosY - (p[2]-centerZ) * sinY)+centerX
+            newY = p[1]
+            newZ = ((p[2]-centerZ) * cosY + (p[0]-centerX) * sinY)+centerZ
+            if not newZ == self.camPos[2] and newZ > self.camPos[2]:
                 l = [self.fl,self.camPos[2],newZ]
                 l = list(l)
                 first = float(l[0]-l[1])
@@ -511,14 +527,19 @@ class _3D:# the class that handles everything
             y = ((y-centerY)*cos+(x-centerX)*sin)+centerY+root.winfo_screenheight()/2
             self.draw_square(x,y,2)
             i += math.pi/180
-    def draw_faces(self,face):
+    def clearScreen(self):
+        canvas.delete(ALL)
+    def updateScreen(self):
+        root.update()
+    def draw_faces(self,points,face):
+        i = points
+#        if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
         self.drawFace(i,face[0][0:4],color=face[0][4],lines='black')
         self.drawFace(i,face[1][0:4],color=face[1][4],lines='black')
         self.drawFace(i,face[2][0:4],color=face[2][4],lines='black')
         self.drawFace(i,face[3][0:4],color=face[3][4],lines='black')
         self.drawFace(i,face[4][0:4],color=face[4][4],lines='black')
         self.drawFace(i,face[5][0:4],color=face[5][4],lines='black')
-        root.update()
     def draw_square(self,x,y,radius,color='black'):#not used
         canvas.create_rectangle(x-radius,y-radius,x+radius,y+radius,fill=color)
     def keyPressed(self,event):#adds a keysym to the list of keys pressed
