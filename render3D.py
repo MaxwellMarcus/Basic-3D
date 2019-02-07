@@ -147,7 +147,7 @@ class _3D:# the class that handles everything
             sinZ = math.sin(self.camRot[2])
             centerX = self.camPos[0]
             centerY = self.camPos[1]
-            centerZ = self.camPos[2]
+            centerZ = self.camPos[2]*2
         #    x = p[0]
         #    y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
         #    z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ

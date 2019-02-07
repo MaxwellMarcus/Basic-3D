@@ -30,7 +30,7 @@ class rubiksCube:
         z = camera.camPos[2]
         camera.camPos[0] = (x*cos)+(z*sin)
         camera.camPos[2] = (z*cos)-(x*sin)
-        camera.camRot[1] -= angle*2
+        #camera.camRot[1] += angle
     def rotateAroundCubeZ(self,angle):
         sin = math.sin(angle)
         cos = math.cos(angle)
@@ -38,6 +38,73 @@ class rubiksCube:
         y = camera.camPos[1]
         camera.camPos[0] = (x*cos)-(y*sin)
         camera.camPos[1] = (y*cos)+(x*sin)
+    def rotateX(self,angle):
+        sin = math.sin(angle)
+        cos = math.cos(angle)
+        for i in self.cubes:
+            for l in i:
+                l[1] = (l[1]*cos)+(l[2]*sin)
+                l[2] = (l[2]*cos)-(l[1]*sin)
+    def rotateY(self,angle):
+        sin = math.sin(angle)
+        cos = math.cos(angle)
+        for i in self.cubes:
+            for l in i:
+                l[0] = (l[0]*cos)+(l[2]*sin)
+                l[2] = (l[2]*cos)-(l[0]*sin)
+    def rotateZ(self,angle):
+        sin = math.sin(angle)
+        cos = math.cos(angle)
+        for i in self.cubes:
+            for l in i:
+                l[1] = (l[1]*cos)+(l[0]*sin)
+                l[0] = (l[0]*cos)-(l[1]*sin)
+    def rotateSide(self,side,angle):
+        if side == 1:
+            list = []
+            for z in self.cubes:
+                if z[0][2] < 0:
+                    list.append(z)
+            for l in list:
+                for z in list:
+                    if not z is l and z[0][1] == l[0][1] and z[0][0] == l[0][0]:
+                        if l > z:
+                            del(l)
+            for z in list:
+                for i in z:
+                    sin = math.sin(angle)
+                    cos = math.cos(angle)
+                    i[0]=(i[0]*cos)-(i[1]*sin)
+                    i[1]=(i[1]*cos)+(i[0]*sin)
+                    dist=z[0][2]-i[2]
+                    i[2]=-100-dist
+        elif side == 2:
+            for z in self.cubes:
+                if z[0][2] > 0:
+                    for i in z:
+                        sin = math.sin(angle)
+                        cos = math.cos(angle)
+                        i[0]=(i[0]*cos)-(i[1]*sin)
+                        i[1]=(i[1]*cos)+(i[0]*sin)
+                        dist=z[0][2]-i[2]
+                        i[2]=100-dist
+        elif side == 3:
+            for z in self.cubes:
+                if z[0][1] > 0:
+                    for i in z:
+                        sin = math.sin(angle)
+                        cos = math.cos(angle)
+                        i[0]=(i[0]*cos)-(i[2]*sin)
+                        i[2]=(i[2]*cos)+(i[0]*sin)
+                        dist=z[0][1]-i[1]
+                        i[1]=100-dist
+        elif side == 4:
+            pass
+        elif side == 5:
+            pass
+        elif side == 6:
+            pass
+
     def render(self):
         camera.clearScreen()
         for i in camera.visible(self.cubes):
@@ -48,6 +115,7 @@ class rubiksCube:
 
 
 cube = rubiksCube(0,0,0)
+#camera.camRot[1] = math.pi
 while camera.start:
     if 'Escape' in camera.keysPressed:
         camera.start = False
@@ -56,8 +124,18 @@ while camera.start:
     if 's' in camera.keysPressed:
         camera.camPos[2] += 10
     if 'j' in camera.keysPressed:
-        cube.rotateAroundCubeY(math.pi/180)
+        cube.rotateSide(1,math.pi/90)
     if 'k' in camera.keysPressed:
-        cube.rotateAroundCubeY(-math.pi/180)
+        cube.rotateSide(2,math.pi/90)
+    if 'h' in camera.keysPressed:
+        cube.rotateSide(3,math.pi/90)
+    if 'Up' in camera.keysPressed:
+        cube.rotateX(math.pi/180)
+    if 'Down' in camera.keysPressed:
+        cube.rotateX(-math.pi/180)
+    if 'Left' in camera.keysPressed:
+        cube.rotateY(math.pi/180)
+    if 'Right' in camera.keysPressed:
+        cube.rotateY(-math.pi/180)
 
     cube.render()
