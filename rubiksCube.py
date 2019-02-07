@@ -115,8 +115,22 @@ class rubiksCube:
 
 
 cube = rubiksCube(0,0,0)
+cube.render()
 #camera.camRot[1] = math.pi
+angle = 0
+originalCube = list(cube.cubes[:])
+print(originalCube is cube.cubes)
 while camera.start:
+    cube.rotateSide(1,math.pi/180)
+    cube.rotateSide(3,math.pi/180)
+    angle += 1
+    print(originalCube is cube.cubes)
+    #if angle%360 == 0:
+    for i in range(len(originalCube)-1):
+        for l in range(len(originalCube[i])-1):
+            for z in range(len(originalCube[i][l])-1):
+                print(originalCube[i][l][z] == cube.cubes[i][l][z])
+                print(originalCube[i][l][z] is cube.cubes[i][l][z])
     if 'Escape' in camera.keysPressed:
         camera.start = False
     if 'w' in camera.keysPressed:
@@ -137,5 +151,4 @@ while camera.start:
         cube.rotateY(math.pi/180)
     if 'Right' in camera.keysPressed:
         cube.rotateY(-math.pi/180)
-
     cube.render()
