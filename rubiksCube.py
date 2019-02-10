@@ -5,6 +5,7 @@ camera = render3D._3D(500)
 class rubiksCube:
     def __init__(self,x,y,z):
         self.cubes = []
+        self.originalCubes = []
         self.x = x
         self.y = y
         self.z = z
@@ -12,6 +13,7 @@ class rubiksCube:
             for y in range(3):
                 for z in range(3):
                     self.cubes.append(camera.returnCube((x-1)*100,(y-1)*100,(z-1)*100,20))
+                    self.originalCubes.append(camera.returnCube((x-1)*100,(y-1)*100,(z-1)*100,20))
         for i in self.cubes:
             i = camera.project(i)
 
@@ -107,6 +109,8 @@ class rubiksCube:
 
     def render(self):
         camera.clearScreen()
+        for i in self.originalCubes:
+            i = camera.project(i)
         for i in camera.visible(self.cubes):
             i = camera.project(i)
             face = camera.visibleFace(i)
@@ -118,19 +122,18 @@ cube = rubiksCube(0,0,0)
 cube.render()
 #camera.camRot[1] = math.pi
 angle = 0
-originalCube = list(cube.cubes[:])
-print(originalCube is cube.cubes)
 while camera.start:
-    cube.rotateSide(1,math.pi/180)
-    cube.rotateSide(3,math.pi/180)
+    cube.rotateY(math.pi/180)
+    #cube.rotateSide(3,math.pi/180)
     angle += 1
-    print(originalCube is cube.cubes)
-    #if angle%360 == 0:
-    for i in range(len(originalCube)-1):
-        for l in range(len(originalCube[i])-1):
-            for z in range(len(originalCube[i][l])-1):
-                print(originalCube[i][l][z] == cube.cubes[i][l][z])
-                print(originalCube[i][l][z] is cube.cubes[i][l][z])
+    if angle%360 == 0:
+        print(cube.cubes == cube.originalCubes)
+        for i in range(len(cube.cubes)):
+            pass
+    #        print(cube.cubes[i])
+    #        print('')
+    #        print(originalCube[i])
+    #        print('')
     if 'Escape' in camera.keysPressed:
         camera.start = False
     if 'w' in camera.keysPressed:
