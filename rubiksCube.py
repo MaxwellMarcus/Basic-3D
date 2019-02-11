@@ -45,22 +45,28 @@ class rubiksCube:
         cos = math.cos(angle)
         for i in self.cubes:
             for l in i:
-                l[1] = (l[1]*cos)+(l[2]*sin)
-                l[2] = (l[2]*cos)-(l[1]*sin)
+                xo = l[2]
+                yo = l[1]
+                l[1] = (yo*cos)+(xo*sin)
+                l[2] = (xo*cos)-(yo*sin)
     def rotateY(self,angle):
         sin = math.sin(angle)
         cos = math.cos(angle)
         for i in self.cubes:
             for l in i:
-                l[0] = (l[0]*cos)+(l[2]*sin)
-                l[2] = (l[2]*cos)-(l[0]*sin)
+                xo = l[0]
+                yo = l[2]
+                l[2] = (yo*cos)+(xo*sin)
+                l[0] = (xo*cos)-(yo*sin)
     def rotateZ(self,angle):
         sin = math.sin(angle)
         cos = math.cos(angle)
         for i in self.cubes:
             for l in i:
-                l[1] = (l[1]*cos)+(l[0]*sin)
-                l[0] = (l[0]*cos)-(l[1]*sin)
+                xo = l[0]
+                yo = l[1]
+                l[1] = (yo*cos)+(xo*sin)
+                l[0] = (xo*cos)-(yo*sin)
     def rotateSide(self,side,angle):
         if side == 1:
             list = []
@@ -76,8 +82,10 @@ class rubiksCube:
                 for i in z:
                     sin = math.sin(angle)
                     cos = math.cos(angle)
-                    i[0]=(i[0]*cos)-(i[1]*sin)
-                    i[1]=(i[1]*cos)+(i[0]*sin)
+                    ox = i[0]
+                    oy = i[1]
+                    i[0]=(ox*cos)-(oy*sin)
+                    i[1]=(oy*cos)+(ox*sin)
                     dist=z[0][2]-i[2]
                     i[2]=-100-dist
         elif side == 2:
@@ -86,8 +94,10 @@ class rubiksCube:
                     for i in z:
                         sin = math.sin(angle)
                         cos = math.cos(angle)
-                        i[0]=(i[0]*cos)-(i[1]*sin)
-                        i[1]=(i[1]*cos)+(i[0]*sin)
+                        ox = i[0]
+                        oy = i[1]
+                        i[0]=(ox*cos)-(oy*sin)
+                        i[1]=(oy*cos)+(ox*sin)
                         dist=z[0][2]-i[2]
                         i[2]=100-dist
         elif side == 3:
@@ -97,7 +107,10 @@ class rubiksCube:
                         sin = math.sin(angle)
                         cos = math.cos(angle)
                         i[0]=(i[0]*cos)-(i[2]*sin)
-                        i[2]=(i[2]*cos)+(i[0]*sin)
+                        ox = i[0]
+                        oy = i[2]
+                        i[0]=(ox*cos)-(oy*sin)
+                        i[2]=(oy*cos)+(ox*sin)
                         dist=z[0][1]-i[1]
                         i[1]=100-dist
         elif side == 4:
@@ -106,7 +119,8 @@ class rubiksCube:
             pass
         elif side == 6:
             pass
-
+    def recenterCube(self,index,newX,newY,newZ):
+        self.cuebs[index] = camera.returnCube(newX,newY,newZ,20)
     def render(self):
         camera.clearScreen()
         for i in self.originalCubes:
@@ -120,20 +134,9 @@ class rubiksCube:
 
 cube = rubiksCube(0,0,0)
 cube.render()
-#camera.camRot[1] = math.pi
-angle = 0
+
 while camera.start:
-    cube.rotateY(math.pi/180)
-    #cube.rotateSide(3,math.pi/180)
-    angle += 1
-    if angle%360 == 0:
-        print(cube.cubes == cube.originalCubes)
-        for i in range(len(cube.cubes)):
-            pass
-    #        print(cube.cubes[i])
-    #        print('')
-    #        print(originalCube[i])
-    #        print('')
+
     if 'Escape' in camera.keysPressed:
         camera.start = False
     if 'w' in camera.keysPressed:
