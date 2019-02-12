@@ -73,11 +73,15 @@ class rubiksCube:
             for z in self.cubes:
                 if z[0][2] < 0:
                     list.append(z)
-            for l in list:
+            '''for l in list:
                 for z in list:
                     if not z is l and z[0][1] == l[0][1] and z[0][0] == l[0][0]:
                         if l > z:
-                            del(l)
+                            del(l)'''
+            while len(list) > 9:
+                list.remove(min(list))
+            for i in list:
+                i.recenterCube()
             for z in list:
                 for i in z:
                     sin = math.sin(angle)
