@@ -81,7 +81,8 @@ class rubiksCube:
             while len(list) > 9:
                 list.remove(min(list))
             for i in list:
-                i.recenterCube()
+                if not i[0][2] == 100:
+                    self.recenterCube(self.cubes.index(i))
             for z in list:
                 for i in z:
                     sin = math.sin(angle)
@@ -123,8 +124,19 @@ class rubiksCube:
             pass
         elif side == 6:
             pass
-    def recenterCube(self,index,newX,newY,newZ):
-        self.cuebs[index] = camera.returnCube(newX,newY,newZ,20)
+    def recenterCube(self,index):
+        l = []
+        c = self.cubes[index][0]
+        for i in range(3):
+            if c[i] > 50:
+                l.append(100)
+            elif c[i] < 50:
+                l.append(-100)
+            else:
+                l.append(0)
+        self.cubes[index] = camera.returnCube(l[0],l[1],l[2],20)
+        #for i in self.cubes[index]:
+        #    print(i)
     def render(self):
         camera.clearScreen()
         for i in self.originalCubes:
