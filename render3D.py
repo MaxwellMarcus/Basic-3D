@@ -25,6 +25,7 @@ class _3D:# the class that handles everything
         self.mousePressed = False
         self.mouse2Pressed = False
         self.keysPressed = []
+        self.usedKeys = []
 
         self.facing = None
 
@@ -548,6 +549,10 @@ class _3D:# the class that handles everything
         i = 0
         while i < self.keysPressed.count(event.keysym):
             self.keysPressed.remove(event.keysym)
+            i=0
+        i = 0
+        while i < self.usedKeys.count(event.keysym):
+            self.usedKeys.remove(event.keysym)
             i=0
     def mousePress(self,event):#changes the variable mousePressed to true if left mouse button is pressed
         self.mousePressed = True

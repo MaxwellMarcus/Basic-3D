@@ -73,15 +73,14 @@ class rubiksCube:
             for z in self.cubes:
                 if z[0][2] < 0:
                     list.append(z)
-            '''for l in list:
-                for z in list:
-                    if not z is l and z[0][1] == l[0][1] and z[0][0] == l[0][0]:
-                        if l > z:
-                            del(l)'''
             while len(list) > 9:
-                list.remove(min(list))
+                smallest = list[0]
+                for i in list:
+                    if i[0][2] < smallest[0][2]:
+                        smallest = i
+                list.remove(smallest)
             for i in list:
-                if not i[0][2] == 100:
+                if not i[0][2] == -100:
                     self.recenterCube(self.cubes.index(i))
             for z in list:
                 for i in z:
@@ -111,7 +110,6 @@ class rubiksCube:
                     for i in z:
                         sin = math.sin(angle)
                         cos = math.cos(angle)
-                        i[0]=(i[0]*cos)-(i[2]*sin)
                         ox = i[0]
                         oy = i[2]
                         i[0]=(ox*cos)-(oy*sin)
@@ -119,11 +117,41 @@ class rubiksCube:
                         dist=z[0][1]-i[1]
                         i[1]=100-dist
         elif side == 4:
-            pass
+            for z in self.cubes:
+                if z[0][1] < 0:
+                    for i in z:
+                        sin = math.sin(angle)
+                        cos = math.cos(angle)
+                        ox = i[0]
+                        oy = i[2]
+                        i[0]=(ox*cos)-(oy*sin)
+                        i[2]=(oy*cos)+(ox*sin)
+                        dist=z[0][1]-i[1]
+                        i[1]=100-dist
         elif side == 5:
-            pass
+            for z in self.cubes:
+                if z[0][0] > 0:
+                    for i in z:
+                        sin = math.sin(angle)
+                        cos = math.cos(angle)
+                        ox = i[1]
+                        oy = i[2]
+                        i[1]=(ox*cos)-(oy*sin)
+                        i[2]=(oy*cos)+(ox*sin)
+                        dist=z[0][0]-i[0]
+                        i[0]=100-dist
         elif side == 6:
-            pass
+            for z in self.cubes:
+                if z[0][0] < 0:
+                    for i in z:
+                        sin = math.sin(angle)
+                        cos = math.cos(angle)
+                        ox = i[1]
+                        oy = i[2]
+                        i[1]=(ox*cos)-(oy*sin)
+                        i[2]=(oy*cos)+(ox*sin)
+                        dist=z[0][0]-i[0]
+                        i[0]=100-dist
     def recenterCube(self,index):
         l = []
         c = self.cubes[index][0]
@@ -156,15 +184,28 @@ while camera.start:
     if 'Escape' in camera.keysPressed:
         camera.start = False
     if 'w' in camera.keysPressed:
-        camera.camPos[2] -= 10
-    if 's' in camera.keysPressed:
         camera.camPos[2] += 10
-    if 'j' in camera.keysPressed:
-        cube.rotateSide(1,math.pi/90)
-    if 'k' in camera.keysPressed:
-        cube.rotateSide(2,math.pi/90)
-    if 'h' in camera.keysPressed:
-        cube.rotateSide(3,math.pi/90)
+    if 's' in camera.keysPressed:
+        camera.camPos[2] -= 10
+    if 'l' in camera.keysPressed and 'l' not in camera.usedKeys:
+        cube.rotateSide(1,math.pi/4)
+        camera.usedKeys.append('l')
+    if 'k' in camera.keysPressed and 'k' not in camera.usedKeys:
+        cube.rotateSide(2,math.pi/4)
+        camera.usedKeys.append('k')
+    if 'j' in camera.keysPressed and 'j' not in camera.usedKeys:
+        cube.rotateSide(3,math.pi/4)
+        camera.usedKeys.append('j')
+    if 'h' in camera.keysPressed and 'h' not in camera.usedKeys:
+        cube.rotateSide(4,math.pi/4)
+        camera.usedKeys.append('h')
+    if 'g' in camera.keysPressed and 'g' not in camera.usedKeys:
+        cube.rotateSide(5,math.pi/4)
+        camera.usedKeys.append('j')
+    if 'f' in camera.keysPressed and 'f' not in camera.usedKeys:
+        cube.rotateSide(6,math.pi/4)
+        camera.usedKeys.append('f')
+
     if 'Up' in camera.keysPressed:
         cube.rotateX(math.pi/180)
     if 'Down' in camera.keysPressed:
