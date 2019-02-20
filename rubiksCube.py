@@ -6,6 +6,7 @@ class rubiksCube:
     def __init__(self,x,y,z):
         self.cubes = []
         self.originalCubes = []
+        self.rotatedCubes = []
         self.x = x
         self.y = y
         self.z = z
@@ -14,6 +15,8 @@ class rubiksCube:
                 for z in range(3):
                     self.cubes.append(camera.returnCube((x-1)*100,(y-1)*100,(z-1)*100,20))
                     self.originalCubes.append(camera.returnCube((x-1)*100,(y-1)*100,(z-1)*100,20))
+                    self.rotatedCubes.append(camera.returnCube((x - 1) * 100, (y - 1) * 100, (z - 1) * 100, 20))
+
         for i in self.cubes:
             i = camera.project(i)
 
@@ -43,7 +46,7 @@ class rubiksCube:
     def rotateX(self,angle):
         sin = math.sin(angle)
         cos = math.cos(angle)
-        for i in self.cubes:
+        for i in self.rotatedCubes:
             for l in i:
                 xo = l[2]
                 yo = l[1]
@@ -52,7 +55,7 @@ class rubiksCube:
     def rotateY(self,angle):
         sin = math.sin(angle)
         cos = math.cos(angle)
-        for i in self.cubes:
+        for i in self.rotatedCubes:
             for l in i:
                 xo = l[0]
                 yo = l[2]
@@ -61,7 +64,7 @@ class rubiksCube:
     def rotateZ(self,angle):
         sin = math.sin(angle)
         cos = math.cos(angle)
-        for i in self.cubes:
+        for i in self.rotatedCubes:
             for l in i:
                 xo = l[0]
                 yo = l[1]
@@ -71,30 +74,10 @@ class rubiksCube:
         if side == 1:
             list = []
             for z in self.cubes:
-                if z[0][2] < 0:
+                if z[0][2] < -90:
                     list.append(z)
-            while len(list) > 9:
-                smallest = list[0]
-                for i in list:
-                    if i[0][2] < smallest[0][2]:
-                        smallest = i
-                list.remove(smallest)
-            for i in list:
-                if not i[0][2] == -100:
-                    self.recenterCube(self.cubes.index(i))
-            for z in list:
-                for i in z:
-                    sin = math.sin(angle)
-                    cos = math.cos(angle)
-                    ox = i[0]
-                    oy = i[1]
-                    i[0]=(ox*cos)-(oy*sin)
-                    i[1]=(oy*cos)+(ox*sin)
-                    dist=z[0][2]-i[2]
-                    i[2]=-100-dist
-        elif side == 2:
-            for z in self.cubes:
-                if z[0][2] > 0:
+            if len(list) == 9:
+                for z in list:
                     for i in z:
                         sin = math.sin(angle)
                         cos = math.cos(angle)
@@ -103,55 +86,92 @@ class rubiksCube:
                         i[0]=(ox*cos)-(oy*sin)
                         i[1]=(oy*cos)+(ox*sin)
                         dist=z[0][2]-i[2]
-                        i[2]=100-dist
+                       # i[2]=-100-dist
+        elif side == 2:
+            list = []
+            for z in self.cubes:
+                if z[0][2] > 90:
+                    list.append(z)
+            if len(list) == 9:
+                for z in list:
+                    if z[0][2] > 0:
+                        for i in z:
+                            sin = math.sin(angle)
+                            cos = math.cos(angle)
+                            ox = i[0]
+                            oy = i[1]
+                            i[0]=(ox*cos)-(oy*sin)
+                            i[1]=(oy*cos)+(ox*sin)
+                            dist=z[0][2]-i[2]
+                          #  i[2]=100-dist
         elif side == 3:
+            list = []
             for z in self.cubes:
-                if z[0][1] > 0:
-                    for i in z:
-                        sin = math.sin(angle)
-                        cos = math.cos(angle)
-                        ox = i[0]
-                        oy = i[2]
-                        i[0]=(ox*cos)-(oy*sin)
-                        i[2]=(oy*cos)+(ox*sin)
-                        dist=z[0][1]-i[1]
-                        i[1]=100-dist
+                if z[0][1] > 90:
+                    list.append(z)
+            if len(list) == 9:
+                for z in list:
+                    if z[0][1] > 0:
+                        for i in z:
+                            sin = math.sin(angle)
+                            cos = math.cos(angle)
+                            ox = i[0]
+                            oy = i[2]
+                            i[0]=(ox*cos)-(oy*sin)
+                            i[2]=(oy*cos)+(ox*sin)
+                            dist=z[0][1]-i[1]
+                         #   i[1]=100-dist
         elif side == 4:
+            list = []
             for z in self.cubes:
-                if z[0][1] < 0:
-                    for i in z:
-                        sin = math.sin(angle)
-                        cos = math.cos(angle)
-                        ox = i[0]
-                        oy = i[2]
-                        i[0]=(ox*cos)-(oy*sin)
-                        i[2]=(oy*cos)+(ox*sin)
-                        dist=z[0][1]-i[1]
-                        i[1]=100-dist
+                if z[0][1] < -90:
+                    list.append(z)
+            if len(list) == 9:
+                for z in list:
+                    if z[0][1] < 0:
+                        for i in z:
+                            sin = math.sin(angle)
+                            cos = math.cos(angle)
+                            ox = i[0]
+                            oy = i[2]
+                            i[0]=(ox*cos)-(oy*sin)
+                            i[2]=(oy*cos)+(ox*sin)
+                            dist=z[0][1]-i[1]
+                           # i[1]=100-dist
         elif side == 5:
+            list = []
             for z in self.cubes:
-                if z[0][0] > 0:
-                    for i in z:
-                        sin = math.sin(angle)
-                        cos = math.cos(angle)
-                        ox = i[1]
-                        oy = i[2]
-                        i[1]=(ox*cos)-(oy*sin)
-                        i[2]=(oy*cos)+(ox*sin)
-                        dist=z[0][0]-i[0]
-                        i[0]=100-dist
+                if z[0][0] > 90:
+                    list.append(z)
+            if len(list) == 9:
+                for z in list:
+                    if z[0][0] > 0:
+                        for i in z:
+                            sin = math.sin(angle)
+                            cos = math.cos(angle)
+                            ox = i[1]
+                            oy = i[2]
+                            i[1]=(ox*cos)-(oy*sin)
+                            i[2]=(oy*cos)+(ox*sin)
+                            dist=z[0][0]-i[0]
+                            #i[0]=100-dist
         elif side == 6:
+            list = []
             for z in self.cubes:
-                if z[0][0] < 0:
-                    for i in z:
-                        sin = math.sin(angle)
-                        cos = math.cos(angle)
-                        ox = i[1]
-                        oy = i[2]
-                        i[1]=(ox*cos)-(oy*sin)
-                        i[2]=(oy*cos)+(ox*sin)
-                        dist=z[0][0]-i[0]
-                        i[0]=100-dist
+                if z[0][0] < -90:
+                    list.append(z)
+            if len(list) == 9:
+                for z in list:
+                    if z[0][0] < 0:
+                        for i in z:
+                            sin = math.sin(angle)
+                            cos = math.cos(angle)
+                            ox = i[1]
+                            oy = i[2]
+                            i[1]=(ox*cos)-(oy*sin)
+                            i[2]=(oy*cos)+(ox*sin)
+                            dist=z[0][0]-i[0]
+                           # i[0]=100-dist
     def recenterCube(self,index):
         l = []
         c = self.cubes[index][0]
@@ -169,7 +189,7 @@ class rubiksCube:
         camera.clearScreen()
         for i in self.originalCubes:
             i = camera.project(i)
-        for i in camera.visible(self.cubes):
+        for i in camera.visible(self.rotatedCubes):
             i = camera.project(i)
             face = camera.visibleFace(i)
             camera.draw_faces(i,face)
@@ -201,17 +221,21 @@ while camera.start:
         camera.usedKeys.append('h')
     if 'g' in camera.keysPressed and 'g' not in camera.usedKeys:
         cube.rotateSide(5,math.pi/4)
-        camera.usedKeys.append('j')
+        camera.usedKeys.append('g')
     if 'f' in camera.keysPressed and 'f' not in camera.usedKeys:
         cube.rotateSide(6,math.pi/4)
         camera.usedKeys.append('f')
 
     if 'Up' in camera.keysPressed:
-        cube.rotateX(math.pi/180)
+        #cube.rotateX(math.pi/180)
+        camera.camRotate(x=math.pi/180)
     if 'Down' in camera.keysPressed:
-        cube.rotateX(-math.pi/180)
+        #cube.rotateX(-math.pi/180)
+        pass
     if 'Left' in camera.keysPressed:
-        cube.rotateY(math.pi/180)
+        #cube.rotateY(math.pi/180)
+        pass
     if 'Right' in camera.keysPressed:
-        cube.rotateY(-math.pi/180)
+        #cube.rotateY(-math.pi/180)
+        pass
     cube.render()
