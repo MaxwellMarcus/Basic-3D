@@ -33,6 +33,9 @@ class _3D:# the class that handles everything
 
         self.start = True
 
+        self.screenWidth = root.winfo_screenwidth()
+        self.screenHeight = root.winfo_screenheight()
+
         root.bind('<Motion>',self.mouseSet)
         root.bind('<KeyPress>',self.keyPressed)
         root.bind('<KeyRelease>',self.KeyReleased)
@@ -532,6 +535,8 @@ class _3D:# the class that handles everything
         canvas.delete(ALL)
     def updateScreen(self):
         root.update()
+    def drawText(self,x,y,text,fontSize):
+        canvas.create_text(x,y,text=text,font=('TkTextFont',fontSize))
     def draw_faces(self,points,face):
         i = points
 #        if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
