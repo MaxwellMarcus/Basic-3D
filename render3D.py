@@ -154,16 +154,19 @@ class _3D:# the class that handles everything
             newX = p[0]
             newY = p[1]
             newZ = xrz
-            if p[0] < 10 and p[0] > -10 and p[1] < 10 and p[1] > -10 and p[2] < 10 and p[2] > -10:
+            #if p[0] < 10 and p[0] > -10 and p[1] < 10 and p[1] > -10 and p[2] < 10 and p[2] > -10:
+            if p[0] == 120 and p[1] == 120 and p[2] == 120:
                 print(xrz)
+                print(newY)
+                print('')
             if not newZ == self.camPos[2] and newZ > self.camPos[2]:
                 l = [self.fl,self.camPos[2],newZ]
                 l = list(l)
                 first = float(l[0]-l[1])
                 second = float(l[2]-l[1])
                 scale = first/second
-                p[3] = newX * scale + self.camPos[0] * scale
-                p[4] = newY * scale + self.camPos[1] * scale
+                p[3] = newX * 1 + self.camPos[0] * 1
+                p[4] = newY * 1 + self.camPos[1] * 1
             else:
                 p[3] = False
                 p[4] = False

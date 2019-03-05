@@ -179,7 +179,6 @@ cube = rubiksCube(0,0,0)
 cube.render()
 
 while camera.start:
-
     if 'Escape' in camera.keysPressed:
         camera.start = False
     if 'w' in camera.keysPressed:
