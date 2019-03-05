@@ -147,21 +147,15 @@ class _3D:# the class that handles everything
             sinX = math.sin(self.camRot[0])
             cosY = math.cos(self.camRot[1])
             sinY = math.sin(self.camRot[1])
-            cosZ = math.cos(self.camRot[2])
-            sinZ = math.sin(self.camRot[2])
-            centerX = self.camPos[0]
-            centerY = self.camPos[1]
-            centerZ = self.camPos[2]*2
-        #    x = p[0]
-        #    y = ((p[1]-centerY) * cosX - (p[2]-centerZ) * sinX)+centerY
-        #    z = ((p[2]-centerZ) * cosX + (p[1]-centerY) * sinX)+centerZ
-        #    newX = ((x-centerX) * cosZ + (y-centerY) * sinZ)+centerX
-        #    newY = ((y-centerY) * cosZ - (x-centerX) * sinZ)+centerY
-        #    newZ = ((z-centerZ) * cosY - (x-centerZ) * sinY)+centerZ
-        #    newX = ((newX-centerX) * cosY + (newZ-centerZ) * sinY)+centerX+centerX
-            newX = ((p[0]-centerX) * cosY - (p[2]-centerZ) * sinY)+centerX
+            xrz = (p[2]*cosX)+(p[1]*sinX)
+            #xry = (p[1]*cosX)+(p[2]*sinX)
+            #yrx = (p[0]*cosY)+(xrz*sinY)
+            #yxz = (xrz*cosY)-(p[0]*sinY)
+            newX = p[0]
             newY = p[1]
-            newZ = ((p[2]-centerZ) * cosY + (p[0]-centerX) * sinY)+centerZ
+            newZ = xrz
+            if p[0] < 10 and p[0] > -10 and p[1] < 10 and p[1] > -10 and p[2] < 10 and p[2] > -10:
+                print(xrz)
             if not newZ == self.camPos[2] and newZ > self.camPos[2]:
                 l = [self.fl,self.camPos[2],newZ]
                 l = list(l)

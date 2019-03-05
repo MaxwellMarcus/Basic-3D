@@ -6,7 +6,6 @@ class rubiksCube:
     def __init__(self,x,y,z):
         self.cubes = []
         self.originalCubes = []
-        self.rotatedCubes = []
         self.x = x
         self.y = y
         self.z = z
@@ -15,38 +14,15 @@ class rubiksCube:
                 for z in range(3):
                     self.cubes.append(camera.returnCube((x-1)*100,(y-1)*100,(z-1)*100,20))
                     self.originalCubes.append(camera.returnCube((x-1)*100,(y-1)*100,(z-1)*100,20))
-                    self.rotatedCubes.append(camera.returnCube((x - 1) * 100, (y - 1) * 100, (z - 1) * 100, 20))
 
         for i in self.cubes:
             i = camera.project(i)
-
-    def rotateAroundCubeX(self,angle):
-        sin = math.sin(angle)
-        cos = math.cos(angle)
-        y = camera.camPos[1]
-        z = camera.camPos[2]
-        camera.camPos[1] = (y*cos)-(z*sin)
-        camera.camPos[2] = (z*cos)+(y*sin)
-
-    def rotateAroundCubeY(self,angle):
-        sin = math.sin(angle)
-        cos = math.cos(angle)
-        x = camera.camPos[0]
-        z = camera.camPos[2]
-        camera.camPos[0] = (x*cos)+(z*sin)
-        camera.camPos[2] = (z*cos)-(x*sin)
-        #camera.camRot[1] += angle
-    def rotateAroundCubeZ(self,angle):
-        sin = math.sin(angle)
-        cos = math.cos(angle)
-        x = camera.camPos[0]
-        y = camera.camPos[1]
-        camera.camPos[0] = (x*cos)-(y*sin)
-        camera.camPos[1] = (y*cos)+(x*sin)
+    def rotate(self,x=0,y=0,z=0):
+        camera.camRotate(x=x,y=y,z=z)
     def rotateX(self,angle):
         sin = math.sin(angle)
         cos = math.cos(angle)
-        for i in self.rotatedCubes:
+        for i in self.cubes:
             for l in i:
                 xo = l[2]
                 yo = l[1]
@@ -55,7 +31,7 @@ class rubiksCube:
     def rotateY(self,angle):
         sin = math.sin(angle)
         cos = math.cos(angle)
-        for i in self.rotatedCubes:
+        for i in self.cubes:
             for l in i:
                 xo = l[0]
                 yo = l[2]
@@ -64,7 +40,7 @@ class rubiksCube:
     def rotateZ(self,angle):
         sin = math.sin(angle)
         cos = math.cos(angle)
-        for i in self.rotatedCubes:
+        for i in self.cubes:
             for l in i:
                 xo = l[0]
                 yo = l[1]
@@ -186,14 +162,17 @@ class rubiksCube:
         #for i in self.cubes[index]:
         #    print(i)
     def render(self):
-        camera.clearScreen()
-        for i in self.originalCubes:
-            i = camera.project(i)
-        for i in camera.visible(self.rotatedCubes):
-            i = camera.project(i)
-            face = camera.visibleFace(i)
-            camera.draw_faces(i,face)
-        camera.updateScreen()
+        try:
+            camera.clearScreen()
+            for i in self.originalCubes:
+                i = camera.project(i)
+            for i in camera.visible(self.cubes):
+                i = camera.project(i)
+                face = camera.visibleFace(i)
+                camera.draw_faces(i,face)
+            camera.updateScreen()
+        except:
+            camera.start = False
 
 
 cube = rubiksCube(0,0,0)
@@ -227,15 +206,12 @@ while camera.start:
         camera.usedKeys.append('f')
 
     if 'Up' in camera.keysPressed:
-        #cube.rotateX(math.pi/180)
+
         camera.camRotate(x=math.pi/180)
     if 'Down' in camera.keysPressed:
-        #cube.rotateX(-math.pi/180)
         pass
     if 'Left' in camera.keysPressed:
-        #cube.rotateY(math.pi/180)
         pass
     if 'Right' in camera.keysPressed:
-        #cube.rotateY(-math.pi/180)
         pass
     cube.render()
