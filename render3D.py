@@ -156,8 +156,10 @@ class _3D:# the class that handles everything
             newZ = p[2]# xrz
             #if p[0] < 10 and p[0] > -10 and p[1] < 10 and p[1] > -10 and p[2] < 10 and p[2] > -10:
             if p[0] == 120 and p[1] == 120 and p[2] == 120:
-            #    print(xrz)
+                print(newZ)
                 print(newY)
+                print(p[3])
+                print(p[4])
                 print('')
             if not newZ == self.camPos[2] and newZ > self.camPos[2]:
                 l = [self.fl,self.camPos[2],newZ]
@@ -536,6 +538,9 @@ class _3D:# the class that handles everything
         canvas.create_text(x,y,text=text,font=('TkTextFont',fontSize))
     def draw_faces(self,points,face):
         i = points
+        if i[0][0] == 0 and i[0][1] == 0 and i[0][2] == 0:
+            print(i[1][3])
+            print(i[1][4])
 #        if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
         self.drawFace(i,face[0][0:4],color=face[0][4],lines='black')
         self.drawFace(i,face[1][0:4],color=face[1][4],lines='black')
