@@ -147,16 +147,16 @@ class _3D:# the class that handles everything
             sinX = math.sin(self.camRot[0])
             cosY = math.cos(self.camRot[1])
             sinY = math.sin(self.camRot[1])
-            xrz = (p[2]*cosX)+(p[1]*sinX)
+        #    xrz = (p[2]*cosX)#+(p[1]*sinX)
             #xry = (p[1]*cosX)+(p[2]*sinX)
             #yrx = (p[0]*cosY)+(xrz*sinY)
             #yxz = (xrz*cosY)-(p[0]*sinY)
             newX = p[0]
             newY = p[1]
-            newZ = xrz
+            newZ = p[2]# xrz
             #if p[0] < 10 and p[0] > -10 and p[1] < 10 and p[1] > -10 and p[2] < 10 and p[2] > -10:
             if p[0] == 120 and p[1] == 120 and p[2] == 120:
-                print(xrz)
+            #    print(xrz)
                 print(newY)
                 print('')
             if not newZ == self.camPos[2] and newZ > self.camPos[2]:
@@ -165,8 +165,8 @@ class _3D:# the class that handles everything
                 first = float(l[0]-l[1])
                 second = float(l[2]-l[1])
                 scale = first/second
-                p[3] = newX * 1 + self.camPos[0] * 1
-                p[4] = newY * 1 + self.camPos[1] * 1
+                p[3] = p[0] * scale# + self.camPos[0] * scale
+                p[4] = p[1] * scale# + self.camPos[1] * scale
             else:
                 p[3] = False
                 p[4] = False
