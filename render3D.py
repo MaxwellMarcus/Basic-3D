@@ -155,10 +155,6 @@ class _3D:# the class that handles everything
             newY = p[1]
             newZ = p[2]# xrz
             #if p[0] < 10 and p[0] > -10 and p[1] < 10 and p[1] > -10 and p[2] < 10 and p[2] > -10:
-            if p[0] == 120 and p[1] == 120 and p[2] == 120:
-            #    print(xrz)
-                print(newY)
-                print('')
             if not newZ == self.camPos[2] and newZ > self.camPos[2]:
                 l = [self.fl,self.camPos[2],newZ]
                 l = list(l)
@@ -170,6 +166,10 @@ class _3D:# the class that handles everything
             else:
                 p[3] = False
                 p[4] = False
+            if p[0] == 120 and p[1] == 120 and p[2] == 120:
+                print(p[3])
+                print(p[4])
+                print('')
         return points
     def drawLines(self,points,indexes):# draws a line from given indexes of a list of points not currently in use
         for i in range(len(indexes)-1):

@@ -164,8 +164,6 @@ class rubiksCube:
     def render(self):
         try:
             camera.clearScreen()
-            for i in self.originalCubes:
-                i = camera.project(i)
             for i in camera.visible(self.cubes):
                 i = camera.project(i)
                 face = camera.visibleFace(i)
