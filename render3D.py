@@ -140,7 +140,7 @@ class _3D:# the class that handles everything
             newY = newY * scale - self.camPos[1] * scale
 
         return newX + root.winfo_screenwidth()/2, newY + root.winfo_screenheight()/2
-    def project(self,points):# changes X and Y based on Z position used for a list of positions, I use it for cubes
+    def project(self,points,printVals=False):# changes X and Y based on Z position used for a list of positions, I use it for cubes
         for i in range(len(points)-1):
             p = points[i+1]
             cosX = math.cos(self.camRot[0])
@@ -150,20 +150,11 @@ class _3D:# the class that handles everything
         #    xrz = (p[2]*cosX)#+(p[1]*sinX)
             #xry = (p[1]*cosX)+(p[2]*sinX)
             #yrx = (p[0]*cosY)+(xrz*sinY)
-            #yxz = (xrz*cosY)-(p[0]*sinY)
+            #yxz = (xrz*cosY)(p[0]*sinY)
             newX = p[0]
             newY = p[1]
             newZ = p[2]# xrz
             #if p[0] < 10 and p[0] > -10 and p[1] < 10 and p[1] > -10 and p[2] < 10 and p[2] > -10:
-<<<<<<< HEAD
-=======
-            if p[0] == 120 and p[1] == 120 and p[2] == 120:
-                print(newZ)
-                print(newY)
-                print(p[3])
-                print(p[4])
-                print('')
->>>>>>> ba5b327fdb8ec074a570d8acc01feac22956afda
             if not newZ == self.camPos[2] and newZ > self.camPos[2]:
                 l = [self.fl,self.camPos[2],newZ]
                 l = list(l)
@@ -175,10 +166,11 @@ class _3D:# the class that handles everything
             else:
                 p[3] = False
                 p[4] = False
-            if p[0] == 120 and p[1] == 120 and p[2] == 120:
-                print(p[3])
-                print(p[4])
-                print('')
+
+        if printVals:
+            print(points[1][3])
+            print(points[1][4])
+            print('')
         return points
     def drawLines(self,points,indexes):# draws a line from given indexes of a list of points not currently in use
         for i in range(len(indexes)-1):

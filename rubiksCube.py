@@ -165,7 +165,10 @@ class rubiksCube:
         try:
             camera.clearScreen()
             for i in camera.visible(self.cubes):
-                i = camera.project(i)
+                if self.cubes.index(i) == 0:
+                    i = camera.project(i,printVals=1)
+                else:
+                    i = camera.project(i)
                 face = camera.visibleFace(i)
                 camera.draw_faces(i,face)
             camera.updateScreen()
