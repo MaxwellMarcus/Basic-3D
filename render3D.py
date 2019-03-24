@@ -147,13 +147,14 @@ class _3D:# the class that handles everything
             sinX = math.sin(self.camRot[0])
             cosY = math.cos(self.camRot[1])
             sinY = math.sin(self.camRot[1])
-        #    xrz = (p[2]*cosX)#+(p[1]*sinX)
-            #xry = (p[1]*cosX)+(p[2]*sinX)
-            #yrx = (p[0]*cosY)+(xrz*sinY)
-            #yxz = (xrz*cosY)(p[0]*sinY)
-            newX = p[0]
-            newY = p[1]
-            newZ = p[2]# xrz
+            xrz = (p[2]*cosX)-(p[1]*sinX)
+            xry = (p[1]*cosX)+(p[2]*sinX)
+            yrx = (p[0]*cosY)+(xrz*sinY)
+            yrz = (xrz*cosY)-(p[0]*sinY)
+            newX = yrx
+            newY = xry
+            newZ = yrz
+        #    print(newX,newY,newZ)
             #if p[0] < 10 and p[0] > -10 and p[1] < 10 and p[1] > -10 and p[2] < 10 and p[2] > -10:
             if not newZ == self.camPos[2] and newZ > self.camPos[2]:
                 l = [self.fl,self.camPos[2],newZ]
@@ -161,17 +162,17 @@ class _3D:# the class that handles everything
                 first = float(l[0]-l[1])
                 second = float(l[2]-l[1])
                 scale = first/second
-                p[3] = p[0] * scale# + self.camPos[0] * scale
-                p[4] = p[1] * scale# + self.camPos[1] * scale
+                p[3] = newX * scale + self.camPos[0] * scale
+                p[4] = newY * scale + self.camPos[1] * scale
             else:
                 p[3] = False
                 p[4] = False
 
-        if printVals:
-            print(points[1][3])
-            print(points[1][4])
-            print('')
-        return points
+        #if printVals:
+            #print(points[1][3])
+            #print(points[1][4])
+            #print('')
+        return [points, newZ]
     def drawLines(self,points,indexes):# draws a line from given indexes of a list of points not currently in use
         for i in range(len(indexes)-1):
             p = points[indexes[i]]
@@ -537,9 +538,9 @@ class _3D:# the class that handles everything
         canvas.create_text(x,y,text=text,font=('TkTextFont',fontSize))
     def draw_faces(self,points,face):
         i = points
-        if i[0][0] == 0 and i[0][1] == 0 and i[0][2] == 0:
-            print(i[1][3])
-            print(i[1][4])
+        #if i[0][0] == 0 and i[0][1] == 0 and i[0][2] == 0:
+        #    print(i[1][3])
+        #    print(i[1][4])
 #        if not i[1][3] > root.winfo_screenwidth() or not i[1][3] < 0 or not i[0][4] > root.winfo_screenheight() or not i[1][4] < 0:
         self.drawFace(i,face[0][0:4],color=face[0][4],lines='black')
         self.drawFace(i,face[1][0:4],color=face[1][4],lines='black')
@@ -549,6 +550,8 @@ class _3D:# the class that handles everything
         self.drawFace(i,face[5][0:4],color=face[5][4],lines='black')
     def draw_square(self,x,y,radius,color='black'):#not used
         canvas.create_rectangle(x-radius,y-radius,x+radius,y+radius,fill=color)
+    def draw_line(self,x1,y1,x2,y2):
+        canvas.create_line(x1,y1,x2,y2)
     def keyPressed(self,event):#adds a keysym to the list of keys pressed
         self.keysPressed.append(event.keysym)
     def KeyReleased(self,event):#takes a keysym of the list of keys pressed

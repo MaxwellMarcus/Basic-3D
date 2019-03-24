@@ -5,7 +5,6 @@ camera = render3D._3D(500)
 class rubiksCube:
     def __init__(self,x,y,z):
         self.cubes = []
-        self.originalCubes = []
         self.x = x
         self.y = y
         self.z = z
@@ -13,12 +12,9 @@ class rubiksCube:
             for y in range(3):
                 for z in range(3):
                     self.cubes.append(camera.returnCube((x-1)*100,(y-1)*100,(z-1)*100,20))
-                    self.originalCubes.append(camera.returnCube((x-1)*100,(y-1)*100,(z-1)*100,20))
 
         for i in self.cubes:
             i = camera.project(i)
-    def rotate(self,x=0,y=0,z=0):
-        camera.camRotate(x=x,y=y,z=z)
     def rotateX(self,angle):
         sin = math.sin(angle)
         cos = math.cos(angle)
@@ -162,18 +158,15 @@ class rubiksCube:
         #for i in self.cubes[index]:
         #    print(i)
     def render(self):
-        try:
-            camera.clearScreen()
-            for i in camera.visible(self.cubes):
-                if self.cubes.index(i) == 0:
-                    i = camera.project(i,printVals=1)
-                else:
-                    i = camera.project(i)
-                face = camera.visibleFace(i)
-                camera.draw_faces(i,face)
-            camera.updateScreen()
-        except:
-            camera.start = False
+        #try:
+        camera.clearScreen()
+        for i in camera.visible(self.cubes):
+            i = camera.project(i)
+            face = camera.visibleFace(i)
+            camera.draw_faces(i,face)
+        camera.updateScreen()
+        #except:
+            #camera.start = False
 
 
 cube = rubiksCube(0,0,0)
@@ -206,8 +199,8 @@ while camera.start:
         camera.usedKeys.append('f')
 
     if 'Up' in camera.keysPressed:
-
-        camera.camRotate(x=math.pi/180)
+        camera.camRot[0] += math.pi/180
+        #camera.camRotate(x=math.pi/180)
     if 'Down' in camera.keysPressed:
         pass
     if 'Left' in camera.keysPressed:
