@@ -71,7 +71,7 @@ class _3D:# the class that handles everything
             valueX = abs(newX-self.camPos[0])#*originDistX
             valueY = abs(newY-self.camPos[1])#*originDistY
             valueZ = abs(newZ-self.camPos[2])#*originDistZ
-            value = valueX+valueY+valueZ
+            value = valueX+valueY+valueZ# This should be pythagorean's equation: a**2+b**2 = c**2
             if len(sorted)==0:
                 sorted.append(i)
             elif value > abs(sorted[0][0][0]-self.camPos[0])+abs(sorted[0][0][1]-self.camPos[1])+abs(sorted[0][0][2]-self.camPos[2]):
@@ -143,19 +143,13 @@ class _3D:# the class that handles everything
     def project(self,points,printVals=False):# changes X and Y based on Z position used for a list of positions, I use it for cubes
         for i in range(len(points)-1):
             p = points[i+1]
-            cosX = math.cos(self.camRot[0])
-            sinX = math.sin(self.camRot[0])
-            cosY = math.cos(self.camRot[1])
-            sinY = math.sin(self.camRot[1])
-            xrz = (p[2]*cosX)-(p[1]*sinX)
-            xry = (p[1]*cosX)+(p[2]*sinX)
-            yrx = (p[0]*cosY)+(xrz*sinY)
-            yrz = (xrz*cosY)-(p[0]*sinY)
-            newX = yrx
-            newY = xry
-            newZ = yrz
-        #    print(newX,newY,newZ)
-            #if p[0] < 10 and p[0] > -10 and p[1] < 10 and p[1] > -10 and p[2] < 10 and p[2] > -10:
+            x_rot_y = p[1]*math.cos(self.camRot[0])+p[2]*math.sin(self.camRot[0])
+            x_rot_z = p[2]*math.cos(self.camRot[0])-p[1]*math.sin(self.camRot[0])
+            y_rot_x = p[0]*math.cos(self.camRot[1])+p[2]*math.sin(self.camRot[1])
+            y_rot_z = p[2]*math.cos(self.camRot[1])-p[0]*math.sin(self.camRot[1])
+            newX = y_rot_x
+            newY = x_rot_y
+            newZ = y_rot_z
             if not newZ == self.camPos[2] and newZ > self.camPos[2]:
                 l = [self.fl,self.camPos[2],newZ]
                 l = list(l)

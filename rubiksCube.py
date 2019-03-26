@@ -14,6 +14,12 @@ class rubiksCube:
                     self.cubes.append(camera.returnCube((x-1)*100,(y-1)*100,(z-1)*100,20))
 
         for i in self.cubes:
+            for l in i:
+                if not type(l) == list:
+                    index = i.index(l)
+                    index2 = self.cubes.index(i)
+                    print(index,index2)
+                    camera.start = False
             i = camera.project(i)
     def rotateX(self,angle):
         sin = math.sin(angle)
@@ -160,7 +166,8 @@ class rubiksCube:
     def render(self):
         #try:
         camera.clearScreen()
-        for i in camera.visible(self.cubes):
+        vis = camera.visible(self.cubes)
+        for i in vis:
             i = camera.project(i)
             face = camera.visibleFace(i)
             camera.draw_faces(i,face)
