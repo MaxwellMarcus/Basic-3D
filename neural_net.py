@@ -16,28 +16,31 @@ class Neuron:
         self.values = []
     def add_synapse(self,x):
         self.synapses.append(x)
-    def set_new_value(self):
+    def normalize_values(self):
         val = 0
         for i in self.values:
             val += i
-        val /= len(self.values)
+        val = float(val) / len(self.values)
         self.value = val
 
 class Net:
-    def __init__(self,rows,neuron_per_row,input):
+    def __init__(self,rows,neuron_per_row,num_input_neurons=1,num_output_neurons=1):
         self.rows = rows
         self.neuron_per_row = neuron_per_row
         self.neurons = []
+        self.num_output_neurons = num_output_neurons
+        self.num_input_neurons = num_input_neurons
+        self.num_synapses = 0
         for i in range(rows):
             if i == 0:
                 sublist = []
-                for l in range(neuron_per_row):
+                for l in range(self.num_input_neurons):
                     neuron = Neuron(1)
                     sublist.append(neuron)
                 self.neurons.append(sublist)#dont forget to add the other types of neurons
             elif i == rows-1:
                 sublist = []
-                for l in range(neuron_per_row):
+                for l in range(self.num_output_neurons):
                     neuron = Neuron(3)
                     sublist.append(neuron)
                 self.neurons.append(sublist)#dont forget to add the other types of neurons
@@ -51,10 +54,66 @@ class Net:
         for i in self.neurons:
             for l in i:
                 if not self.neurons.index(i) == self.rows - 1:
-                    for q in range(self.neuron_per_row):
-                        l.add_synapse(Synapse(l,self.neurons[self.neurons.index(i)+1],float(random.randint(-10,10))/10))
-    def get_output(self):
+                    for q in range(len(self.neurons[self.neurons.index(i)+1])):
+                        l.add_synapse(Synapse(l,self.neurons[self.neurons.index(i)+1][q],float(random.randint(0,10))/10))
+                        self.num_synapses += 1
+    def get_output(self,input):
+        for i in self.neurons:
+            if self.neurons.index(i) == 0:
+                z = 0
+                for l in i:
+                    l.value = input[z]
+                    z += 1
+
         for i in self.neurons:
             for l in i:
                 for q in l.synapses:
-                    q.neuron2.set_value(q.get_value())
+                    q.neuron2.values.append(q.get_value())
+                    q.neuron2.normalize_values()
+        outputs = []
+        for i in self.neurons[len(self.neurons)-1]:
+            outputs.append(i.value)
+        return outputs
+    def mutate(self,num_of_synapse_changes,amount_of_mutation):
+        synapapse_to_change = random.randint(0,self.num_synapses)
+        synapses_found = 0
+        for i in self.neurons:
+            for l in i:
+                for q in l.synapses:
+
+                    if synapses_found == synapapse_to_change:
+                        q.weight += random.uniform(-amount_of_mutation,amount_of_mutation)/float(10)
+                    synapses_found += 1
+
+def sort(training_output,outputs):
+    for i in outputs:
+        i.append(abs(i[0][0]-training_output))
+    sorted = []
+    for i in outputs:
+        if len(sorted)==0:
+            sorted.append(i)
+        elif i[2] > sorted[0][2]:
+            sorted.insert(0,i)
+        elif not i[2] < sorted[len(sorted)-1][2]:
+            for k in sorted:
+                if i[2] > k[2]:
+                    sorted.insert(sorted.index(k),i)
+                    break
+        else:
+            sorted.append(i)
+    return sorted
+
+nets = []
+for i in range(10):
+    nets.append(Net(2,0,3,1))
+for loop in range(1):
+    training_inputs = []
+    for l in range(3):
+        training_inputs.append(random.randint(0,1))
+
+    outputs = []
+    for i in nets:
+        outputs.append([i.get_output(training_inputs),i])
+    half = len(nets)/2
+    for i in range(len(nets)/2):
+        
