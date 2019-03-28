@@ -83,9 +83,9 @@ class Net:
                 for l in i:
                     for q in l.synapses:
                         if synapses_found == synapapse_to_change:
-                            amount = random.uniform(-amount_of_mutation,amount_of_mutation)/float(10)
+                            amount = random.uniform(-amount_of_mutation,amount_of_mutation)
                             while q.weight + amount < 0  or q.weight + amount > 1:
-                                amount = random.uniform(-amount_of_mutation,amount_of_mutation)/float(10)
+                                amount = random.uniform(-amount_of_mutation,amount_of_mutation)
                             q.weight += amount
                         synapses_found += 1
 
@@ -108,11 +108,11 @@ def sort(training_output,outputs):
     return sorted
 
 nets = []
-for i in range(10):
+for i in range(1000):
     nets.append(Net(2,0,3,1))
-for loop in range(1000):
-    training_inputs = []
-    for l in range(3):
+for loop in range(200):
+    training_inputs = [0]
+    for l in range(2):
         training_inputs.append(random.randint(0,1))
 
     outputs = []
@@ -120,13 +120,24 @@ for loop in range(1000):
         outputs.append([i.get_output(training_inputs),i])
 
     outputs = sort(training_inputs[0],outputs)
-    print(training_inputs[0],outputs[len(outputs)-1][0])
+    #for i in outputs:
+    #    print(i[0])
+    #print(training_inputs[0],outputs[len(outputs)-1][0])
+    #for i in outputs[len(outputs)-1][1].neurons:
+    #    for l in i:
+    #        for q in l.synapses:
+    #            print(q.weight)
+    #print('')
     half = int(len(nets)/2)
     for i in range(half):
+        #nets[nets.index(outputs[i][1])] = Net(2,0,3,1)
         nets[nets.index(outputs[i][1])] = nets[nets.index(outputs[i+half][1])]
     for i in nets:
-        i.mutate(1,1)
+        i.mutate(2,.1)
 
 while True:
     training_inputs = raw_input('Give new input: ')
+    training_inputs = list(training_inputs)
+    for i in range(len(training_inputs)):
+        training_inputs[i] = int(training_inputs[i])
     print(outputs[len(outputs)-1][1].get_output(training_inputs))
