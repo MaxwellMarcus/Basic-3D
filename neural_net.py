@@ -6,6 +6,7 @@ class Synapse:
         self.neuron1 = neuron1
         self.neuron2 = neuron2
     def get_value(self):
+    #    print(type(self.neuron1.value),type(self.weight))
         return self.neuron1.value*self.weight
 
 class Neuron:
@@ -55,7 +56,7 @@ class Net:
             for l in i:
                 if not self.neurons.index(i) == self.rows - 1:
                     for q in range(len(self.neurons[self.neurons.index(i)+1])):
-                        l.add_synapse(Synapse(l,self.neurons[self.neurons.index(i)+1][q],float(random.randint(0,10))/10))
+                        l.add_synapse(Synapse(l,self.neurons[self.neurons.index(i)+1][q],float(random.randint(0,100))/100))
                         self.num_synapses += 1
     def get_output(self,input):
         for i in self.neurons:
@@ -74,16 +75,19 @@ class Net:
         for i in self.neurons[len(self.neurons)-1]:
             outputs.append(i.value)
         return outputs
-    def mutate(self,num_of_synapse_changes,amount_of_mutation):
-        synapapse_to_change = random.randint(0,self.num_synapses)
-        synapses_found = 0
-        for i in self.neurons:
-            for l in i:
-                for q in l.synapses:
-
-                    if synapses_found == synapapse_to_change:
-                        q.weight += random.uniform(-amount_of_mutation,amount_of_mutation)/float(10)
-                    synapses_found += 1
+    def mutate(self,num_of_synapses_changed,amount_of_mutation):
+        for loops in range(num_of_synapses_changed):
+            synapapse_to_change = random.randint(0,self.num_synapses)
+            synapses_found = 0
+            for i in self.neurons:
+                for l in i:
+                    for q in l.synapses:
+                        if synapses_found == synapapse_to_change:
+                            amount = random.uniform(-amount_of_mutation,amount_of_mutation)/float(10)
+                            while q.weight + amount < 0  or q.weight + amount > 1:
+                                amount = random.uniform(-amount_of_mutation,amount_of_mutation)/float(10)
+                            q.weight += amount
+                        synapses_found += 1
 
 def sort(training_output,outputs):
     for i in outputs:
@@ -92,11 +96,11 @@ def sort(training_output,outputs):
     for i in outputs:
         if len(sorted)==0:
             sorted.append(i)
-        elif i[2] > sorted[0][2]:
+        elif i[2] >= sorted[0][2]:
             sorted.insert(0,i)
         elif not i[2] < sorted[len(sorted)-1][2]:
             for k in sorted:
-                if i[2] > k[2]:
+                if i[2] >= k[2]:
                     sorted.insert(sorted.index(k),i)
                     break
         else:
@@ -106,7 +110,7 @@ def sort(training_output,outputs):
 nets = []
 for i in range(10):
     nets.append(Net(2,0,3,1))
-for loop in range(1):
+for loop in range(1000):
     training_inputs = []
     for l in range(3):
         training_inputs.append(random.randint(0,1))
@@ -114,6 +118,15 @@ for loop in range(1):
     outputs = []
     for i in nets:
         outputs.append([i.get_output(training_inputs),i])
-    half = len(nets)/2
-    for i in range(len(nets)/2):
-        
+
+    outputs = sort(training_inputs[0],outputs)
+    print(training_inputs[0],outputs[len(outputs)-1][0])
+    half = int(len(nets)/2)
+    for i in range(half):
+        nets[nets.index(outputs[i][1])] = nets[nets.index(outputs[i+half][1])]
+    for i in nets:
+        i.mutate(1,1)
+
+while True:
+    training_inputs = raw_input('Give new input: ')
+    print(outputs[len(outputs)-1][1].get_output(training_inputs))
