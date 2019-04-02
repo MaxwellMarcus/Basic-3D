@@ -25,7 +25,7 @@ class Creature:
 def sort(l):
     for i in range(len(l)):
         l[i] = [(l[i])]
-        l[i].append(l[i][0].x)
+        l[i].append(l[i][0].speed)
     sorted = []
     for i in l:
         if len(sorted)==0:
@@ -42,7 +42,6 @@ def sort(l):
             sorted.append(i)
     for i in range(len(sorted)):
         sorted[i] = sorted[i][0]
-    print(len(sorted))
     return sorted
 
 maxSpeed = 100
