@@ -111,8 +111,8 @@ nets = []
 for i in range(1000):
     nets.append(Net(2,0,3,1))
 for loop in range(200):
-    training_inputs = [0]
-    for l in range(2):
+    training_inputs = []
+    for l in range(3):
         training_inputs.append(random.randint(0,1))
 
     outputs = []
@@ -136,8 +136,14 @@ for loop in range(200):
         i.mutate(2,.1)
 
 while True:
-    training_inputs = raw_input('Give new input: ')
-    training_inputs = list(training_inputs)
-    for i in range(len(training_inputs)):
-        training_inputs[i] = int(training_inputs[i])
-    print(outputs[len(outputs)-1][1].get_output(training_inputs))
+    try:
+        training_inputs = input('Give new input: ')
+        training_inputs = list(training_inputs)
+        for i in range(len(training_inputs)):
+            training_inputs[i] = int(training_inputs[i])
+        print(outputs[len(outputs)-1][1].get_output(training_inputs))
+    except:
+        for i in outputs[len(outputs)-1][1]:
+            for l in i:
+                for q in l.synapses:
+                    print(q.weight)
