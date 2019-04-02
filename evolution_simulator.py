@@ -1,14 +1,27 @@
+try:
+    from tkinter import *
+except:
+    from Tkinter import *
 import random
+
+root = Tk()
+canvas = Canvas(root,width = root.winfo_screenwidth(),height = root.winfo_screenheight())
+canvas.pack()
+height = float(root.winfo_screenheight())
+width = float(root.winfo_screenwidth())
 class Creature:
     def __init__(self,speed):
         self.x = 0
         self.speed = speed
     def run(self):
-        for i in range(1000):
-            self.x += self.speed
+        x = self.speed
+        #for i in range(1000):
+            #self.x += self.speed
     def mutate(self):
-        self.speed += random.randint(-10,10)/10
-
+        change = random.randint(-1,1)
+        while self.speed + change < minSpeed or self.speed + change > maxSpeed or change == 0:
+            change = random.randint(-1,1)
+        self.speed += change
 def sort(l):
     for i in range(len(l)):
         l[i] = [(l[i])]
@@ -29,17 +42,48 @@ def sort(l):
             sorted.append(i)
     for i in range(len(sorted)):
         sorted[i] = sorted[i][0]
+    print(len(sorted))
     return sorted
 
+maxSpeed = 100
+minSpeed = 0
 creatures = []
-for i in range(1000):
-    creatures.append(Creature(random.randint(1,1000000)))
-    creatures[i].run()
+lines = []
+lines2 = []
 for i in range(100):
+    creatures.append(Creature(random.randint(1,100)))
+print(len(creatures))
+last = None
+for i in range(1):
+    for l in creatures:
+        l.run()
     creatures = sort(creatures)
     half = len(creatures)/2
+    lines.append(creatures[len(creatures)-1].speed)
     for i in range(len(creatures)):
-         if i+1 > half:
-             creatures[i] = creatures[int(i-half)]
-         creatures[i].mutate()
-    print(creatures[0].x)
+        if i+1 > half:
+        #    creatures[i] = Creature(creatures[int(i-half)].speed)
+            creatures[i].mutate()
+    lines2.append(creatures[0].speed)
+    canvas.delete(ALL)
+    lastX = 0
+    lastY = height/2
+    for i in range(11):
+        canvas.create_line(0,lastY-(i*10)*3,width,lastY-(i*10)*3)
+        canvas.create_text(20,lastY-(i*10)*3,text=str(i*10),font=('TkTextFont',20))
+    for i in lines:
+        x = lastX + width/len(lines)
+        y = height/2-i*3
+        canvas.create_line(lastX,lastY,x,y,fill = 'red')
+        lastX = x
+        lastY = y
+    lastX = 0
+    lastY = height/2
+    for l in lines2:
+        x = lastX + width/len(lines)
+        y = height/2-l*3
+        canvas.create_line(lastX,lastY,x,y,fill = 'green')
+        lastX = x
+        lastY = y
+    root.update()
+root.mainloop()
