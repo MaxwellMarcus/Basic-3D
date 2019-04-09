@@ -4,6 +4,7 @@ except:
     from Tkinter import *
 import random
 import math
+import time
 
 root = Tk()
 canvas = Canvas(root,width = root.winfo_screenwidth(),height = root.winfo_screenheight())
@@ -72,7 +73,7 @@ def new_creatures(event):
                 median = creatures[i]
             if i+1 > half:
                 creatures[i] = Creature(creatures[int(i-half)].speed_x,creatures[int(i-half)].speed_y)
-                creatures[i].mutate()
+            creatures[i].mutate()
         lines3.append(median.fittness)
         canvas.delete(ALL)
         lastX = 0
@@ -108,6 +109,7 @@ def new_creatures(event):
             lastY = y
 
         root.update()
+        time.sleep(.5)
 
 root.bind('<Key>',new_creatures)
 root.mainloop()

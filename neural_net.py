@@ -60,6 +60,9 @@ class Net:
                         self.num_synapses += 1
     def get_output(self,input):
         for i in self.neurons:
+            for l in i:
+                l.values = []
+        for i in self.neurons:
             if self.neurons.index(i) == 0:
                 z = 0
                 for l in i:
@@ -74,6 +77,7 @@ class Net:
         outputs = []
         for i in self.neurons[len(self.neurons)-1]:
             outputs.append(i.value)
+        self.outputs = outputs
         return outputs
     def mutate(self,num_of_synapses_changed,amount_of_mutation):
         for loops in range(num_of_synapses_changed):
@@ -88,62 +92,59 @@ class Net:
                                 amount = random.uniform(-amount_of_mutation,amount_of_mutation)
                             q.weight += amount
                         synapses_found += 1
+    def get_fitness(self,training_outputs):
+        return abs(training_outputs - self.outputs[0])
 
-def sort(training_output,outputs):
-    for i in outputs:
-        i.append(abs(i[0][0]-training_output))
+def sort(l):
+    for i in range(len(l)):
+        l[i] = [(l[i])]
+        l[i].append(l[i][0].get_fitness(training_inputs[0]))
     sorted = []
-    for i in outputs:
+    for i in l:
         if len(sorted)==0:
             sorted.append(i)
-        elif i[2] >= sorted[0][2]:
-            sorted.insert(0,i)
-        elif not i[2] < sorted[len(sorted)-1][2]:
+        else:
             for k in sorted:
-                if i[2] >= k[2]:
+                if i[1] > k[1]:
                     sorted.insert(sorted.index(k),i)
                     break
-        else:
-            sorted.append(i)
+                elif sorted.index(k) == len(sorted)-1:
+                    sorted.append(i)
+
+    for i in range(len(sorted)):
+        sorted[i] = sorted[i][0]
     return sorted
 
 nets = []
-for i in range(1000):
+for i in range(100):
     nets.append(Net(2,0,3,1))
-for loop in range(200):
+for loop in range(100):
+    print(loop)
     training_inputs = []
     for l in range(3):
         training_inputs.append(random.randint(0,1))
 
-    outputs = []
-    for i in nets:
-        outputs.append([i.get_output(training_inputs),i])
+    for l in nets:
+        l.get_output(training_inputs)
+    nets = sort(nets)
+    half = len(nets)/2
+    for i in range(len(nets)):
+        if i+1 == int(half):
+            median = nets[i]
+        if i+1 > half:
+            nets[i] = nets[int(i-half)]
+            nets[i].mutate(1,.2)
 
-    outputs = sort(training_inputs[0],outputs)
-    #for i in outputs:
-    #    print(i[0])
-    #print(training_inputs[0],outputs[len(outputs)-1][0])
-    #for i in outputs[len(outputs)-1][1].neurons:
-    #    for l in i:
-    #        for q in l.synapses:
-    #            print(q.weight)
-    #print('')
-    half = int(len(nets)/2)
-    for i in range(half):
-        #nets[nets.index(outputs[i][1])] = Net(2,0,3,1)
-        nets[nets.index(outputs[i][1])] = nets[nets.index(outputs[i+half][1])]
-    for i in nets:
-        i.mutate(2,.1)
 
 while True:
-    try:
-        training_inputs = input('Give new input: ')
+    training_inputs = input('Give new input: ')
+    if not training_inputs == 'synapses':
         training_inputs = list(training_inputs)
         for i in range(len(training_inputs)):
             training_inputs[i] = int(training_inputs[i])
-        print(outputs[len(outputs)-1][1].get_output(training_inputs))
-    except:
-        for i in outputs[len(outputs)-1][1]:
+        print(nets[0].get_output(training_inputs))
+    else:
+        for i in nets[0].neurons:
             for l in i:
-                for q in l.synapses:
-                    print(q.weight)
+                for k in l.synapses:
+                    print(k.weight)
