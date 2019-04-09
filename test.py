@@ -1,21 +1,22 @@
 import random
 l = []
-for i in range(100):
+for i in range(5):
     l.append([None,random.randint(1,100)])
 sorted = []
-for i in l:
-    if len(sorted)==0:
-        first = False
-        sorted.append(i)
-    elif i[1] > sorted[0][1]:
-        sorted.insert(0,i)
-    elif not i[1] < sorted[len(sorted)-1][1]:
-        for k in sorted:
-            if i[1] > k[1]:
-                sorted.insert(sorted.index(k),i)
-                break
-    else:
-        sorted.append(i)
-for i in range(len(sorted)):
-    sorted[i] = sorted[i][0]
-print(len(sorted))
+def sort(l):
+    sorted = []
+    for i in l:
+        if len(sorted)==0:
+            sorted.append(i)
+        else:
+            for k in sorted:
+                if i[1] < k[1]:
+                    print(i[1],k[1])
+                    sorted.insert(sorted.index(k),i)
+                    break
+                elif sorted.index(k) == len(sorted)-1:
+                    sorted.append(i)
+    return sorted
+
+for i in sort(l):
+    print(i[1])
