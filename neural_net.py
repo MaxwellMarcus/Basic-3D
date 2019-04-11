@@ -32,6 +32,7 @@ class Net:
         self.num_output_neurons = num_output_neurons
         self.num_input_neurons = num_input_neurons
         self.num_synapses = 0
+        self.ouputs = []
         for i in range(rows):
             if i == 0:
                 sublist = []
@@ -78,6 +79,7 @@ class Net:
         for i in self.neurons[len(self.neurons)-1]:
             outputs.append(i.value)
         self.outputs = outputs
+        self.ouputs.append(abs(input[0] - self.outputs[0]))
         return outputs
     def mutate(self,num_of_synapses_changed,amount_of_mutation):
         for loops in range(num_of_synapses_changed):
@@ -92,13 +94,17 @@ class Net:
                                 amount = random.uniform(-amount_of_mutation,amount_of_mutation)
                             q.weight += amount
                         synapses_found += 1
-    def get_fitness(self,training_outputs):
-        return abs(training_outputs - self.outputs[0])
+    def get_fitness(self):
+        fitness = 0
+        for i in self.ouputs:
+            fitness += i
+        fitness /= len(self.ouputs)
+        return fitness
 
 def sort(l):
     for i in range(len(l)):
         l[i] = [(l[i])]
-        l[i].append(l[i][0].get_fitness(training_inputs[0]))
+        l[i].append(l[i][0].get_fitness())
     sorted = []
     for i in l:
         if len(sorted)==0:
@@ -110,31 +116,41 @@ def sort(l):
                     break
                 elif sorted.index(k) == len(sorted)-1:
                     sorted.append(i)
+                    break
 
     for i in range(len(sorted)):
         sorted[i] = sorted[i][0]
     return sorted
 
 nets = []
-for i in range(100):
+possible_inputs = [
+[0,0,0],
+[0,0,1],
+[0,1,0],
+[0,1,1],
+[1,0,0],
+[1,0,1],
+[1,1,0],
+[1,1,1],
+]
+for i in range(1000):
     nets.append(Net(2,0,3,1))
-for loop in range(100):
-    print(loop)
-    training_inputs = []
-    for l in range(3):
-        training_inputs.append(random.randint(0,1))
+for loop in range(10000):
+    for i in nets:
+        i.ouputs = []
+    for i in possible_inputs:
+        for l in nets:
+            l.get_output(i)
 
-    for l in nets:
-        l.get_output(training_inputs)
     nets = sort(nets)
     half = len(nets)/2
     for i in range(len(nets)):
         if i+1 == int(half):
             median = nets[i]
-        if i+1 > half:
+        if i+1 < half:
             nets[i] = nets[int(i-half)]
-            nets[i].mutate(1,.2)
-
+            nets[i].mutate(3,.1)
+    print(len(nets))#nets[0].get_fitness())
 
 while True:
     training_inputs = input('Give new input: ')
