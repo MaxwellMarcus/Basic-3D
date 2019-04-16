@@ -135,7 +135,7 @@ possible_inputs = [
 ]
 for i in range(1000):
     nets.append(Net(2,0,3,1))
-for loop in range(1):
+for loop in range(100):
     for i in nets:
         i.ouputs = []
     for i in possible_inputs:
@@ -144,8 +144,15 @@ for loop in range(1):
 
     sortable = {}
     for i in range(len(nets)):
-        sortable.update({nets[i].get_fitness(): nets[i]})
-        print(len(sortable))
+        add = 0
+        addable = False
+        while not addable:
+            try:
+                sortable[nets[i].get_fitness()+add]
+                add += 1
+            except:
+                addable = True
+        sortable.update({nets[i].get_fitness()+add: nets[i]})
     nets = []
     for i in sorted(sortable):
         nets.append(sortable[i])
@@ -156,7 +163,6 @@ for loop in range(1):
         if i+1 < half:
             nets[i] = nets[int(i-half)]
             nets[i].mutate(1,.1)
-    print(len(nets))
 while True:
     training_inputs = input('Give new input: ')
     if not training_inputs == 'synapses':
