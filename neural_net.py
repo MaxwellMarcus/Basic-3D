@@ -135,7 +135,7 @@ possible_inputs = [
 ]
 for i in range(1000):
     nets.append(Net(2,0,3,1))
-for loop in range(20):
+for loop in range(10):
     for i in nets:
         i.ouputs = []
     for i in possible_inputs:
