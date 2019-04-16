@@ -6,25 +6,22 @@ def sort(l):
     sorted = []
     print(len(l))
     for i in l:
+        now = len(sorted)
         if len(sorted)==0:
+            sorted.append(i)
+        elif i[1] > sorted[len(sorted)-1][1]:
             sorted.append(i)
         else:
             for k in sorted:
-                #print(len(sorted))
-                #print(i[1],k[1])
-                #print(len(l))
-                #print(sorted.index(k))
-                #print('')
-                if i[1] <= k[1]:
+                if i[1] < k[1]:
                     sorted.insert(sorted.index(k),i)
-                #    print('this')
                     break
                 elif sorted.index(k) == len(sorted)-1:
-                #    print('that')
                     sorted.append(i)
                     break
+        #if now == len(sorted):
+            #print(i[1])
     return sorted
-for i in range(2):
-    l = sort(l)
-    print(len(l))
-    print('')
+l.sort()
+for i in l:
+    print(i)
