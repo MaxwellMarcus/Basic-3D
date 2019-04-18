@@ -25,7 +25,7 @@ for i in range(100000):
     outputs = sigmoid(np.dot(input_layer, synaptic_weights))
     error = training_outputs - outputs
     adjustments = error * sigmoid_derivative(outputs)
-    synaptic_weights += #np.dot(input_layer.T,adjustments)
+    synaptic_weights += np.dot(input_layer.T,adjustments)
 
 print('Synaptic weights after training')
 print(synaptic_weights)

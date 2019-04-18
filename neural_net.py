@@ -1,4 +1,5 @@
 import random
+import copy
 
 class Synapse:
     def __init__(self,neuron1,neuron2,weight):
@@ -90,10 +91,8 @@ class Net:
                     for q in l.synapses:
                         if synapses_found == synapapse_to_change:
                             amount = random.uniform(-amount_of_mutation,amount_of_mutation)
-                            while q.weight + amount < 0  or q.weight + amount > 1:
-                                amount = random.uniform(-amount_of_mutation,amount_of_mutation)
                             q.weight += amount
-                        synapses_found += 1
+                            synapses_found += 1
     def get_fitness(self):
         fitness = 0
         for i in self.ouputs:
@@ -133,9 +132,12 @@ possible_inputs = [
 [1,1,0],
 [1,1,1],
 ]
-for i in range(1000):
+for i in range(15):
     nets.append(Net(2,0,3,1))
-for loop in range(10):
+    #nets[i].neurons[0][0].synapses[0].weight = 1
+    #nets[i].neurons[0][1].synapses[0].weight = 0
+    #nets[i].neurons[0][2].synapses[0].weight = 0
+for loop in range(1):
     for i in nets:
         i.ouputs = []
     for i in possible_inputs:
@@ -157,18 +159,23 @@ for loop in range(10):
     for i in sorted(sortable):
         nets.append(sortable[i])
     half = len(nets)/2
+    for i in nets:
+        print(i.get_fitness())
     for i in range(len(nets)):
         if i+1 == int(half):
             median = nets[i]
         if i+1 > half:
-            nets[i] = nets[int(i-half)]
+            nets[i] = copy.deepcopy(nets[int(i-half)])
             nets[i].mutate(1,.1)
+
+    #print(nets[0].get_fitness())
 while True:
     training_inputs = input('Give new input: ')
+    print(type(training_inputs))
     if not training_inputs == 'synapses':
-        training_inputs = list(training_inputs)
-        for i in range(len(training_inputs)):
-            training_inputs[i] = int(training_inputs[i])
+        #training_inputs = list(training_inputs)
+        #for i in range(len(training_inputs)):
+        #    training_inputs[i] = int(training_inputs[i])
         print(nets[0].get_output(training_inputs))
     else:
         for i in nets[0].neurons:
