@@ -1,5 +1,6 @@
 import random
 import copy
+import numpy as np
 
 class Synapse:
     def __init__(self,neuron1,neuron2,weight):
@@ -81,7 +82,7 @@ class Net:
             outputs.append(i.value)
         self.outputs = outputs
         self.ouputs.append(abs(input[0] - self.outputs[0]))
-        return outputs
+        return self.sigmoid(outputs)
     def mutate(self,num_of_synapses_changed,amount_of_mutation):
         for loops in range(num_of_synapses_changed):
             synapapse_to_change = random.randint(0,self.num_synapses)
@@ -99,6 +100,12 @@ class Net:
             fitness += i
         fitness /= len(self.ouputs)
         return fitness
+    def sigmoid(self,input):
+        output = []
+        for i in input:
+            l = 1/(1+np.exp(-i))
+            output.append(l)
+        return output
 
 def sort(l):
     for i in range(len(l)):
