@@ -15,9 +15,11 @@ training_outputs = np.array([[0,1,1,0]]).T
 
 np.random.seed(1054)
 
-#synaptic_weights = 2 * np.random.random((3,1)) - 1
-synaptic_weights = np.array([[12.4705330277],[-0.2538291879],[-10.0319333206]])
-print(type(synaptic_weights))
+synaptic_weights = 2 * np.random.random((3,1)) - 1
+synaptic_weights = np.array([[ 12.00871161],
+                             [ -0.20452124],
+                             [ -5.80022232]])
+
 print('Random Starting synaptic weights')
 print(synaptic_weights)
 for i in range(1):
@@ -25,9 +27,10 @@ for i in range(1):
     outputs = sigmoid(np.dot(input_layer, synaptic_weights))
     error = training_outputs - outputs
     adjustments = error * sigmoid_derivative(outputs)
-    #synaptic_weights += np.dot(input_layer.T,adjustments)
+    synaptic_weights += np.dot(input_layer.T,adjustments)
 
 print('Synaptic weights after training')
 print(synaptic_weights)
 print('Outputs after training')
 print(outputs)
+print(np.dot(input_layer, synaptic_weights))
