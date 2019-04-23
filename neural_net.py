@@ -79,10 +79,9 @@ class Net:
                     q.neuron2.normalize_values()
         outputs = []
         for i in self.neurons[len(self.neurons)-1]:
-            outputs.append(i.value)
-        self.outputs = outputs
-        self.ouputs.append(abs(input[0] - self.outputs[0]))
-        return self.sigmoid(outputs)
+            outputs.append(self.sigmoid(i.value))
+        self.ouputs.append((input[0] - outputs[0]))
+        return self.list_sigmoid(outputs)#self.sigmoid(outputs)
     def mutate(self,num_of_synapses_changed,amount_of_mutation):
         for loops in range(num_of_synapses_changed):
             synapapse_to_change = random.randint(0,self.num_synapses)
@@ -93,19 +92,25 @@ class Net:
                         if synapses_found == synapapse_to_change:
                             amount = random.uniform(-amount_of_mutation,amount_of_mutation)
                             q.weight += amount
-                            synapses_found += 1
+                        synapses_found += 1
     def get_fitness(self):
         fitness = 0
         for i in self.ouputs:
-            fitness += i
+            fitness += abs(i)
         fitness /= len(self.ouputs)
         return fitness
     def sigmoid(self,input):
-        output = []
-        for i in input:
-            l = 1/(1+np.exp(-i))
-            output.append(l)
+        #print(type(input))
+        #output = []
+        #for i in input:
+        output = 1/(1+np.exp(-input))
+        #    output.append(l)
         return output
+    def list_sigmoid(self,inputs):
+        outputs = []
+        for i in inputs:
+            outputs.append(1/(1+np.exp(-i)))
+        return outputs
 
 def sort(l):
     for i in range(len(l)):
@@ -139,14 +144,15 @@ possible_inputs = [
 [1,1,0],
 [1,1,1],
 ]
-for i in range(15):
+for i in range(100):
     nets.append(Net(2,0,3,1))
     #nets[i].neurons[0][0].synapses[0].weight = 1
     #nets[i].neurons[0][1].synapses[0].weight = 0
     #nets[i].neurons[0][2].synapses[0].weight = 0
-for loop in range(1):
+for loop in range(100):
     for i in nets:
         i.ouputs = []
+    #i = [random.randint(0,1),random.randint(0,1),random.randint(0,1)]
     for i in possible_inputs:
         for l in nets:
             l.get_output(i)
@@ -166,19 +172,18 @@ for loop in range(1):
     for i in sorted(sortable):
         nets.append(sortable[i])
     half = len(nets)/2
-    for i in nets:
-        print(i.get_fitness())
+    #for i in nets:
+        #print(i.get_fitness())
     for i in range(len(nets)):
         if i+1 == int(half):
             median = nets[i]
         if i+1 > half:
             nets[i] = copy.deepcopy(nets[int(i-half)])
-            nets[i].mutate(1,.1)
+            nets[i].mutate(3,1)
 
-    #print(nets[0].get_fitness())
+    print(nets[len(nets)-1].get_fitness())
 while True:
     training_inputs = input('Give new input: ')
-    print(type(training_inputs))
     if not training_inputs == 'synapses':
         #training_inputs = list(training_inputs)
         #for i in range(len(training_inputs)):
