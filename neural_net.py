@@ -3,13 +3,14 @@ import copy
 import numpy as np
 
 class Synapse:
-    def __init__(self,neuron1,neuron2,weight):
+    def __init__(self,neuron1,neuron2,weight,bias):
         self.weight = weight
+        #self.bias = bias
         self.neuron1 = neuron1
         self.neuron2 = neuron2
     def get_value(self):
     #    print(type(self.neuron1.value),type(self.weight))
-        return self.neuron1.value*self.weight
+        return (self.neuron1.value)*self.weight
 
 class Neuron:
     def __init__(self,type):
@@ -59,13 +60,14 @@ class Net:
             for l in i:
                 if not self.neurons.index(i) == self.rows - 1:
                     for q in range(len(self.neurons[self.neurons.index(i)+1])):
-                        l.add_synapse(Synapse(l,self.neurons[self.neurons.index(i)+1][q],float(random.randint(0,100))/100))
+                        l.add_synapse(Synapse(l,self.neurons[self.neurons.index(i)+1][q],float(random.randint(0,100))/100,float(random.randint(0,100))/100))
                         self.num_synapses += 1
-    def get_output(self,input):
+    def get_output(self,input,correct_output):
         for i in self.neurons:
             for l in i:
                 l.values = []
         for i in self.neurons:
+            #setting the values of the input neurons to the given input values
             if self.neurons.index(i) == 0:
                 z = 0
                 for l in i:
@@ -80,7 +82,7 @@ class Net:
         outputs = []
         for i in self.neurons[len(self.neurons)-1]:
             outputs.append((i.value))
-        self.ouputs.append((input[0] - self.sigmoid(outputs[0])))
+        self.ouputs.append((correct_output - self.sigmoid(outputs[0])))
         return self.list_sigmoid(outputs)#self.sigmoid(outputs)
     def mutate(self,num_of_synapses_changed,amount_of_mutation):
         for loops in range(num_of_synapses_changed):
@@ -91,7 +93,11 @@ class Net:
                     for q in l.synapses:
                         if synapses_found == synapapse_to_change:
                             amount = random.uniform(-amount_of_mutation,amount_of_mutation)
+                            #synapse_or_bias = random.randint(0,1)
+                            #if synapse_or_bias == 0:
                             q.weight += amount
+                            #else:
+                                #q.bias += amount
                         synapses_found += 1
     def get_fitness(self):
         fitness = 0
@@ -100,7 +106,7 @@ class Net:
         fitness /= len(self.ouputs)
         return fitness
     def sigmoid(self,input):
-        output = 1/(1+np.exp(-input))
+        output = 1/(1+np.exp(-input))*2-.5
         return output
     def list_sigmoid(self,inputs):
         outputs = []
@@ -110,15 +116,11 @@ class Net:
 
 nets = []
 possible_inputs = [
-[0,0,1],
-[0,1,1],
-[1,0,0],
-[1,0,1],
-[1,1,0],
-[1,1,1],
+[1],
+[-1]
 ]
 for i in range(100):
-    nets.append(Net(2,0,3,1))
+    nets.append(Net(2,1,1,1))
     #nets[i].neurons[0][0].synapses[0].weight = 24.00872169
     #nets[i].neurons[0][1].synapses[0].weight = -0.40452123
     #nets[i].neurons[0][2].synapses[0].weight = -10.80022737
@@ -130,7 +132,7 @@ for loop in range(100):
     #    i = [random.randint(0,1),random.randint(0,1),random.randint(0,1)]
     for i in possible_inputs:
         for l in nets:
-            l.get_output(i)
+            l.get_output(i,possible_inputs.index(i))
 
     sortable = {}
     for i in range(len(nets)):
@@ -164,15 +166,13 @@ for loop in range(100):
 while True:
     training_inputs = input('Give new input: ')
     if not training_inputs == 'synapses':
-        if training_inputs == '010' or training_inputs == '000':
-            print('Nope')
-            break
-        training_inputs = list(training_inputs)
-        for i in range(len(training_inputs)):
-            training_inputs[i] = int(training_inputs[i])
-        print(nets[len(nets)-1].get_output(training_inputs))
+        #training_inputs = list(training_inputs)
+        #for i in range(len(training_inputs)):
+        #    training_inputs[i] = int(training_inputs[i])
+        print(nets[len(nets)-1].get_output(training_inputs,0))
     else:
         for i in nets[0].neurons:
             for l in i:
                 for k in l.synapses:
                     print(k.weight)
+                    print(k.bias)
