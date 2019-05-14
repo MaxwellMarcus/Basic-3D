@@ -34,6 +34,7 @@ class Net:
         self.num_input_neurons = num_input_neurons
         self.num_synapses = 0
         self.ouputs = []
+        self.outputs = []
         for i in range(rows):
             if i == 0:
                 sublist = []
@@ -81,6 +82,7 @@ class Net:
         for i in self.neurons[len(self.neurons)-1]:
             outputs.append((i.value))
         self.ouputs.append(correct_output - self.sigmoid(outputs[0]))
+        self.outputs.append(self.list_sigmoid(outputs))
         return self.list_sigmoid(outputs)
     def mutate(self,num_of_synapses_changed,amount_of_mutation):
         for loops in range(num_of_synapses_changed):
@@ -115,16 +117,26 @@ def create_net_of_nets(num_nets):
     global nets,possible_inputs
     nets = []
     possible_inputs = [
-    [1],
-    [-1]
+    [1,1,1,1],
+    [-1,-1,-1,-1],
+    [1,1,1,-1],
+    [1,1,-1,-1],
+    [1,-1,-1,-1],
+    [-1,-1,-1,1],
+    [-1,-1,1,1],
+    [-1,1,1,1],
+    [1,-1,1,-1],
+    [-1,1,-1,1]
     ]
+
     for i in range(num_nets):
-        nets.append(Net(2,1,1,1))
+        nets.append(Net(2,1,4,4))
 
 def new_gen():
     global nets,possible_inputs
     for i in nets:
         i.ouputs = []
+        i.outputs = []
     for i in possible_inputs:
         for l in nets:
             l.get_output(i,-i[0])
@@ -150,8 +162,8 @@ def new_gen():
             median = nets[i]
         if i+1 > half:
             nets[i] = copy.deepcopy(nets[int(i-half)])
-            nets[i].mutate(1,2)
-    return nets[0].ouputs
+            nets[i].mutate(2,1)
+    return nets[0].outputs
 
 
 '''while True:
