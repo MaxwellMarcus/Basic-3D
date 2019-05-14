@@ -163,7 +163,7 @@ def new_gen():
         if i+1 > half:
             nets[i] = copy.deepcopy(nets[int(i-half)])
             nets[i].mutate(2,1)
-    return nets[0].outputs
+    return [nets[0].outputs,nets[0].get_fitness()]
 
 
 '''while True:
