@@ -5,11 +5,9 @@ import numpy as np
 class Synapse:
     def __init__(self,neuron1,neuron2,weight,bias):
         self.weight = weight
-        #self.bias = bias
         self.neuron1 = neuron1
         self.neuron2 = neuron2
     def get_value(self):
-    #    print(type(self.neuron1.value),type(self.weight))
         return (self.neuron1.value)*self.weight
 
 class Neuron:
@@ -42,19 +40,19 @@ class Net:
                 for l in range(self.num_input_neurons):
                     neuron = Neuron(1)
                     sublist.append(neuron)
-                self.neurons.append(sublist)#dont forget to add the other types of neurons
+                self.neurons.append(sublist)
             elif i == rows-1:
                 sublist = []
                 for l in range(self.num_output_neurons):
                     neuron = Neuron(3)
                     sublist.append(neuron)
-                self.neurons.append(sublist)#dont forget to add the other types of neurons
+                self.neurons.append(sublist)
             else:
                 sublist = []
                 for l in range(neuron_per_row):
                     neuron = Neuron(2)
                     sublist.append(neuron)
-                self.neurons.append(sublist)#dont forget to add the other types of neurons
+                self.neurons.append(sublist)
 
         for i in self.neurons:
             for l in i:
@@ -82,8 +80,8 @@ class Net:
         outputs = []
         for i in self.neurons[len(self.neurons)-1]:
             outputs.append((i.value))
-        self.ouputs.append((correct_output - self.sigmoid(outputs[0])))
-        return self.list_sigmoid(outputs)#self.sigmoid(outputs)
+        self.ouputs.append(correct_output - self.sigmoid(outputs[0]))
+        return self.list_sigmoid(outputs)
     def mutate(self,num_of_synapses_changed,amount_of_mutation):
         for loops in range(num_of_synapses_changed):
             synapapse_to_change = random.randint(0,self.num_synapses)
@@ -93,11 +91,7 @@ class Net:
                     for q in l.synapses:
                         if synapses_found == synapapse_to_change:
                             amount = random.uniform(-amount_of_mutation,amount_of_mutation)
-                            #synapse_or_bias = random.randint(0,1)
-                            #if synapse_or_bias == 0:
                             q.weight += amount
-                            #else:
-                                #q.bias += amount
                         synapses_found += 1
     def get_fitness(self):
         fitness = 0
@@ -114,22 +108,23 @@ class Net:
             outputs.append(1/(1+np.exp(-5*i))*2-1)
         return outputs
 
+
 nets = []
-possible_inputs = [
-[1],
-[-1]
-]
-for i in range(100):
-    nets.append(Net(2,1,1,1))
-    #nets[i].neurons[0][0].synapses[0].weight = 24.00872169
-    #nets[i].neurons[0][1].synapses[0].weight = -0.40452123
-    #nets[i].neurons[0][2].synapses[0].weight = -10.80022737
-for loop in range(100):
+possible_inputs = []
+def create_net_of_nets(num_nets):
+    global nets,possible_inputs
+    nets = []
+    possible_inputs = [
+    [1],
+    [-1]
+    ]
+    for i in range(num_nets):
+        nets.append(Net(2,1,1,1))
+
+def new_gen():
+    global nets,possible_inputs
     for i in nets:
         i.ouputs = []
-    #i = [random.randint(0,1),random.randint(0,1),random.randint(0,1)]
-    #while i == [0,1,0] or i == [0,0,0]:
-    #    i = [random.randint(0,1),random.randint(0,1),random.randint(0,1)]
     for i in possible_inputs:
         for l in nets:
             l.get_output(i,-i[0])
@@ -149,8 +144,6 @@ for loop in range(100):
     for i in sorted(sortable):
         nets.append(sortable[i])
     half = len(nets)/2
-    #for i in nets:
-        #print(i.get_fitness())
 
     for i in range(len(nets)):
         if i+1 == int(half):
@@ -158,24 +151,21 @@ for loop in range(100):
         if i+1 > half:
             nets[i] = copy.deepcopy(nets[int(i-half)])
             nets[i].mutate(1,2)
-    #for i in nets[len(nets)-1].ouputs:
-    #    if i < 0:
-    #        print(i)
-    #print('')
-    print(nets[0].get_fitness())
-print(nets[0].ouputs)
-while True:
-    training_inputs = input('Give new input: ')
-    if not training_inputs == 'synapses':
-        if not training_inputs == '-1':
-            training_inputs = list(training_inputs)
-            for i in range(len(training_inputs)):
-                training_inputs[i] = int(training_inputs[i])
-            print(nets[len(nets)-1].get_output(training_inputs,0))
-        else:
-            print(nets[0].get_output([-1],0))#len(nets)-1].get_output([-1],0))
+    return nets[0].ouputs
+
+
+'''while True:
+    inputs = input('Give new input: ')
+    if not inputs == 'synapses':
+        inputs = int(inputs)/127.5-1
+        print(inputs)
+        output = (nets[len(nets)-1].get_output([inputs],0))
+        print(output)
+        output = (output[0]+1)*127.5
+        print(output)
     else:
         for i in nets[0].neurons:
             for l in i:
                 for k in l.synapses:
                     print(k.weight)
+'''

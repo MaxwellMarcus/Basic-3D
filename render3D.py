@@ -7,7 +7,6 @@ import random
 import math
 
 root = Tk()
-#root.config(cursor = "none")
 
 canvas = Canvas(root,width = root.winfo_screenwidth(),height = root.winfo_screenheight())
 canvas.pack()
