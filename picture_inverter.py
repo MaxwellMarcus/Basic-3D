@@ -12,7 +12,7 @@ canvas.pack()
 
 neural_net.create_net_of_nets(100)
 pos_ins = neural_net.possible_inputs
-for i in range(1000):
+for i in range(1000):#
     canvas.delete(ALL)
     input = pos_ins[0]
     outputs = neural_net.new_gen()
