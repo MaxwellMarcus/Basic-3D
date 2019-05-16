@@ -81,7 +81,7 @@ class Net:
         outputs = []
         for i in self.neurons[len(self.neurons)-1]:
             outputs.append((i.value))
-        self.ouputs.append(correct_output - self.sigmoid(outputs[0]))
+        self.ouputs.append(self.avg_fitness(outputs,correct_output))
         self.outputs.append(self.list_sigmoid(outputs))
         return self.list_sigmoid(outputs)
     def mutate(self,num_of_synapses_changed,amount_of_mutation):
@@ -109,37 +109,60 @@ class Net:
         for i in inputs:
             outputs.append(1/(1+np.exp(-5*i))*2-1)
         return outputs
+    def avg_fitness(self,output,correct_output):
+        fitnesses = []
+        for i in range(len(correct_output)):
+            fitnesses.append(correct_output[i]-self.sigmoid(output[i]))
+        avg = 0
+        for i in fitnesses:
+            avg += i
+        avg = avg/len(fitnesses)
+        return avg
+
 
 
 nets = []
 possible_inputs = []
+correct_output = []
 def create_net_of_nets(num_nets):
-    global nets,possible_inputs
+    global nets,possible_inputs,correct_output
     nets = []
     possible_inputs = [
     [1,1,1,1],
-#    [-1,-1,-1,-1],
-#    [1,1,1,-1],
-#    [1,1,-1,-1],
-#    [1,-1,-1,-1],
-#    [-1,-1,-1,1],
-#    [-1,-1,1,1],
-#    [-1,1,1,1],
-#    [1,-1,1,-1],
-#    [-1,1,-1,1]
+    [-1,-1,-1,-1],
+    [1,1,1,-1],
+    [1,1,-1,-1],
+    [1,-1,-1,-1],
+    [-1,-1,-1,1],
+    [-1,-1,1,1],
+    [-1,1,1,1],
+    [1,-1,1,-1],
+    [-1,1,-1,1]
+    ]
+    correct_output = [
+    [-1,-1,-1,-1],
+    [1,1,1,1],
+    [-1,-1,-1,1],
+    [-1,-1,1,1],
+    [-1,1,1,1],
+    [1,1,1,-1],
+    [1,1,-1,-1],
+    [1,-1,-1,-1],
+    [-1,1,-1,1],
+    [1,-1,1,-1]
     ]
 
     for i in range(num_nets):
         nets.append(Net(2,1,4,4))
 
 def new_gen():
-    global nets,possible_inputs
+    global nets,possible_inputs,correct_output
     for i in nets:
         i.ouputs = []
         i.outputs = []
     for i in possible_inputs:
         for l in nets:
-            l.get_output(i,-i[0])
+            l.get_output(i,correct_output[possible_inputs.index(i)])
 
     sortable = {}
     for i in range(len(nets)):
@@ -170,7 +193,6 @@ if __name__ == '__main__':
     for i in range(100):
         output = new_gen()
         print(output[0][0],output[1])
-
 '''while True:
     inputs = input('Give new input: ')
     if not inputs == 'synapses':
