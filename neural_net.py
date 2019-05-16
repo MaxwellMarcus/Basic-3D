@@ -118,15 +118,15 @@ def create_net_of_nets(num_nets):
     nets = []
     possible_inputs = [
     [1,1,1,1],
-    [-1,-1,-1,-1],
-    [1,1,1,-1],
-    [1,1,-1,-1],
-    [1,-1,-1,-1],
-    [-1,-1,-1,1],
-    [-1,-1,1,1],
-    [-1,1,1,1],
-    [1,-1,1,-1],
-    [-1,1,-1,1]
+#    [-1,-1,-1,-1],
+#    [1,1,1,-1],
+#    [1,1,-1,-1],
+#    [1,-1,-1,-1],
+#    [-1,-1,-1,1],
+#    [-1,-1,1,1],
+#    [-1,1,1,1],
+#    [1,-1,1,-1],
+#    [-1,1,-1,1]
     ]
 
     for i in range(num_nets):
@@ -165,6 +165,11 @@ def new_gen():
             nets[i].mutate(2,1)
     return [nets[0].outputs,nets[0].get_fitness()]
 
+if __name__ == '__main__':
+    create_net_of_nets(100)
+    for i in range(100):
+        output = new_gen()
+        print(output[0][0],output[1])
 
 '''while True:
     inputs = input('Give new input: ')
